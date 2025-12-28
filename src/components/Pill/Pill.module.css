@@ -1,0 +1,45 @@
+.pill {
+  /* Always a capsule, never stretches */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  width: fit-content;
+  max-width: 100%;
+
+  padding: 6px 10px;
+  border-radius: 999px;
+
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  /* Premium glass */
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 75%, transparent);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  color: var(--text);
+}
+
+.default {
+  opacity: 0.92;
+}
+
+.accent {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--border));
+  background: color-mix(in oklab, var(--accent) 12%, var(--card));
+}
+
+.success {
+  color: var(--success, #2ee59d);
+  border-color: color-mix(in oklab, var(--success, #2ee59d) 35%, var(--border));
+  background: color-mix(in oklab, var(--success, #2ee59d) 10%, var(--card));
+}

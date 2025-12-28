@@ -1,0 +1,119 @@
+.card {
+  position: relative;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--glass-strong) 85%, transparent),
+    color-mix(in oklab, var(--glass) 85%, transparent)
+  );
+  box-shadow: var(--shadow-md), var(--shadow-inset);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  outline: none;
+  min-height: 280px;
+  transition: transform 160ms ease, border-color 180ms ease;
+}
+
+.card:focus-visible {
+  box-shadow: var(--shadow-md), var(--shadow-inset), 0 0 0 6px var(--ring);
+}
+
+.previewLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.previewMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.1) contrast(1.02);
+}
+
+.previewTint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at 30% 10%,
+      rgba(56, 189, 248, 0.18),
+      transparent 55%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65));
+}
+
+.active .previewLayer {
+  opacity: 1;
+}
+
+.active {
+  border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 22%);
+  transform: translateY(-2px);
+}
+
+.head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.left {
+  display: flex;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.iconWrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
+  display: grid;
+  place-items: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 520;
+  font-size: clamp(1.5rem, 1.8vw, 1.95rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.subtitle {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 70ch;
+}
+
+.right {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.topRight {
+  color: var(--muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
+}

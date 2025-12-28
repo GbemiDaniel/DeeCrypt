@@ -1,0 +1,250 @@
+.card {
+  position: relative;
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 92%, var(--glass));
+  overflow: hidden;
+  isolation: isolate;
+
+  /* KEY: fill the ModuleGrid cell */
+  height: 100%;
+  min-height: 0;
+}
+
+/* Visual-only layers must never intercept clicks */
+.preview {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.previewTint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(56, 189, 248, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 60%,
+      rgba(168, 85, 247, 0.12),
+      transparent 60%
+    );
+  opacity: 0.65;
+}
+
+.previewImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+}
+
+/* Body is full-height flex so the bottom row pins nicely */
+.body {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-6);
+
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kickerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.platformPill {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 88%, var(--glass-strong));
+  color: var(--text);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3.3vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.hook {
+  max-width: 62ch;
+  color: color-mix(in oklab, var(--text) 78%, var(--muted));
+  line-height: 1.75;
+}
+
+/* Pushes controls to bottom */
+.spacer {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Bottom row: META | ARROWS | EYE */
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: 3;
+}
+
+.meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.dot {
+  opacity: 0.7;
+}
+
+.arrows {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  /* IMPORTANT: ensure visible on desktop */
+  opacity: 1;
+  visibility: visible;
+}
+
+.eye {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.navBtn,
+.eyeBtn {
+  height: 40px;
+  width: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 86%, var(--glass-strong));
+  color: var(--text);
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease,
+    background 120ms ease;
+}
+
+.navBtn:hover,
+.eyeBtn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--border) 70%, var(--accent));
+}
+
+.navBtn:focus-visible,
+.eyeBtn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 70%, white);
+  outline-offset: 3px;
+}
+
+.navBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Pagination dots */
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dotItem {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  opacity: 0.55;
+}
+
+.dotActive {
+  opacity: 1;
+  background: color-mix(in oklab, var(--accent) 70%, var(--bg));
+  border-color: color-mix(in oklab, var(--border) 60%, var(--accent));
+}
+
+/* Mobile arrows outside + subtle pulse */
+.mobileArrows {
+  position: absolute;
+  inset: auto 16px 16px 16px;
+  display: none;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.mobileArrowBtn {
+  pointer-events: auto;
+  height: 44px;
+  width: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 82%, var(--glass-strong));
+  color: var(--text);
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  animation: pulseHint 2.8s ease-in-out infinite;
+}
+
+.mobileArrowBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  animation: none;
+}
+
+@keyframes pulseHint {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .bottomRow {
+    grid-template-columns: 1fr auto; /* meta + eye */
+  }
+
+  /* Desktop arrows are hidden on mobile */
+  .arrows {
+    display: none;
+  }
+
+  .mobileArrows {
+    display: flex;
+  }
+}

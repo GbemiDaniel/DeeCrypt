@@ -1,0 +1,53 @@
+.hero {
+  padding: var(--space-6) 0 var(--space-2);
+}
+
+.availability {
+  margin-bottom: var(--space-4);
+}
+
+.headline {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  font-size: clamp(3.2rem, 6.6vw, 5.4rem);
+}
+
+.top {
+  display: block;
+}
+
+.bottom {
+  display: block;
+  font-style: italic;
+  color: color-mix(in oklab, var(--text) 85%, var(--muted));
+}
+
+.bottomRow {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.subcopy {
+  margin: 0;
+  max-width: 55ch;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 1.05rem;
+}
+
+.modeSlot {
+  justify-self: start;
+}
+
+@media (min-width: 900px) {
+  .bottomRow {
+    grid-template-columns: 1fr auto;
+  }
+  .modeSlot {
+    justify-self: start; /* matches AI Studio positioning near text */
+  }
+}

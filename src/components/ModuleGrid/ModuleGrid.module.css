@@ -1,0 +1,68 @@
+.grid {
+  margin-top: var(--space-6);
+  display: grid;
+  gap: var(--space-4);
+
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "left"
+    "rightTop"
+    "rightBottom";
+}
+
+/* areas */
+.left {
+  grid-area: left;
+}
+.rightTop {
+  grid-area: rightTop;
+}
+.rightBottom {
+  grid-area: rightBottom;
+}
+
+/* IMPORTANT: allow children to stretch properly */
+.left,
+.rightTop,
+.rightBottom {
+  min-width: 0;
+}
+
+/* tablet */
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "left left"
+      "rightTop rightBottom";
+    align-items: stretch;
+  }
+
+  /* make sure left has real height and fills it */
+  .left {
+    height: auto;
+  }
+}
+
+/* desktop: left spans 2 rows (tall), right stacks */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 2.1fr 1fr;
+    grid-template-rows: 1fr 1fr; /* ✅ gives two clear rows */
+    grid-template-areas:
+      "left rightTop"
+      "left rightBottom";
+    align-items: stretch;
+  }
+
+  /* ✅ left must fill the 2-row height */
+  .left {
+    height: 100%;
+  }
+
+  /* ✅ right cards fill each row */
+  .rightTop,
+  .rightBottom {
+    height: 100%;
+  }
+}

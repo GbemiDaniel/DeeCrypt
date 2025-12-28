@@ -1,0 +1,184 @@
+.content {
+  padding: 0;
+  overflow: hidden;
+  width: min(900px, 92vw);
+  max-width: 900px;
+
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 92%, var(--glass-strong));
+}
+
+.wrap {
+  padding: var(--space-6);
+}
+
+.header {
+  margin-bottom: var(--space-4);
+}
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1.1;
+  margin-top: 6px;
+}
+
+/* Native shell */
+.native {
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 88%, var(--glass));
+  overflow: hidden;
+}
+
+.nativeTop {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+  height: 38px;
+  width: 38px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--bg) 75%, var(--glass-strong));
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.authorName {
+  font-weight: 650;
+}
+
+.authorHandle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.nativeBody {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.paragraph {
+  margin: 0;
+  line-height: 1.75;
+  color: color-mix(in oklab, var(--text) 82%, var(--muted));
+}
+
+/* X metrics row (only shown for X posts when metrics exist) */
+.metricsRow {
+  padding: 10px 14px 12px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.metricIcon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+
+.nativeFooter {
+  padding: 12px 14px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.footerMeta {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.dot {
+  opacity: 0.7;
+}
+
+.readBtn {
+  border-radius: 999px;
+}
+
+/* Platform skins */
+.isX .native {
+  /* slightly crisper, tweet-like */
+  background: color-mix(in oklab, var(--bg) 86%, var(--glass-strong));
+}
+
+.isX .title {
+  /* less “essay headline”, more “post title” */
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.isX .paragraph {
+  line-height: 1.65;
+}
+
+/* Essay platforms: give it more breathing room */
+.isEssay .nativeBody {
+  gap: 14px;
+}
+
+.isEssay .paragraph {
+  line-height: 1.85;
+}
+
+/* Mobile: stack footer cleanly */
+@media (max-width: 640px) {
+  .wrap {
+    padding: var(--space-5);
+  }
+
+  .nativeFooter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .readBtn {
+    width: 100%;
+  }
+}

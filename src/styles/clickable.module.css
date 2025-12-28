@@ -1,0 +1,21 @@
+.clickable {
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease,
+    background 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+.clickable:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 18%);
+  background: color-mix(in oklab, var(--glass) 86%, transparent);
+  box-shadow: var(--shadow-md), var(--shadow-inset);
+}
+
+.clickable:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+.clickable:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 55%, white 8%);
+  outline-offset: 3px;
+}

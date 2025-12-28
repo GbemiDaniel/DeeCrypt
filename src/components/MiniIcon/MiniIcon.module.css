@@ -1,0 +1,17 @@
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--text) 18%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--ring) 35%, transparent);
+}
+
+.accent {
+  background: var(--accent);
+}
+.accent2 {
+  background: var(--accent2);
+}
+.neutral {
+  background: color-mix(in oklab, var(--text) 18%, transparent);
+}

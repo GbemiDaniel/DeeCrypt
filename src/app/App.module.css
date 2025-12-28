@@ -1,0 +1,23 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  padding: 2.25rem 0 3rem;
+  flex: 1;
+}
+
+.footer {
+  padding: 1.25rem 0 2.25rem;
+  color: var(--muted);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footerSep {
+  opacity: 0.6;
+}

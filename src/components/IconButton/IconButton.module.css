@@ -1,0 +1,19 @@
+.btn {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-soft);
+  background: color-mix(in oklab, var(--glass) 90%, transparent);
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  transition: transform 160ms ease, border-color 180ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 20%);
+}

@@ -1,0 +1,32 @@
+.row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stat {
+  min-width: 0;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.value {
+  margin-top: 0.35rem;
+  font-weight: 650;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* On small screens, wrap nicely */
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
