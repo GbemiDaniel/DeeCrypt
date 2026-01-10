@@ -1,6 +1,10 @@
 .wrap {
   position: relative;
   height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 10px;
 }
 
 /* rail */
@@ -36,21 +40,16 @@
   inset: 0;
   opacity: 0.92;
   z-index: 0;
+  pointer-events: none;
 }
 .previewImg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-.previewTint {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-      circle at 25% 8%,
-      rgba(56, 189, 248, 0.18),
-      transparent 58%
-    ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.68));
+  object-fit: contain;
+  pointer-events: none;
+  /* Add blur to soften the background image */
+  filter: blur(8px);
+  transform: scale(1.1);
 }
 .previewTintOnly {
   position: absolute;
@@ -59,9 +58,10 @@
   background: radial-gradient(
       circle at 25% 8%,
       rgba(56, 189, 248, 0.14),
-      transparent 60%
+      transparent 30%
     ),
     linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.72));
+  pointer-events: none;
 }
 .previewVideo {
   position: absolute;
@@ -69,6 +69,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 
   /* hidden by default */
   opacity: 0;
@@ -127,6 +128,7 @@
   position: relative;
   z-index: 2;
   height: 100%;
+  min-height: 0;
   padding: 18px;
   padding-top: 64px;
   display: grid;
@@ -136,6 +138,9 @@
 
 .textBlock {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
 .title {
@@ -220,7 +225,6 @@
 
 /* Dots */
 .dots {
-  margin-top: 12px;
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -284,7 +288,7 @@
   }
 
   .wrap {
-    padding: 0 14px;
+    padding: 0 12px;
   }
 
   .bottomRow {
@@ -293,5 +297,28 @@
 
   .navColPlaceholder {
     display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .slide {
+    min-height: clamp(420px, 70vh, 560px);
+  }
+
+  .content {
+    padding: clamp(14px, 4vw, 18px);
+    padding-top: 56px;
+    gap: 12px;
+  }
+
+  .dots {
+    gap: 8px;
+  }
+
+  .edgeLeft {
+    left: 6px;
+  }
+  .edgeRight {
+    right: 6px;
   }
 }

@@ -44,7 +44,7 @@
   grid-template-columns: auto 1fr auto;
   gap: 12px;
   align-items: center;
-  padding: 14px 14px 10px;
+  padding: 16px 16px 12px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -83,7 +83,7 @@
 }
 
 .nativeBody {
-  padding: 14px;
+  padding: 16px;
   display: grid;
   gap: 12px;
 }
@@ -118,7 +118,7 @@
 }
 
 .nativeFooter {
-  padding: 12px 14px 14px;
+  padding: 14px 16px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -145,26 +145,54 @@
 /* Platform skins */
 .isX .native {
   /* slightly crisper, tweet-like */
-  background: color-mix(in oklab, var(--bg) 86%, var(--glass-strong));
+  background: color-mix(in oklab, var(--bg) 84%, var(--glass-strong));
 }
 
 .isX .title {
   /* less “essay headline”, more “post title” */
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1.2;
 }
 
+.isX .nativeTop {
+  padding: 12px 12px 10px;
+}
+
+.isX .nativeBody {
+  padding: 12px;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.isX .nativeFooter {
+  padding: 10px 12px 12px;
+}
+
 .isX .paragraph {
-  line-height: 1.65;
+  line-height: 1.6;
+  color: color-mix(in oklab, var(--text) 86%, var(--muted));
 }
 
 /* Essay platforms: give it more breathing room */
+.isEssay .nativeTop {
+  padding: 18px 18px 14px;
+  background: color-mix(in oklab, var(--bg) 92%, var(--glass));
+}
+
 .isEssay .nativeBody {
-  gap: 14px;
+  padding: 18px;
+  gap: 16px;
+  font-size: 16px;
 }
 
 .isEssay .paragraph {
-  line-height: 1.85;
+  line-height: 1.9;
+  color: color-mix(in oklab, var(--text) 90%, var(--muted));
+}
+
+.isEssay .nativeFooter {
+  padding: 16px 18px 18px;
+  background: color-mix(in oklab, var(--bg) 92%, var(--glass));
 }
 
 /* Mobile: stack footer cleanly */
@@ -176,6 +204,10 @@
   .nativeFooter {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .footerMeta {
+    flex-wrap: wrap;
   }
 
   .readBtn {

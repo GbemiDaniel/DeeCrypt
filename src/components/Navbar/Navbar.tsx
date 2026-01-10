@@ -15,10 +15,14 @@ export default function Navbar({ brand, theme, onThemeChange }: NavbarProps) {
       <div className={`container ${styles.inner}`}>
         <div className={styles.left}>
           <div className={styles.brandWrap}>
-            <div className={styles.logo} aria-hidden="true" />
+            <img
+              src="/logos/Deecrypt logo.png"
+              className={styles.logo}
+              alt={`${brand} logo`}
+            />
             <div className={styles.brandText}>
               <div className={styles.brandName}>{brand}</div>
-              <div className={styles.brandVer}>PORTFOLIO v1.0</div>
+              <div className={styles.brandVer}>DEV | WRITER</div>
             </div>
           </div>
         </div>
@@ -28,8 +32,12 @@ export default function Navbar({ brand, theme, onThemeChange }: NavbarProps) {
             className={styles.themeBtn}
             type="button"
             onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            title={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? (
               <Sun className={styles.themeIcon} aria-hidden="true" />

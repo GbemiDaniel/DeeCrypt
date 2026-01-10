@@ -1,22 +1,27 @@
 .hero {
-  padding: var(--space-6) 0 var(--space-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 28rem;
 }
 
 .availability {
-  margin-bottom: var(--space-4);
+  margin-bottom: 0;
 }
 
 .headline {
-  margin: 0 0 1rem;
+  margin: 0;
   font-family: var(--font-serif);
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 0.92;
-  font-size: clamp(3.2rem, 6.6vw, 5.4rem);
+  font-size: clamp(2.8rem, 6.6vw, 5.4rem);
 }
 
 .top {
   display: block;
+  padding: var(--space-2) 0;
 }
 
 .bottom {

@@ -14,7 +14,10 @@
   transform: translateY(0);
   transition: transform 160ms ease, border-color 180ms ease,
     box-shadow 180ms ease;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  min-height: 0;
 }
 
 /* inner highlight (premium glass edge) */
@@ -98,6 +101,9 @@
 
 .body {
   margin-top: 1.05rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .footer {

@@ -2,6 +2,11 @@
   margin-top: var(--space-6);
   display: grid;
   gap: var(--space-4);
+  height: clamp(900px, 150vh, 1200px);
+  min-height: 0;
+  align-items: stretch;
+  grid-template-rows: minmax(0, 1.6fr) minmax(0, 0.7fr) minmax(0, 0.7fr);
+  grid-auto-rows: minmax(0, 1fr);
 
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -26,6 +31,8 @@
 .rightTop,
 .rightBottom {
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 
 /* tablet */
@@ -35,12 +42,9 @@
     grid-template-areas:
       "left left"
       "rightTop rightBottom";
+    height: clamp(640px, 75vh, 860px);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-  }
-
-  /* make sure left has real height and fills it */
-  .left {
-    height: auto;
   }
 }
 
@@ -48,7 +52,7 @@
 @media (min-width: 1024px) {
   .grid {
     grid-template-columns: 2.1fr 1fr;
-    grid-template-rows: 1fr 1fr; /* ✅ gives two clear rows */
+    grid-template-rows: repeat(2, minmax(0, 1fr)); /* ✅ gives two clear rows */
     grid-template-areas:
       "left rightTop"
       "left rightBottom";

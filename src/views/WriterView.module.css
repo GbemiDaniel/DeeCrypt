@@ -1,0 +1,4 @@
+.platformTicker {
+  min-height: 0;
+  height: clamp(56px, 9vw, 64px);
+}

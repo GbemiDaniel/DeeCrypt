@@ -126,8 +126,8 @@ export default function PreviewCarousel({
   }, []);
 
   const goTo = (i: number) => setIndex(clamp(i, 0, items.length - 1));
-  const prev = () => goTo(safeIndex - 1);
-  const next = () => goTo(safeIndex + 1);
+  const prev = () => setIndex((index - 1 + items.length) % items.length);
+  const next = () => setIndex((index + 1) % items.length);
 
   // ✅ Play only active video; pause & reset the rest
   useEffect(() => {
@@ -230,9 +230,6 @@ export default function PreviewCarousel({
                     preload={isActive ? "metadata" : "none"}
                   />
                 ) : null}
-
-                {/* Tint on top */}
-                <div className={`${styles.previewTint} noPointer`} />
               </div>
 
               {/* Top overlay: icon + badge */}

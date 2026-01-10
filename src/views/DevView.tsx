@@ -48,16 +48,19 @@ export default function DevView({ mode, onModeChange }: Props) {
         setOpenPreview(true);
       },
     }),
-    []
+    [projects]
   );
 
   return (
     <>
       <Hero
+        key={mode}
+        mode={mode}
         availabilityLabel="AVAILABLE FOR HIRE"
-        headlineTop="Architecting the"
-        headlineBottom="On-Chain Narrative"
-        subcopy="I build scalable interfaces for modern web apps, with an eye toward Web3 systems — and I write to make complex tech feel obvious."
+        headlineTop="Welcome"
+        headlineBottom="I'm Gbemi Daniel"
+        subcopy="I’m a front-end developer building for the modern web and the decentralized future.
+I focus on simplifying features and interactions so digital products feel clear, intuitive, and accessible."
         modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
       />
 

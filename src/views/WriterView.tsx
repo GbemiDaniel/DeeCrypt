@@ -8,7 +8,10 @@ import MiniIcon from "../components/MiniIcon/MiniIcon";
 import Tag from "../components/Tag/Tag";
 import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
+import PlatformsTicker from "../components/PlatformsTicker/PlatformsTicker";
 import { posts } from "../data/posts";
+import styles from "./WriterView.module.css";
+import { BookOpen, Newspaper, X } from "lucide-react";
 
 type Props = {
   mode: Mode;
@@ -70,34 +73,29 @@ export default function WriterView({ mode, onModeChange }: Props) {
             subtitle="Where I publish and share."
             icon={<MiniIcon variant="accent" />}
             footer={
-              <div style={{ display: "grid", gap: 10, color: "var(--muted)" }}>
-                <a
-                  href="https://x.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>X (Twitter)</span>
-                  <span>↗</span>
-                </a>
-                <a
-                  href="https://mirror.xyz/"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>Mirror</span>
-                  <span>↗</span>
-                </a>
-                <a
-                  href="https://medium.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>Medium</span>
-                  <span>↗</span>
-                </a>
+              <div className={styles.platformTicker}>
+                <PlatformsTicker
+                  items={[
+                    {
+                      href: "https://x.com/",
+                      label: "X (Twitter)",
+                      sublabel: "Threads + shorter notes",
+                      icon: <X size={16} />,
+                    },
+                    {
+                      href: "https://mirror.xyz/",
+                      label: "Mirror",
+                      sublabel: "Longform essays",
+                      icon: <BookOpen size={16} />,
+                    },
+                    {
+                      href: "https://medium.com/",
+                      label: "Medium",
+                      sublabel: "Archived posts",
+                      icon: <Newspaper size={16} />,
+                    },
+                  ]}
+                />
               </div>
             }
           />

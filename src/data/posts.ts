@@ -16,6 +16,13 @@ export type WriterPost = {
   // optional “tweet-like” content blocks
   body: string[];
 
+  // optional metrics for X-style preview
+  metrics?: {
+    likes: number;
+    replies: number;
+    reposts: number;
+  };
+
   // used for the carousel background tint/image
   previewImage?: string;
 
@@ -55,6 +62,11 @@ export const posts: WriterPost[] = [
       "Remove all friction and you remove weight, trust, and meaning.",
       "The future of UX is not hiding complexity — it’s making it legible.",
     ],
+    metrics: {
+      likes: 428,
+      replies: 19,
+      reposts: 72,
+    },
     previewImage: "/previews/sample.jpg",
     href: "https://x.com/",
   },

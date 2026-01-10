@@ -38,15 +38,13 @@ export default function App() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const modeLabel = useMemo(() => {
-    return mode === MODES.DEV ? "Developer Mode" : "Writer Mode";
-  }, [mode]);
+  const brandName = mode === MODES.DEV ? "Gbemi Daniel" : "DeeCrypt";
 
   // if (SHOW_PLAYGROUND) return <Playground />;
 
   return (
     <div className={`bg-grid ${styles.app}`}>
-      <Navbar brand="DeeCrypt" theme={theme} onThemeChange={setTheme} />
+      <Navbar brand={brandName} theme={theme} onThemeChange={setTheme} />
 
       <main className={`container ${styles.main}`}>
         {mode === MODES.DEV ? (

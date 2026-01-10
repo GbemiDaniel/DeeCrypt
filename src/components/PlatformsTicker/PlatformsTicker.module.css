@@ -1,0 +1,32 @@
+.ticker {
+  --row-height: clamp(56px, 9vw, 64px);
+  height: var(--row-height);
+  min-height: 0;
+  position: relative;
+}
+
+.viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 420ms ease;
+  will-change: transform;
+}
+
+.noTransition {
+  transition: none;
+}
+
+.row {
+  height: var(--row-height);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    transition: none;
+  }
+}

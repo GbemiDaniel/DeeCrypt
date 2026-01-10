@@ -30,12 +30,7 @@
 .logo {
   width: 38px;
   height: 38px;
-  border-radius: 12px;
-  background: radial-gradient(circle at 30% 30%, var(--accent), transparent 55%),
-    radial-gradient(circle at 70% 70%, var(--accent2), transparent 55%),
-    rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
-  box-shadow: 0 0 0 6px var(--ring);
+  object-fit: contain;
 }
 
 .brandText {

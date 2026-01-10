@@ -1,0 +1,47 @@
+.ticker {
+  --row-height: 58px;
+  --duration: 12s;
+  height: calc(var(--row-height) * 1.2);
+  position: relative;
+}
+
+.viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  animation: ticker-scroll var(--duration) linear infinite;
+  will-change: transform;
+}
+
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.row {
+  height: var(--row-height);
+}
+
+.ticker:hover .track,
+.ticker:focus-within .track {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

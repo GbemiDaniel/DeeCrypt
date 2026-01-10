@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type TouchEvent } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./WriterCarousel.module.css";
 import type { WriterPost } from "../../data/posts";
@@ -27,6 +27,10 @@ export default function WriterCarousel({
 
   const [index, setIndex] = useState(initialIndex);
 
+  // Swipe gesture state
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
   useEffect(() => setIndex(initialIndex), [initialIndex]);
 
   const item = safeItems[index];
@@ -44,8 +48,33 @@ export default function WriterCarousel({
     onOpen?.(item);
   }
 
+  // Swipe gesture handlers
+  const minSwipeDistance = 50;
+  function onTouchStart(e: TouchEvent) {
+    setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX);
+  }
+  function onTouchMove(e: TouchEvent) {
+    setTouchEnd(e.targetTouches[0].clientX);
+  }
+  function onTouchEnd() {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) go(1);
+    if (isRightSwipe) go(-1);
+    setTouchStart(null);
+    setTouchEnd(null);
+  }
+
   return (
-    <div className={styles.card}>
+    <div
+      className={styles.card}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Visual-only layers */}
       <div className={styles.preview} aria-hidden="true">
         <div className={styles.previewTint} />

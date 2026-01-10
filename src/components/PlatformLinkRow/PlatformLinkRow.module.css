@@ -1,0 +1,84 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--border) 75%, transparent);
+  background: color-mix(in oklab, var(--bg) 92%, var(--glass));
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow-inset);
+  transition: transform 140ms ease, border-color 160ms ease,
+    box-shadow 160ms ease, background 160ms ease;
+}
+
+.row:hover {
+  transform: translateY(-2px);
+  background: color-mix(in oklab, var(--bg) 86%, var(--glass-strong));
+  border-color: color-mix(in oklab, var(--border) 65%, var(--accent) 22%);
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.iconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 88%, var(--glass-strong));
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  flex: 0 0 auto;
+}
+
+.iconWrap svg {
+  width: 16px;
+  height: 16px;
+}
+
+.labels {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.sublabel {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.external {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+
+  .row:hover {
+    transform: none;
+  }
+}
