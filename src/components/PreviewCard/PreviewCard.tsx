@@ -41,7 +41,7 @@ export default function PreviewCard({
 
       <div className={styles.head}>
         <div className={styles.left}>
-          {icon ? <div className={styles.iconWrap}>{icon}</div> : null}
+          {topRight ? <div className={styles.iconWrap}>{topRight}</div> : null}
           <div>
             <h3 className={styles.title}>{title}</h3>
             <p className={styles.subtitle}>{subtitle}</p>
@@ -49,21 +49,22 @@ export default function PreviewCard({
         </div>
 
         <div className={styles.right}>
-          {topRight ? <div className={styles.topRight}>{topRight}</div> : null}
-          <IconButton label="Preview" onClick={onOpen}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-              <path
-                d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-            </svg>
-          </IconButton>
+          <div className={styles.topRight}>
+            <IconButton label="Preview" onClick={onOpen}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M2.5 12s3.5-7 9.5-7 9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+                <path
+                  d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+              </svg>
+            </IconButton>
+          </div>
         </div>
       </div>
 
