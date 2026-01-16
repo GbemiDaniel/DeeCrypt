@@ -93,24 +93,6 @@
   z-index: 3;
 }
 
-.iconSlot {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  border: 1px solid var(--border-soft);
-  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
-  box-shadow: var(--shadow-sm), var(--shadow-inset);
-  display: grid;
-  place-items: center;
-}
-
-.iconDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--accent) 70%, white 10%);
-}
-
 .badge {
   padding: 0.35rem 0.7rem;
   border-radius: var(--radius-pill);
@@ -165,7 +147,7 @@
   border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
   padding-top: 14px;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 14px;
 }
@@ -211,11 +193,6 @@
 
 .navColPlaceholder {
   width: 92px;
-}
-
-.openCol {
-  display: grid;
-  place-items: center;
 }
 
 .eyeBtn {
@@ -292,7 +269,7 @@
   }
 
   .bottomRow {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr;
   }
 
   .navColPlaceholder {

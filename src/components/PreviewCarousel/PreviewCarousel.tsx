@@ -1,7 +1,13 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./PreviewCarousel.module.css";
 import { Button } from "../ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "../ui/carousel";
 
 export type PreviewMeta = {
   label: string;
@@ -15,10 +21,7 @@ export type PreviewItem = {
   subtitle: string;
   badge?: string;
   previewImage?: string;
-
-  // ✅ New (optional): short looping preview
   previewVideo?: string;
-
   icon?: React.ReactNode;
   meta?: PreviewMeta[];
 };
@@ -27,9 +30,6 @@ export type PreviewCarouselProps = {
   items: PreviewItem[];
   onOpen?: (item: PreviewItem) => void;
 };
-
-// Number of items to clone on each side for the infinite loop effect
-const LOOP_BUFFER = 1;
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -49,30 +49,14 @@ export default function PreviewCarousel({
   items,
   onOpen,
 }: PreviewCarouselProps) {
-  const railRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
-  const isJumping = useRef(false); // Used to disable smooth scroll during loop jumps
+  const [api, setApi] = useState<CarouselApi>();
+  const [realIndex, setRealIndex] = useState(0);
 
   const canLoop = items.length > 1;
 
-  // Create a looped list of items for rendering: [..., last, 1, 2, ..., first, ...]
-  const loopedItems = useMemo(() => {
-    if (!canLoop) return items;
-    const start = items.slice(-LOOP_BUFFER);
-    const end = items.slice(0, LOOP_BUFFER);
-    return [...start, ...items, ...end];
-  }, [items, canLoop]);
-
-  const [index, setIndex] = useState(canLoop ? LOOP_BUFFER : 0);
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-
-  // The "real" index of the item in the original `items` array
-  const realIndex = useMemo(() => {
-    if (!canLoop) return index;
-    // Account for the buffer at the start
-    return (index - LOOP_BUFFER + items.length) % items.length;
-  }, [index, items.length, canLoop]);
 
   // Mobile breakpoint
   useEffect(() => {
@@ -83,122 +67,35 @@ export default function PreviewCarousel({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  // Initial scroll position (run once, no animation)
-  useLayoutEffect(() => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const el = rail.children.item(index) as HTMLElement | null;
-    if (!el) return;
-    rail.scrollTo({ left: el.offsetLeft, behavior: "auto" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // The "magic jump" effect for infinite looping
   useEffect(() => {
-    if (!canLoop || !isJumping.current) return;
+    if (!api) return;
 
-    const rail = railRef.current;
-    if (!rail) return;
-
-    // After the state has updated to the new (real) index,
-    // perform an instant scroll to that new position.
-    const el = rail.children.item(index) as HTMLElement | null;
-    if (el) {
-      rail.scrollTo({ left: el.offsetLeft, behavior: "auto" });
-    }
-
-    // Allow smooth scrolling again after the jump is complete.
-    // A timeout is needed to let the DOM changes apply.
-    setTimeout(() => {
-      isJumping.current = false;
-    }, 50);
-  }, [index, canLoop]);
-
-  // Main scroll effect when index changes (e.g., from buttons)
-  useEffect(() => {
-    if (isJumping.current) return; // Don't scroll if a jump is in progress
-
-    const rail = railRef.current;
-    if (!rail) return;
-    const el = rail.children.item(index) as HTMLElement | null;
-    if (!el) return;
-
-    rail.scrollTo({
-      left: el.offsetLeft,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
-  }, [index, prefersReducedMotion]);
-
-  // IntersectionObserver to update index on user swipe
-  useEffect(() => {
-    if (!canLoop) return;
-    const rail = railRef.current;
-    if (!rail) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (isJumping.current) return; // Ignore observer while jumping
-
-        const intersecting = entries.find((e) => e.isIntersecting);
-        if (!intersecting) return;
-
-        const children = Array.from(rail.children);
-        const newIndex = children.indexOf(intersecting.target);
-
-        if (newIndex !== index) {
-          setIndex(newIndex);
-        }
-      },
-      { root: rail, threshold: 0.6 }
-    );
-
-    Array.from(rail.children).forEach((child) => observer.observe(child));
-    return () => observer.disconnect();
-    // Re-run if the number of items changes to re-observe
-  }, [items.length, canLoop, index]);
-
-  // Handler for when a transition ends (to catch the end of a swipe)
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail || !canLoop) return;
-
-    const handleTransitionEnd = () => {
-      // Are we in the left buffer zone?
-      if (index < LOOP_BUFFER) {
-        isJumping.current = true;
-        setIndex(index + items.length);
-      }
-      // Are we in the right buffer zone?
-      else if (index >= LOOP_BUFFER + items.length) {
-        isJumping.current = true;
-        setIndex(index - items.length);
-      }
+    const onSelect = (api: CarouselApi) => {
+      setRealIndex(api.selectedScrollSnap());
     };
 
-    rail.addEventListener("transitionend", handleTransitionEnd);
-    rail.addEventListener("scrollend", handleTransitionEnd); // For browsers supporting scrollend
+    api.on("select", onSelect);
+    // Initial state
+    onSelect(api);
+
     return () => {
-      rail.removeEventListener("transitionend", handleTransitionEnd);
-      rail.removeEventListener("scrollend", handleTransitionEnd);
+      api.off("select", onSelect);
     };
-  }, [index, items.length, canLoop]);
+  }, [api]);
 
   const goTo = (i: number) => {
-    if (!canLoop) return;
-    setIndex(i + LOOP_BUFFER);
+    api?.scrollTo(i);
   };
   const prev = () => {
-    if (!canLoop) return;
-    setIndex((prevIndex) => prevIndex - 1);
+    api?.scrollPrev();
   };
   const next = () => {
-    if (!canLoop) return;
-    setIndex((prevIndex) => prevIndex + 1);
+    api?.scrollNext();
   };
 
   // Video playback effect
   useEffect(() => {
-    if (prefersReducedMotion || !canLoop) return;
+    if (prefersReducedMotion || !canLoop || !api) return;
 
     const activeItem = items[realIndex];
     if (!activeItem) return;
@@ -214,12 +111,20 @@ export default function PreviewCarousel({
         vid.pause();
       }
     }
-  }, [realIndex, items, prefersReducedMotion, canLoop]);
+  }, [realIndex, items, prefersReducedMotion, canLoop, api]);
 
   if (!items.length) return null;
 
   return (
-    <div className={styles.wrap}>
+    <Carousel
+      setApi={setApi}
+      opts={{
+        loop: canLoop,
+        align: "start",
+        duration: prefersReducedMotion ? 0 : 40,
+      }}
+      className={styles.wrap}
+    >
       {/* Mobile arrows OUTSIDE + pulse */}
       {isMobile && canLoop ? (
         <>
@@ -247,18 +152,12 @@ export default function PreviewCarousel({
         </>
       ) : null}
 
-      <div
-        ref={railRef}
-        className={styles.rail}
-        aria-label="Project previews carousel"
-      >
-        {loopedItems.map((item, i) => {
+      <CarouselContent className={`h-full ml-0 gap-4`}>
+        {items.map((item, i) => {
           const meta = (item.meta ?? []).slice(0, 3);
-          const isActive = i === index;
 
           return (
-            // We add a random component to the key for cloned items to satisfy React's key warning
-            <article key={`${item.id}-${i}`} className={styles.slide}>
+            <CarouselItem key={item.id} className={`${styles.slide} pl-0`}>
               {/* Visual-only background layers */}
               <div className={`${styles.preview} noPointer`} aria-hidden="true">
                 {item.previewImage ? (
@@ -277,7 +176,7 @@ export default function PreviewCarousel({
                       videoRefs.current[item.id] = el;
                     }}
                     className={`${styles.previewVideo} noPointer ${
-                      isActive ? styles.previewVideoActive : ""
+                      i === realIndex ? styles.previewVideoActive : ""
                     }`}
                     src={item.previewVideo}
                     muted
@@ -293,9 +192,17 @@ export default function PreviewCarousel({
                   <div className={styles.badge}>{item.badge}</div>
                 ) : null}
 
-                <div className={styles.iconSlot}>
-                  {item.icon ?? <span className={styles.iconDot} />}
-                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className={styles.eyeBtn}
+                  aria-label="Open preview"
+                  aria-haspopup="dialog"
+                  onClick={() => onOpen?.(items[realIndex])}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
               </div>
 
               <div className={styles.content}>
@@ -304,7 +211,7 @@ export default function PreviewCarousel({
                   <p className={styles.subtitle}>{item.subtitle}</p>
                 </div>
 
-                {/* Bottom row: META | ARROWS | EYE */}
+                {/* Bottom row: META | ARROWS */}
                 <div className={styles.bottomRow}>
                   <div className={styles.meta}>
                     {meta.map((m) => (
@@ -347,27 +254,12 @@ export default function PreviewCarousel({
                   ) : (
                     <div className={styles.navColPlaceholder} />
                   )}
-
-                  {/* Eye column */}
-                  <div className={styles.openCol}>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      className={styles.eyeBtn}
-                      aria-label="Open preview"
-                      aria-haspopup="dialog"
-                      onClick={() => onOpen?.(items[realIndex])}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               </div>
-            </article>
+            </CarouselItem>
           );
         })}
-      </div>
+      </CarouselContent>
 
       {/* Dots below */}
       <div className={styles.dots} aria-label="Carousel pagination">
@@ -383,6 +275,6 @@ export default function PreviewCarousel({
           />
         ))}
       </div>
-    </div>
+    </Carousel>
   );
 }
