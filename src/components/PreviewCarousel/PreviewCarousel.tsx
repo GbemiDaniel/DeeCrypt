@@ -68,16 +68,22 @@ export default function PreviewCarousel({
   useEffect(() => {
     if (!api) return;
 
-    const onSelect = (api: CarouselApi) => {
+    // This function updates the React state, which triggers a re-render.
+    const onSettle = (api: CarouselApi) => {
+      // Update the active dot index in React state.
       setRealIndex(api.selectedScrollSnap());
     };
 
-    api.on("select", onSelect);
-    // Initial state
-    onSelect(api);
+    // Listen for the 'settle' event, which fires AFTER the animation is complete.
+    // This is the key to the performance fix: we avoid re-rendering during the animation.
+    api.on("settle", onSettle);
 
+    // Set the initial active dot state when the component first mounts.
+    setRealIndex(api.selectedScrollSnap());
+
+    // Cleanup the event listener when the component unmounts.
     return () => {
-      api.off("select", onSelect);
+      api.off("settle", onSettle);
     };
   }, [api]);
 
