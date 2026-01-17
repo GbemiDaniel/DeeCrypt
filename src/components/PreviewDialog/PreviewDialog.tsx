@@ -1,4 +1,5 @@
 import { ExternalLink, Github } from "lucide-react";
+import { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,7 @@ export type PreviewDialogProps = {
   open: boolean;
   title: string;
   imageSrc?: string;
+  videoSrc?: string;
   description?: string;
   meta?: PreviewDialogMeta[];
 
@@ -34,6 +36,7 @@ export default function PreviewDialog({
   open,
   title,
   imageSrc,
+  videoSrc,
   description,
   meta,
   primaryHref,
@@ -42,6 +45,19 @@ export default function PreviewDialog({
   secondaryLabel,
   onClose,
 }: PreviewDialogProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    if (open) {
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
+    } else {
+      vid.pause();
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={(v) => (!v ? onClose() : undefined)}>
       <DialogContent className="max-w-[980px] w-[min(980px,92vw)] p-0 overflow-hidden">
@@ -69,7 +85,16 @@ export default function PreviewDialog({
             {/* Media */}
             <div className="rounded-xl border border-border/60 bg-black/20 overflow-hidden">
               <div className="w-full aspect-video md:aspect-auto md:min-h-[260px]">
-                {imageSrc ? (
+                {videoSrc ? (
+                  <video
+                    ref={videoRef}
+                    src={videoSrc}
+                    className="h-full w-full object-cover"
+                    muted
+                    playsInline
+                    loop
+                  />
+                ) : imageSrc ? (
                   <img
                     src={imageSrc}
                     alt=""

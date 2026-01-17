@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./PreviewCarousel.module.css";
 import { Button } from "../ui/button";
@@ -21,7 +21,6 @@ export type PreviewItem = {
   subtitle: string;
   badge?: string;
   previewImage?: string;
-  previewVideo?: string;
   icon?: React.ReactNode;
   meta?: PreviewMeta[];
 };
@@ -49,7 +48,6 @@ export default function PreviewCarousel({
   items,
   onOpen,
 }: PreviewCarouselProps) {
-  const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
   const [api, setApi] = useState<CarouselApi>();
   const [realIndex, setRealIndex] = useState(0);
 
@@ -93,26 +91,6 @@ export default function PreviewCarousel({
     api?.scrollNext();
   };
 
-  // Video playback effect
-  useEffect(() => {
-    if (prefersReducedMotion || !canLoop || !api) return;
-
-    const activeItem = items[realIndex];
-    if (!activeItem) return;
-
-    for (const item of items) {
-      const vid = videoRefs.current[item.id];
-      if (!vid) continue;
-      const isActive = item.id === activeItem.id;
-      if (isActive) {
-        vid.currentTime = 0;
-        vid.play().catch(() => {});
-      } else {
-        vid.pause();
-      }
-    }
-  }, [realIndex, items, prefersReducedMotion, canLoop, api]);
-
   if (!items.length) return null;
 
   return (
@@ -121,7 +99,7 @@ export default function PreviewCarousel({
       opts={{
         loop: canLoop,
         align: "start",
-        duration: prefersReducedMotion ? 0 : 40,
+        duration: prefersReducedMotion ? 0 : 25,
       }}
       className={styles.wrap}
     >
@@ -153,7 +131,7 @@ export default function PreviewCarousel({
       ) : null}
 
       <CarouselContent className={`h-full ml-0 gap-4`}>
-        {items.map((item, i) => {
+        {items.map((item) => {
           const meta = (item.meta ?? []).slice(0, 3);
 
           return (
@@ -170,20 +148,6 @@ export default function PreviewCarousel({
                 ) : (
                   <div className={`${styles.previewTintOnly} noPointer`} />
                 )}
-                {!prefersReducedMotion && item.previewVideo ? (
-                  <video
-                    ref={(el) => {
-                      videoRefs.current[item.id] = el;
-                    }}
-                    className={`${styles.previewVideo} noPointer ${
-                      i === realIndex ? styles.previewVideoActive : ""
-                    }`}
-                    src={item.previewVideo}
-                    muted
-                    playsInline
-                    loop
-                  />
-                ) : null}
               </div>
 
               {/* Top overlay: badge + icon */}
@@ -199,7 +163,7 @@ export default function PreviewCarousel({
                   className={styles.eyeBtn}
                   aria-label="Open preview"
                   aria-haspopup="dialog"
-                  onClick={() => onOpen?.(items[realIndex])}
+                  onClick={() => onOpen?.(item)}
                 >
                   <Eye className="h-4 w-4" />
                 </Button>

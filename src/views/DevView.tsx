@@ -116,6 +116,7 @@ I focus on simplifying features and interactions so digital products feel clear,
         open={openPreview}
         title={active?.title ?? "Preview"}
         imageSrc={active?.previewImage}
+        videoSrc={active?.previewVideo}
         description={active?.descriptionLong ?? active?.subtitle}
         meta={active?.meta}
         primaryHref={active?.links?.primary?.href}
