@@ -142,88 +142,97 @@ export default function PreviewCarousel({
 
           return (
             <CarouselItem key={item.id} className={`${styles.slide} pl-0`}>
-              {/* Visual-only background layers */}
-              <div className={`${styles.preview} noPointer`} aria-hidden="true">
-                {item.previewImage ? (
-                  <img
-                    className={`${styles.previewImg} noPointer`}
-                    src={item.previewImage}
-                    alt=""
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className={`${styles.previewTintOnly} noPointer`} />
-                )}
-              </div>
-
-              {/* Top overlay: badge + icon */}
-              <div className={styles.overlayUi} aria-hidden="true">
-                {item.badge ? (
-                  <div className={styles.badge}>{item.badge}</div>
-                ) : null}
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className={styles.eyeBtn}
-                  aria-label="Open preview"
-                  aria-haspopup="dialog"
-                  onClick={() => onOpen?.(item)}
+              {/* This new inner div isolates the heavy content from the animated slide. */}
+              {/* The parent CarouselItem is now a lightweight, animatable shell. */}
+              <div className={styles.slideInner}>
+                {/* Visual-only background layers */}
+                <div
+                  className={`${styles.preview} noPointer`}
+                  aria-hidden="true"
                 >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className={styles.content}>
-                <div className={styles.textBlock}>
-                  <h3 className={styles.title}>{item.title}</h3>
-                  <p className={styles.subtitle}>{item.subtitle}</p>
+                  {item.previewImage ? (
+                    <img
+                      className={`${styles.previewImg} noPointer`}
+                      src={item.previewImage}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      fetchpriority="low"
+                    />
+                  ) : (
+                    <div className={`${styles.previewTintOnly} noPointer`} />
+                  )}
                 </div>
 
-                {/* Bottom row: META | ARROWS */}
-                <div className={styles.bottomRow}>
-                  <div className={styles.meta}>
-                    {meta.map((m) => (
-                      <div className={styles.metaCell} key={m.label}>
-                        <div className={styles.metaLabel}>{m.label}</div>
-                        <div
-                          className={`${styles.metaValue} ${
-                            m.accent ? styles.accent : ""
-                          }`}
-                        >
-                          {m.value}
-                        </div>
-                      </div>
-                    ))}
+                {/* Top overlay: badge + icon */}
+                <div className={styles.overlayUi} aria-hidden="true">
+                  {item.badge ? (
+                    <div className={styles.badge}>{item.badge}</div>
+                  ) : null}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className={styles.eyeBtn}
+                    aria-label="Open preview"
+                    aria-haspopup="dialog"
+                    onClick={() => onOpen?.(item)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className={styles.content}>
+                  <div className={styles.textBlock}>
+                    <h3 className={styles.title}>{item.title}</h3>
+                    <p className={styles.subtitle}>{item.subtitle}</p>
                   </div>
 
-                  {!isMobile && canLoop ? (
-                    <div className={styles.navCol}>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className={styles.navBtn}
-                        onClick={prev}
-                        aria-label="Previous project"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className={styles.navBtn}
-                        onClick={next}
-                        aria-label="Next project"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+                  {/* Bottom row: META | ARROWS */}
+                  <div className={styles.bottomRow}>
+                    <div className={styles.meta}>
+                      {meta.map((m) => (
+                        <div className={styles.metaCell} key={m.label}>
+                          <div className={styles.metaLabel}>{m.label}</div>
+                          <div
+                            className={`${styles.metaValue} ${
+                              m.accent ? styles.accent : ""
+                            }`}
+                          >
+                            {m.value}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ) : (
-                    <div className={styles.navColPlaceholder} />
-                  )}
+
+                    {!isMobile && canLoop ? (
+                      <div className={styles.navCol}>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className={styles.navBtn}
+                          onClick={prev}
+                          aria-label="Previous project"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className={styles.navBtn}
+                          onClick={next}
+                          aria-label="Next project"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className={styles.navColPlaceholder} />
+                    )}
+                  </div>
                 </div>
               </div>
             </CarouselItem>
