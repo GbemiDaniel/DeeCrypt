@@ -1,0 +1,30 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svg {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 8px hsl(var(--sidequest-accent-glow) / 0.3));
+}
+
+.track {
+  fill: none;
+  stroke: hsl(var(--sidequest-progress-track));
+}
+
+.progress {
+  fill: none;
+  stroke: hsl(var(--sidequest-accent));
+  stroke-linecap: round;
+  transition: stroke-dashoffset 500ms ease-out;
+}
+
+.percentage {
+  position: absolute;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--sidequest-text));
+}

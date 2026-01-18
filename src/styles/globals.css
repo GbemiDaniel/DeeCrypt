@@ -147,6 +147,20 @@ button {
   --sidebar-accent-foreground: var(--text);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--accent);
+
+  -sidequest-bg: 220 20% 8%;
+  --sidequest-card: 220 18% 12%;
+  --sidequest-glass: 220 16% 16%;
+  --sidequest-border: 220 14% 24%;
+  --sidequest-border-soft: 220 14% 20%;
+
+  --sidequest-text: 220 15% 92%;
+  --sidequest-text-muted: 220 10% 65%;
+
+  --sidequest-accent: 270 85% 65%;
+  --sidequest-accent-glow: 270 85% 65%;
+
+  --sidequest-progress-track: 220 12% 28%;
 }
 
 @layer base {
@@ -157,4 +171,3 @@ button {
     @apply bg-background text-foreground;
   }
 }
-

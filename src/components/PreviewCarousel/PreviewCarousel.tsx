@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./PreviewCarousel.module.css";
 import { Button } from "../ui/button";
@@ -49,7 +49,9 @@ export default function PreviewCarousel({
   onOpen,
 }: PreviewCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const [realIndex, setRealIndex] = useState(0);
+  // Use a ref to store the dot button DOM nodes. This allows us to manipulate them
+  // directly without causing React re-renders.
+  const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const canLoop = items.length > 1;
 
@@ -65,27 +67,42 @@ export default function PreviewCarousel({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  // This effect sets up the imperative dot update logic.
+  // It runs only when the Embla API is ready.
   useEffect(() => {
     if (!api) return;
 
-    // This function updates the React state, which triggers a re-render.
-    const onSettle = (api: CarouselApi) => {
-      // Update the active dot index in React state.
-      setRealIndex(api.selectedScrollSnap());
+    // This callback will be used for both 'select' and 'reInit' events.
+    // It imperatively updates the dot classes, avoiding React state and re-renders.
+    const updateDots = (emblaApi: CarouselApi) => {
+      dotsRef.current.forEach((dotNode, index) => {
+        if (!dotNode) return;
+        // Check if this dot's index matches the selected slide's index.
+        if (index === emblaApi.selectedScrollSnap()) {
+          dotNode.classList.add(styles.dotActive);
+        } else {
+          dotNode.classList.remove(styles.dotActive);
+        }
+      });
     };
 
-    // Listen for the 'settle' event, which fires AFTER the animation is complete.
-    // This is the key to the performance fix: we avoid re-rendering during the animation.
-    api.on("settle", onSettle);
+    // 'select' fires on every slide change, including during drag.
+    // This provides immediate, frame-accurate feedback.
+    api.on("select", updateDots);
+    // 'reInit' fires if the carousel is re-initialized, ensuring dots are correct.
+    api.on("reInit", updateDots);
 
-    // Set the initial active dot state when the component first mounts.
-    setRealIndex(api.selectedScrollSnap());
+    // Run the update once on initialization to set the initial active dot.
+    updateDots(api);
 
-    // Cleanup the event listener when the component unmounts.
     return () => {
-      api.off("settle", onSettle);
+      api.off("select", updateDots);
+      api.off("reInit", updateDots);
     };
-  }, [api]);
+    // The dependency array ensures this effect only re-runs if the api instance changes,
+    // or if the number of items changes (requiring a re-sync of the dots).
+  }, [api, items]);
+
 
   const goTo = (i: number) => {
     api?.scrollTo(i);
@@ -245,10 +262,10 @@ export default function PreviewCarousel({
         {items.map((_, i) => (
           <button
             key={i}
+            // Populate the ref array with the dot DOM nodes.
+            ref={(el) => (dotsRef.current[i] = el)}
             type="button"
-            className={`${styles.dot} ${
-              i === realIndex ? styles.dotActive : ""
-            }`}
+            className={styles.dot}
             aria-label={`Go to project ${i + 1}`}
             onClick={() => goTo(i)}
           />

@@ -14,6 +14,34 @@ import PreviewCarousel, {
 import PreviewDialog from "../components/PreviewDialog/PreviewDialog";
 
 import { projects, type Project } from "../data/projects";
+import {
+  SideQuestCard,
+  type SideProject,
+} from "@/components/SideQuest/SideQuestCard";
+import { Rocket } from "lucide-react";
+
+const sideProjects: SideProject[] = [
+  {
+    name: "CLI Task Manager",
+    description:
+      "A minimal terminal-based task manager with vim-like keybindings",
+    progress: 75,
+    url: "https://github.com/",
+  },
+  {
+    name: "Pixel Art Generator",
+    description:
+      "AI-powered tool that converts images into retro pixel art styles",
+    progress: 40,
+    url: "https://github.com/",
+  },
+  {
+    name: "Portfolio V3",
+    description: "Complete redesign with dark mode and interactive components",
+    progress: 90,
+    url: "https://github.com/",
+  },
+];
 
 type Props = {
   mode: Mode;
@@ -67,26 +95,11 @@ I focus on simplifying features and interactions so digital products feel clear,
       <ModuleGrid
         left={<PreviewCarousel {...carouselProps} />}
         rightTop={
-          <ModuleCard
-            title="Open Source"
-            subtitle="Things I build and contribute to."
-            icon={<MiniIcon variant="accent2" />}
-            footer={
-              <div style={{ display: "grid", gap: 10, color: "var(--muted)" }}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>ui-kit</span>
-                  <span>4.2k ★</span>
-                </div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>wallet-hooks</span>
-                  <span>892 ★</span>
-                </div>
-              </div>
-            }
+          <SideQuestCard
+            title="Side Quests"
+            subtitle="Personal projects I'm tinkering with"
+            icon={Rocket}
+            projects={sideProjects}
           />
         }
         rightBottom={
