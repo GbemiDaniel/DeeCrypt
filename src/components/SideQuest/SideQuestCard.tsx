@@ -49,7 +49,12 @@ export function SideQuestCard({
       </div>
 
       {/* Projects list */}
-      <div className={styles.projectList}>
+      <div
+        className={cn(
+          styles.projectList,
+          projects.length > 3 && styles.hasOverflow
+        )}
+      >
         {projects.map((project, index) => (
           <NavLink
             key={index}
@@ -60,18 +65,20 @@ export function SideQuestCard({
               <h4 className={styles.projectName}>{project.name}</h4>
               <p className={styles.projectDescription}>{project.description}</p>
             </div>
-            <CircularProgress
-              value={project.progress}
-              size={48}
-              strokeWidth={4}
-            />
-            {/* The external icon is only shown if there is a URL */}
-            {project.url && (
-              <ExternalLink size={16} className={styles.externalIcon} />
-            )}
+            <div className={styles.projectItemRight}>
+              <CircularProgress
+                value={project.progress}
+                size={48}
+                strokeWidth={4}
+              />
+              {/* The external icon is only shown if there is a URL */}
+              {project.url && (
+                <ExternalLink size={16} className={styles.externalIcon} />
+              )}
+            </div>
           </NavLink>
         ))}
       </div>
     </article>
   );
-}
+}mpm run dev

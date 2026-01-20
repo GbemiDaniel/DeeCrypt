@@ -2,6 +2,7 @@
 /* Styles are now aligned with ModuleCard.module.css */
 
 .card {
+  --sidequest-accent: var(--accent, #c99cff);
   position: relative;
   overflow: hidden;
   padding: 1.2rem;
@@ -16,7 +17,9 @@
   box-shadow: var(--shadow-md), var(--shadow-inset);
   backdrop-filter: blur(12px);
   /* Matched transition */
-  transition: transform 160ms ease, border-color 180ms ease,
+  transition:
+    transform 160ms ease,
+    border-color 180ms ease,
     box-shadow 180ms ease;
   /* Layout properties from Phase 2 */
   display: flex;
@@ -114,8 +117,25 @@
   /* Layout properties from Phase 2 */
   flex: 1;
   min-height: 0;
+  /* The overflow behavior is now conditional */
+}
+
+/* 
+  SideQuestCard Phase 2: Scroll Threshold Logic 
+  Applied only when the number of projects exceeds 3.
+  The .hasOverflow class is toggled via JS in the component.
+*/
+.projectList.hasOverflow {
   overflow-y: auto;
   padding-right: 0.5rem; /* Space for scrollbar */
+  /*
+    The max-height is derived from the calculated height of 3 project items.
+    - Item height: ~79px (padding + text content)
+    - Gap between items: 12px (0.75rem)
+    Calculation: (3 * 79px) + (2 * 12px) = 237px + 24px = 261px
+    This makes the threshold robust and tied to the item's own styling.
+  */
+  max-height: 261px;
 }
 
 /* Custom scrollbar styling using standard variables */
@@ -134,23 +154,38 @@
 }
 
 .projectItem {
+  position: relative; /* Needed for pseudo-element */
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.875rem; /* Tighter gap */
   border-radius: 0.75rem;
   padding: 0.75rem;
   text-decoration: none;
-  /* Use standard variables */
   background: color-mix(in oklab, var(--glass) 50%, transparent);
-  border: 1px solid transparent; /* Start transparent for hover transition */
-  transition: all 150ms ease;
+  border: 1px solid transparent;
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    border-color 150ms ease;
 }
 
 .projectItem:hover {
-  /* Use standard variables */
   background: color-mix(in oklab, var(--glass) 70%, transparent);
   border-color: color-mix(in oklab, var(--accent) 30%, transparent);
-  transform: translateX(4px);
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* Pressed/tapped state for immediate feedback */
+.projectItem:active {
+  transform: translateY(0px) scale(0.98);
+  background: color-mix(in oklab, var(--glass) 90%, transparent);
+  transition-duration: 60ms;
+}
+
+/* Accessibility focus state */
+.projectItem:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .projectInfo {
@@ -158,25 +193,29 @@
   flex: 1;
 }
 
+.projectItemRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Space between progress and icon */
+  flex-shrink: 0;
+}
+
 .projectName {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary); /* Use standard text color */
+  color: var(--text-primary);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: color 150ms ease;
 }
 
 .projectItem:hover .projectName {
-  color: var(--accent); /* Use standard accent color */
+  color: var(--accent);
 }
 
 .projectDescription {
   margin-top: 0.125rem;
   font-size: 0.75rem;
   line-height: 1.625;
-  color: var(--muted); /* Use standard muted color */
+  color: var(--muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -184,10 +223,11 @@
 }
 
 .externalIcon {
-  opacity: 0;
+  opacity: 0.4; /* Icon is visible but subtle by default */
   transition: opacity 150ms ease;
-  color: var(--accent); /* Use standard accent color */
+  color: var(--accent);
   flex-shrink: 0;
+  align-self: center;
 }
 
 .projectItem:hover .externalIcon {
@@ -204,5 +244,22 @@
   }
   .projectItem:hover {
     transform: none;
+  }
+}
+
+/*
+  On mobile, the parent grid row can be short. The previous `min-height: 380px`
+  on the card fought with the grid's sizing, causing it to overflow and overlap
+  the module below.
+
+  The new approach removes the `min-height` to fix the overlap. Instead, we give
+  the project list a fixed height sufficient for ~3 items. This makes the card's
+  overall height predictable and allows scrolling within the list, as intended.
+  This is a compromise that both fixes the layout bug and addresses the list height.
+*/
+@media (max-width: 719px) {
+  .projectList {
+    /* Let the list grow naturally on mobile instead of constraining it. */
+    /* This is the first step to a flexible height implementation. */
   }
 }

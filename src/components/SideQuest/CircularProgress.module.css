@@ -7,17 +7,20 @@
 
 .svg {
   transform: rotate(-90deg);
-  filter: drop-shadow(0 0 8px hsl(var(--sidequest-accent-glow) / 0.3));
+  /* Use the global accent glow variable */
+  filter: drop-shadow(0 0 8px var(--ring));
 }
 
 .track {
   fill: none;
-  stroke: hsl(var(--sidequest-progress-track));
+  /* Use a soft border color for the track */
+  stroke: var(--border-soft);
 }
 
 .progress {
   fill: none;
-  stroke: hsl(var(--sidequest-accent));
+  /* Use the global accent color */
+  stroke: var(--accent);
   stroke-linecap: round;
   transition: stroke-dashoffset 500ms ease-out;
 }
@@ -26,5 +29,6 @@
   position: absolute;
   font-size: 0.75rem;
   font-weight: 600;
-  color: hsl(var(--sidequest-text));
+  /* Use the global primary text color */
+  color: var(--text);
 }
