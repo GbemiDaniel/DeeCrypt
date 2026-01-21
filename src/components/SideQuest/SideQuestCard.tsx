@@ -52,7 +52,7 @@ export function SideQuestCard({
       <div
         className={cn(
           styles.projectList,
-          projects.length > 3 && styles.hasOverflow
+          projects.length > 3 && styles.hasOverflow,
         )}
       >
         {projects.map((project, index) => (
@@ -81,4 +81,4 @@ export function SideQuestCard({
       </div>
     </article>
   );
-}mpm run dev
+}
