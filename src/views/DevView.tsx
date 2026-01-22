@@ -7,7 +7,6 @@ import ModuleGrid from "../components/ModuleGrid/ModuleGrid";
 import ModuleCard from "../components/ModuleCard/ModuleCard";
 import MiniIcon from "../components/MiniIcon/MiniIcon";
 import SkillBadge from "../components/SkillBadge/SkillBadge";
-
 import PreviewCarousel, {
   type PreviewCarouselProps,
 } from "../components/PreviewCarousel/PreviewCarousel";

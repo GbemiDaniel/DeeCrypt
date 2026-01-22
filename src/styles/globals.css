@@ -47,11 +47,8 @@ button {
   z-index: -1;
   opacity: var(--grid-opacity);
 
-  background-image: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.14) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.14) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size);
 
@@ -121,6 +118,7 @@ button {
 
   /* brand */
   --primary: var(--accent);
+  --accent-writer: #00dc82;
   --primary-foreground: var(--bg);
   --accent-foreground: var(--bg);
 

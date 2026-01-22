@@ -1,19 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./App.module.css";
+// Ensure your modes.ts includes 'ABOUT' or just use string literals like below
 import { MODES, Mode, Theme, isValidMode } from "./modes";
-import Navbar from "../components/Navbar/Navbar.tsx";
+import Navbar from "../components/Navbar/Navbar";
 import DevView from "../views/DevView";
 import WriterView from "../views/WriterView";
-// optional later:
-// import Playground from "../dev/Playground";
+import AboutView from "../views/AboutView";
+import Footer from "@/components/Footer/Footer";
 
 const LS_MODE = "deecrypt:mode";
 const LS_THEME = "deecrypt:theme";
 
-// flip to true later if you want to test experimental UI inside your real app
-const SHOW_PLAYGROUND = false;
-
 export default function App() {
+  // Ensure your modes.ts defines MODES.DEV, etc.
   const [mode, setMode] = useState<Mode>(MODES.DEV);
   const [theme, setTheme] = useState<Theme>("dark");
 
@@ -30,6 +29,7 @@ export default function App() {
   }, [mode]);
 
   useEffect(() => {
+    // Scroll to top whenever the View changes
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [mode]);
 
@@ -38,27 +38,26 @@ export default function App() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const brandName = mode === MODES.DEV ? "Gbemi Daniel" : "DeeCrypt";
-
-  // if (SHOW_PLAYGROUND) return <Playground />;
-
   return (
     <div className={`bg-grid ${styles.app}`}>
-      <Navbar brand={brandName} theme={theme} onThemeChange={setTheme} />
+      <Navbar
+        theme={theme}
+        onThemeChange={setTheme}
+        mode={mode}
+        onModeChange={setMode}
+      />
 
       <main className={`container ${styles.main}`}>
-        {mode === MODES.DEV ? (
-          <DevView mode={mode} onModeChange={setMode} />
-        ) : (
-          <WriterView mode={mode} onModeChange={setMode} />
-        )}
+        {/* LOGIC UPDATE: Handle all 3 views explicitly */}
+
+        {mode === "dev" && <DevView mode={mode} onModeChange={setMode} />}
+
+        {mode === "writer" && <WriterView mode={mode} onModeChange={setMode} />}
+
+        {mode === "about" && <AboutView />}
       </main>
 
-      <footer className={`container ${styles.footer}`}>
-        <span>© {new Date().getFullYear()} DeeCrypt</span>
-        <span className={styles.footerSep}>•</span>
-        <span>Built with React + Vite</span>
-      </footer>
+      <Footer />
     </div>
   );
 }

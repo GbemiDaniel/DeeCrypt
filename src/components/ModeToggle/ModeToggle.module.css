@@ -18,7 +18,8 @@
   cursor: pointer;
   font-size: 0.92rem;
   letter-spacing: -0.01em;
-  transition: background 180ms ease, color 180ms ease, transform 120ms ease;
+  transition: background 180ms ease, color 180ms ease, transform 120ms ease,
+    text-shadow 300ms ease;
 }
 
 .btn:hover {
@@ -36,3 +37,18 @@
   box-shadow: var(--shadow-inset);
   border: 1px solid color-mix(in oklab, var(--border) 65%, transparent);
 }
+
+.devActive {
+  text-shadow:
+    0 0 8px color-mix(in srgb, var(--accent) 70%, transparent),
+    0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--accent);
+}
+
+.writerActive {
+  text-shadow:
+    0 0 8px color-mix(in srgb, var(--accent2) 70%, transparent),
+    0 0 16px color-mix(in srgb, var(--accent2) 30%, transparent);
+  color: var(--accent2);
+}
+

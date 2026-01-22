@@ -1,12 +1,10 @@
 /* === Phase 4: Visual System Alignment === */
-/* Styles are now aligned with ModuleCard.module.css */
 
 .card {
   --sidequest-accent: var(--accent, #c99cff);
   position: relative;
   overflow: hidden;
   padding: 1.2rem;
-  /* Matched from ModuleCard */
   border: 1px solid var(--border-soft);
   background: linear-gradient(
     180deg,
@@ -16,19 +14,16 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md), var(--shadow-inset);
   backdrop-filter: blur(12px);
-  /* Matched transition */
   transition:
     transform 160ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease;
-  /* Layout properties from Phase 2 */
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
 }
 
-/* Matched from ModuleCard */
 .card::before {
   content: "";
   position: absolute;
@@ -45,7 +40,6 @@
 
 .card:hover {
   transform: translateY(-2px);
-  /* Matched from ModuleCard */
   border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 18%);
 }
 
@@ -60,12 +54,11 @@
 .headerLeft {
   display: flex;
   align-items: flex-start;
-  gap: 1rem; /* Aligned */
+  gap: 1rem;
   min-width: 0;
 }
 
 .iconWrap {
-  /* Aligned with ModuleCard */
   width: 46px;
   height: 46px;
   border-radius: 16px;
@@ -78,7 +71,7 @@
 }
 
 .icon {
-  color: var(--accent); /* Use standard accent color */
+  color: var(--accent);
 }
 
 .titleWrap {
@@ -86,20 +79,18 @@
 }
 
 .title {
-  /* Aligned font with ModuleCard title */
   font-family: var(--font-serif);
   font-weight: 520;
   font-size: clamp(1.5rem, 1.8vw, 1.95rem);
   letter-spacing: -0.02em;
   line-height: 1.05;
-  color: var(--text-primary); /* Use standard text color */
+  color: var(--text-primary);
 }
 
 .subtitle {
-  /* Aligned with ModuleCard subtitle */
   margin-top: 0.45rem;
   line-height: 1.55;
-  color: var(--muted); /* Use standard muted color */
+  color: var(--muted);
 }
 
 .topRight {
@@ -108,59 +99,36 @@
   color: var(--muted);
 }
 
+/* --- INCREASED SPACING HERE --- */
 .projectList {
   position: relative;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem; /* More breathing room from header */
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  /* Layout properties from Phase 2 */
+  gap: 1rem; /* Increased from 0.75rem to 1rem */
   flex: 1;
   min-height: 0;
-  /* The overflow behavior is now conditional */
 }
 
 .border {
   margin-top: 1.15rem;
   border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
 }
-/* 
-  SideQuestCard Phase 2: Scroll Threshold Logic 
-  Applied only when the number of projects exceeds the visible limit.
-*/
+
 .scrollMobile {
   overflow-y: auto;
   padding-right: 0.5rem;
-  /* Approx 16.5em = height of 3 items + gaps. Scales with font size. */
-  max-height: 16.5em; 
+  max-height: 18em; /* Adjusted for larger spacing */
 }
 
 @media (min-width: 1024px) {
-  /*
-    On mobile, the parent grid row can be short. The previous `min-height: 380px`
-    on the card fought with the grid's sizing, causing it to overflow and overlap
-    the module below.
-  
-    The new approach removes the `min-height` to fix the overlap. Instead, we give
-    the project list a fixed height sufficient for ~3 items. This makes the card's
-    overall height predictable and allows scrolling within the list, as intended.
-    This is a compromise that both fixes the layout bug and addresses the list height.
-  */
-  @media (max-width: 719px) {
-    .projectList {
-      /* Let the list grow naturally on mobile instead of constraining it. */
-      /* This is the first step to a flexible height implementation. */
-    }
-  }
   .scrollDesktop {
     overflow-y: auto;
     padding-right: 0.5rem;
-    /* Approx 11em = height of 2 items + gap. Scales with font size. */
-    max-height: 11em; 
+    max-height: 14em; /* Adjusted for larger spacing */
   }
 }
 
-/* Custom scrollbar styling using standard variables */
 .projectList::-webkit-scrollbar {
   width: 6px;
 }
@@ -175,39 +143,41 @@
   background: var(--border);
 }
 
+/* --- PROJECT ITEMS --- */
+
 .projectItem {
-  position: relative; /* Needed for pseudo-element */
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.875rem; /* Tighter gap */
+  gap: 1rem; /* Increased gap inside item */
   border-radius: 0.75rem;
-  padding: 0.75rem;
-  text-decoration: none;
+  padding: 0.875rem; /* More internal padding */
   background: color-mix(in oklab, var(--glass) 50%, transparent);
   border: 1px solid transparent;
   transition:
-    transform 150ms ease,
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
     background 150ms ease,
     border-color 150ms ease;
+  cursor: pointer;
 }
 
 .projectItem:hover {
   background: color-mix(in oklab, var(--glass) 70%, transparent);
   border-color: color-mix(in oklab, var(--accent) 30%, transparent);
-  transform: translateY(-1px) scale(1.01);
 }
 
-/* Pressed/tapped state for immediate feedback */
-.projectItem:active {
-  transform: translateY(0px) scale(0.98);
-  background: color-mix(in oklab, var(--glass) 90%, transparent);
-  transition-duration: 60ms;
+/* ACTIVE STATE (Pop-out) */
+.projectItemActive {
+  transform: scale(1.025); /* Slightly stronger pop */
+  background: color-mix(in oklab, var(--glass) 80%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 10;
 }
 
-/* Accessibility focus state */
-.projectItem:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.projectItemActive:hover {
+  transform: scale(1.025);
+  border-color: var(--accent);
 }
 
 .projectInfo {
@@ -215,26 +185,20 @@
   flex: 1;
 }
 
-.projectItemRight {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem; /* Space between progress and icon */
-  flex-shrink: 0;
-}
-
 .projectName {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-primary);
   overflow: hidden;
 }
 
-.projectItem:hover .projectName {
+.projectItemActive .projectName {
   color: var(--accent);
+  font-weight: 600;
 }
 
 .projectDescription {
-  margin-top: 0.125rem;
+  margin-top: 0.25rem;
   font-size: 0.75rem;
   line-height: 1.625;
   color: var(--muted);
@@ -244,44 +208,69 @@
   overflow: hidden;
 }
 
-.externalIcon {
-  opacity: 0.4; /* Icon is visible but subtle by default */
-  transition: opacity 150ms ease;
-  color: var(--accent);
-  flex-shrink: 0;
-  align-self: center;
+.projectItemActive .projectDescription {
+  color: var(--text-primary);
 }
 
-.projectItem:hover .externalIcon {
+/* --- DYNAMIC LAYOUT (Progress + Hidden Icon) --- */
+.projectItemRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align to right */
+  gap: 0; /* Gap is handled by the animation margin */
+  flex-shrink: 0;
+}
+
+/* The Icon Wrapper (Hidden by default) */
+.externalLinkWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Initial State: Collapsed */
+  width: 0;
+  opacity: 0;
+  transform: scale(0.5);
+  margin-left: 0;
+  pointer-events: none;
+
+  /* Animation Settings */
+  transition:
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color: var(--muted);
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* The Pop-Out Effect */
+.iconActive {
+  /* Final State: Expanded */
+  width: 32px;
   opacity: 1;
+  transform: scale(1);
+  margin-left: 0.75rem; /* Push Progress Bar to left */
+  pointer-events: auto;
+
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 15%, transparent);
+}
+
+.iconActive:hover {
+  background: var(--accent);
+  color: var(--background);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .projectItem {
+  .projectItem,
+  .externalLinkWrapper {
     transition: none;
-  }
-  .card:hover {
-    transform: none;
-  }
-  .projectItem:hover {
-    transform: none;
-  }
-}
-
-/*
-  On mobile, the parent grid row can be short. The previous `min-height: 380px`
-  on the card fought with the grid's sizing, causing it to overflow and overlap
-  the module below.
-
-  The new approach removes the `min-height` to fix the overlap. Instead, we give
-  the project list a fixed height sufficient for ~3 items. This makes the card's
-  overall height predictable and allows scrolling within the list, as intended.
-  This is a compromise that both fixes the layout bug and addresses the list height.
-*/
-@media (max-width: 719px) {
-  .projectList {
-    /* Let the list grow naturally on mobile instead of constraining it. */
-    /* This is the first step to a flexible height implementation. */
   }
 }

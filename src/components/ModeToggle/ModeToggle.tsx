@@ -11,7 +11,7 @@ export default function ModeToggle({ mode, onChange }: ModeToggleProps) {
     <div className={styles.wrap} role="group" aria-label="Mode toggle">
       <button
         type="button"
-        className={`${styles.btn} ${mode === MODES.DEV ? styles.active : ""}`}
+        className={`${styles.btn} ${mode === MODES.DEV ? `${styles.active} ${styles.devActive}` : ""}`}
         onClick={() => onChange(MODES.DEV)}
         aria-pressed={mode === MODES.DEV}
       >
@@ -21,7 +21,7 @@ export default function ModeToggle({ mode, onChange }: ModeToggleProps) {
       <button
         type="button"
         className={`${styles.btn} ${
-          mode === MODES.WRITER ? styles.active : ""
+          mode === MODES.WRITER ? `${styles.active} ${styles.writerActive}` : ""
         }`}
         onClick={() => onChange(MODES.WRITER)}
         aria-pressed={mode === MODES.WRITER}

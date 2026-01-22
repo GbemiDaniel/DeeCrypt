@@ -1,6 +1,7 @@
 export const MODES = {
   DEV: "dev",
   WRITER: "writer",
+  ABOUT: "about",
 } as const;
 
 export type Mode = (typeof MODES)[keyof typeof MODES];
