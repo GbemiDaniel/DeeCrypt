@@ -50,7 +50,7 @@ export default function WriterView({ mode, onModeChange }: Props) {
           <ModuleCard
             title="Topics"
             subtitle="Themes I keep circling back to."
-            icon={<MiniIcon variant="accent2" />}
+            icon={BookOpen}
             footer={
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {[
@@ -71,7 +71,7 @@ export default function WriterView({ mode, onModeChange }: Props) {
           <ModuleCard
             title="Platforms"
             subtitle="Where I publish and share."
-            icon={<MiniIcon variant="accent" />}
+            icon={Newspaper}
             footer={
               <div className={styles.platformTicker}>
                 <PlatformsTicker

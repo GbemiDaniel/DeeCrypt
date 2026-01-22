@@ -120,22 +120,44 @@
   /* The overflow behavior is now conditional */
 }
 
+.border {
+  margin-top: 1.15rem;
+  border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
+}
 /* 
   SideQuestCard Phase 2: Scroll Threshold Logic 
-  Applied only when the number of projects exceeds 3.
-  The .hasOverflow class is toggled via JS in the component.
+  Applied only when the number of projects exceeds the visible limit.
 */
-.projectList.hasOverflow {
+.scrollMobile {
   overflow-y: auto;
-  padding-right: 0.5rem; /* Space for scrollbar */
+  padding-right: 0.5rem;
+  /* Approx 16.5em = height of 3 items + gaps. Scales with font size. */
+  max-height: 16.5em; 
+}
+
+@media (min-width: 1024px) {
   /*
-    The max-height is derived from the calculated height of 3 project items.
-    - Item height: ~79px (padding + text content)
-    - Gap between items: 12px (0.75rem)
-    Calculation: (3 * 79px) + (2 * 12px) = 237px + 24px = 261px
-    This makes the threshold robust and tied to the item's own styling.
+    On mobile, the parent grid row can be short. The previous `min-height: 380px`
+    on the card fought with the grid's sizing, causing it to overflow and overlap
+    the module below.
+  
+    The new approach removes the `min-height` to fix the overlap. Instead, we give
+    the project list a fixed height sufficient for ~3 items. This makes the card's
+    overall height predictable and allows scrolling within the list, as intended.
+    This is a compromise that both fixes the layout bug and addresses the list height.
   */
-  max-height: 261px;
+  @media (max-width: 719px) {
+    .projectList {
+      /* Let the list grow naturally on mobile instead of constraining it. */
+      /* This is the first step to a flexible height implementation. */
+    }
+  }
+  .scrollDesktop {
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    /* Approx 11em = height of 2 items + gap. Scales with font size. */
+    max-height: 11em; 
+  }
 }
 
 /* Custom scrollbar styling using standard variables */

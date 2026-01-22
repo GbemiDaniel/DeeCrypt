@@ -1,0 +1,32 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  border: 1px solid var(--border-soft);
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon {
+  color: var(--badge-color);
+}
+
+@media (hover: hover) {
+  .badge:hover {
+    border-color: var(--badge-color);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--badge-color) 30%, transparent);
+    transform: translateY(-2px);
+    cursor: default;
+  }
+}
+
+.badge:active {
+  transform: scale(0.98);
+  border-color: var(--badge-color);
+}

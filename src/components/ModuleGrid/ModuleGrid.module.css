@@ -2,47 +2,41 @@
   margin-top: var(--space-6);
   display: grid;
   gap: var(--space-4);
-  min-height: 0;
-  align-items: stretch;
-  grid-template-rows: auto;
-  grid-auto-rows: minmax(0, 1fr);
-
   grid-template-columns: 1fr;
-  grid-template-areas:
-    "left"
-    "rightTop"
-    "rightBottom";
 }
 
-/* areas */
-.left {
-  grid-area: left;
-}
-.rightTop {
-  grid-area: rightTop;
-}
-.rightBottom {
-  grid-area: rightBottom;
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
 }
 
 /* IMPORTANT: allow children to stretch properly */
-.left,
-.rightTop,
-.rightBottom {
+.left {
   min-width: 0;
   min-height: 0;
-  height: 100%;
+}
+
+/* Force the Top card to only take what it needs */
+.rightTop {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Force the Bottom card to fill ALL remaining space */
+.rightBottom {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0; /* Critical for scrolling internal content */
 }
 
 /* tablet */
 @media (min-width: 720px) {
   .grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "left left"
-      "rightTop rightBottom";
-    height: auto;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
     align-items: stretch;
   }
 }
@@ -51,21 +45,6 @@
 @media (min-width: 1024px) {
   .grid {
     grid-template-columns: 2.1fr 1fr;
-    grid-template-rows: repeat(2, minmax(0, 1fr)); /* ✅ gives two clear rows */
-    grid-template-areas:
-      "left rightTop"
-      "left rightBottom";
     align-items: stretch;
-  }
-
-  /* ✅ left must fill the 2-row height */
-  .left {
-    height: 100%;
-  }
-
-  /* ✅ right cards fill each row */
-  .rightTop,
-  .rightBottom {
-    height: 100%;
   }
 }

@@ -14,8 +14,10 @@ export default function ModuleGrid({
   return (
     <section className={styles.grid}>
       <div className={styles.left}>{left}</div>
-      <div className={styles.rightTop}>{rightTop}</div>
-      <div className={styles.rightBottom}>{rightBottom}</div>
+      <div className={styles.rightColumn}>
+        <div className={styles.rightTop}>{rightTop}</div>
+        <div className={styles.rightBottom}>{rightBottom}</div>
+      </div>
     </section>
   );
 }

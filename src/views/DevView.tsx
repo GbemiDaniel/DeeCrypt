@@ -6,7 +6,7 @@ import Hero from "../components/Hero/Hero";
 import ModuleGrid from "../components/ModuleGrid/ModuleGrid";
 import ModuleCard from "../components/ModuleCard/ModuleCard";
 import MiniIcon from "../components/MiniIcon/MiniIcon";
-import Tag from "../components/Tag/Tag";
+import SkillBadge from "../components/SkillBadge/SkillBadge";
 
 import PreviewCarousel, {
   type PreviewCarouselProps,
@@ -18,7 +18,26 @@ import {
   SideQuestCard,
   type SideProject,
 } from "@/components/SideQuest/SideQuestCard";
-import { Rocket } from "lucide-react";
+import { Rocket, Layers2 } from "lucide-react";
+import {
+  SiReact,
+  SiTypescript,
+  SiTailwindcss,
+  SiNextdotjs,
+  SiSupabase,
+  SiFramer,
+  SiGreensock, // If you use GSAP
+  SiVite,
+} from "react-icons/si";
+
+const TECH_STACK = [
+  { name: "React", color: "#61DAFB", icon: SiReact },
+  { name: "TypeScript", color: "#3178C6", icon: SiTypescript },
+  { name: "Next.js", color: "#FFFFFF", icon: SiNextdotjs }, // White glow for Dark Mode
+  { name: "Tailwind", color: "#06B6D4", icon: SiTailwindcss },
+  { name: "Supabase", color: "#3ECF8E", icon: SiSupabase },
+  { name: "Framer", color: "#0055FF", icon: SiFramer },
+];
 
 const sideProjects: SideProject[] = [
   {
@@ -76,7 +95,7 @@ export default function DevView({ mode, onModeChange }: Props) {
         setOpenPreview(true);
       },
     }),
-    [projects]
+    [projects],
   );
 
   return (
@@ -106,18 +125,16 @@ I focus on simplifying features and interactions so digital products feel clear,
           <ModuleCard
             title="Stack"
             subtitle="Tools I’m building with (and growing into)."
-            icon={<MiniIcon variant="accent" />}
+            icon={Layers2}
             footer={
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {[
-                  "React",
-                  "TypeScript",
-                  "CSS Modules",
-                  "Vite",
-                  "Tailwind (learning)",
-                  "shadcn/ui (learning)",
-                ].map((t) => (
-                  <Tag key={t}>{t}</Tag>
+                {TECH_STACK.map((tech) => (
+                  <SkillBadge
+                    key={tech.name}
+                    name={tech.name}
+                    icon={tech.icon}
+                    color={tech.color}
+                  />
                 ))}
               </div>
             }

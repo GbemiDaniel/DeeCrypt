@@ -1,10 +1,11 @@
+import type { LucideIcon } from "lucide-react";
 import styles from "./ModuleCard.module.css";
 
 type ModuleCardProps = {
   title: string;
   subtitle?: string;
   topRight?: React.ReactNode;
-  icon?: React.ReactNode;
+  icon?: LucideIcon;
   footer?: React.ReactNode;
   children?: React.ReactNode;
 };
@@ -13,7 +14,7 @@ export default function ModuleCard({
   title,
   subtitle,
   topRight,
-  icon,
+  icon: Icon,
   footer,
   children,
 }: ModuleCardProps) {
@@ -21,7 +22,11 @@ export default function ModuleCard({
     <article className={styles.card}>
       <div className={styles.head}>
         <div className={styles.left}>
-          {icon ? <div className={styles.iconWrap}>{icon}</div> : null}
+          {Icon && (
+            <div className={styles.iconWrap}>
+              <Icon size={22} className={styles.icon} />
+            </div>
+          )}
           <div>
             <h3 className={styles.title}>{title}</h3>
             {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}

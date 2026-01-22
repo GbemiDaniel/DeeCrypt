@@ -29,6 +29,9 @@ export function SideQuestCard({
   topRight,
   className,
 }: SideQuestCardProps) {
+  const scrollMobile = projects.length > 3;
+  const scrollDesktop = projects.length > 2;
+
   return (
     <article className={cn(styles.card, className)}>
       {/* Header */}
@@ -47,12 +50,13 @@ export function SideQuestCard({
 
         {topRight && <div className={styles.topRight}>{topRight}</div>}
       </div>
-
+      <span className={styles.border}></span>
       {/* Projects list */}
       <div
         className={cn(
           styles.projectList,
-          projects.length > 3 && styles.hasOverflow,
+          scrollMobile && styles.scrollMobile,
+          scrollDesktop && styles.scrollDesktop,
         )}
       >
         {projects.map((project, index) => (
