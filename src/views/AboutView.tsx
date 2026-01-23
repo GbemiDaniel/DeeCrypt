@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import {
   Download,
   Mail,
@@ -9,40 +8,37 @@ import {
   Code,
   PenTool,
   CheckCircle2,
+  Briefcase,
+  Zap,
+  GraduationCap,
 } from "lucide-react";
 import styles from "./AboutView.module.css";
-import { cn } from "@/lib/utils"; // Assuming you have this, or just use template literals
+import { cn } from "@/lib/utils";
+import { Timeline } from "@/components/Timeline";
+import { useInView } from "@/hooks/useInView"; // <--- Importing your new lightweight hook
 
-// --- REUSABLE ANIMATION WRAPPER ---
-// This handles the "Fade Up" effect when elements scroll into view
-const Reveal = ({
+// --- 1. THE LIGHTWEIGHT WRAPPER ---
+// This replaces the old "Reveal" component.
+// It uses your custom hook to keep things efficient.
+const FadeIn = ({
   children,
   delay = 0,
+  className,
 }: {
   children: React.ReactNode;
   delay?: number;
+  className?: string;
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Only animate once
-        }
-      },
-      { threshold: 0.1 },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  const { ref, isInView } = useInView({ threshold: 0.1, triggerOnce: true });
 
   return (
     <div
       ref={ref}
-      className={cn(styles.reveal, isVisible && styles.visible)}
+      className={cn(
+        styles.reveal, // Base opacity: 0, transform: translateY
+        isInView && styles.visible, // Active state
+        className,
+      )}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
@@ -50,14 +46,46 @@ const Reveal = ({
   );
 };
 
+// --- 2. DATA CONSTANTS ---
+const JOURNEY = [
+  {
+    year: "2026",
+    title: "Housing Agency Co-Founder",
+    description:
+      "Launched a student housing platform in Nsukka with my brother. Merging real-world logistics with a digital-first approach to solve accommodation issues.",
+    icon: <Briefcase size={14} />,
+  },
+  {
+    year: "2025",
+    title: "DeeCrypt Hub & Web3",
+    description:
+      "Founded a Web3 educational brand. Specializing in Technical Writing for projects like Ioxa and building community trust through simplified narratives.",
+    icon: <Zap size={14} />,
+  },
+  {
+    year: "2025",
+    title: "NYSC Mobilization",
+    description:
+      "Batch C Mobilization. A pivotal transition period from academic life to national service, while simultaneously honing my frontend craft.",
+    icon: <GraduationCap size={14} />,
+  },
+  {
+    year: "2021",
+    title: "University of Nigeria",
+    description:
+      "The Foundation. Physics & Astronomy background that taught me the first principles of complex systems and logical reasoning.",
+    icon: <PenTool size={14} />,
+  },
+];
+
+// --- 3. MAIN COMPONENT ---
 export default function AboutView() {
   return (
     <div className={styles.container}>
-      {/* --- HERO SECTION: THE HOOK --- */}
+      {/* HERO SECTION */}
       <section className={styles.heroSection}>
-        <Reveal>
+        <FadeIn>
           <div className={styles.avatarWrapper}>
-            {/* Replace with your actual Avatar path */}
             <img
               src="/logos/D logo 120 x 120.png"
               alt="Gbemi Daniel"
@@ -68,28 +96,28 @@ export default function AboutView() {
               Open to Work
             </div>
           </div>
-        </Reveal>
+        </FadeIn>
 
-        <Reveal delay={200}>
+        <FadeIn delay={200}>
           <h1 className={styles.headline}>
             Crafting Logic. <br />
             <span className={styles.gradientText}>Curating Narratives.</span>
           </h1>
-        </Reveal>
+        </FadeIn>
 
-        <Reveal delay={400}>
+        <FadeIn delay={400}>
           <p className={styles.introText}>
             I’m <strong>Gbemi Daniel</strong> (aka <em>Deecrypt</em>). I sit at
             the intersection of <strong>Frontend Engineering</strong> and{" "}
             <strong>Web3 Storytelling</strong>. I build pixel-perfect interfaces
             by day and simplify complex crypto concepts by night.
           </p>
-        </Reveal>
+        </FadeIn>
       </section>
 
-      {/* --- THE TRINITY: FRONTEND | WEB3 | WRITING --- */}
+      {/* SKILL GRID */}
       <section className={styles.gridSection}>
-        <Reveal delay={100}>
+        <FadeIn delay={100}>
           <div className={styles.skillCard}>
             <div className={styles.iconBox} data-type="dev">
               <Code size={24} />
@@ -100,9 +128,9 @@ export default function AboutView() {
               Next.js, and Tailwind CSS.
             </p>
           </div>
-        </Reveal>
+        </FadeIn>
 
-        <Reveal delay={200}>
+        <FadeIn delay={200}>
           <div className={styles.skillCard}>
             <div className={styles.iconBox} data-type="web3">
               <CheckCircle2 size={24} />
@@ -113,9 +141,9 @@ export default function AboutView() {
               blockchain analytics tools.
             </p>
           </div>
-        </Reveal>
+        </FadeIn>
 
-        <Reveal delay={300}>
+        <FadeIn delay={300}>
           <div className={styles.skillCard}>
             <div className={styles.iconBox} data-type="writer">
               <PenTool size={24} />
@@ -126,31 +154,45 @@ export default function AboutView() {
               of the <strong>DeeCrypt</strong> brand.
             </p>
           </div>
-        </Reveal>
+        </FadeIn>
       </section>
 
-      {/* --- BADGES & CERTIFICATES --- */}
+      {/* TIMELINE SECTION */}
+      <section className={styles.timelineSection}>
+        <FadeIn>
+          <h2
+            className={styles.sectionTitle}
+            style={{ justifyContent: "center" }}
+          >
+            The Journey
+          </h2>
+        </FadeIn>
+
+        {/* REMOVE <FadeIn> WRAPPER HERE. Just use the component directly. */}
+        {/* The Timeline handles its own animation now. */}
+        <Timeline items={JOURNEY} />
+      </section>
+
+      {/* CERTIFICATES */}
       <section className={styles.certSection}>
-        <Reveal>
+        <FadeIn>
           <h2 className={styles.sectionTitle}>
             <Award className={styles.sectionIcon} />
             Badges & Milestones
           </h2>
-        </Reveal>
+        </FadeIn>
 
         <div className={styles.certGrid}>
-          {/* Example Badge 1 */}
-          <Reveal delay={100}>
+          <FadeIn delay={100}>
             <div className={styles.certCard}>
               <div className={styles.certDate}>2025</div>
               <h4>Google Developer Profile</h4>
               <p>Gemini for Software Development Lifecycle</p>
               <span className={styles.badgePill}>Completed</span>
             </div>
-          </Reveal>
+          </FadeIn>
 
-          {/* Example Badge 2 (Placeholder) */}
-          <Reveal delay={200}>
+          <FadeIn delay={200}>
             <div className={styles.certCard}>
               <div className={styles.certDate}>In Progress</div>
               <h4>Frontend Mastery</h4>
@@ -159,13 +201,13 @@ export default function AboutView() {
                 Loading...
               </span>
             </div>
-          </Reveal>
+          </FadeIn>
         </div>
       </section>
 
-      {/* --- CALL TO ACTION (HIRE ME) --- */}
+      {/* CTA SECTION */}
       <section className={styles.ctaSection}>
-        <Reveal>
+        <FadeIn>
           <div className={styles.glassPanel}>
             <h2>Ready to build something legendary?</h2>
             <p>
@@ -201,7 +243,7 @@ export default function AboutView() {
               </a>
             </div>
           </div>
-        </Reveal>
+        </FadeIn>
       </section>
     </div>
   );
