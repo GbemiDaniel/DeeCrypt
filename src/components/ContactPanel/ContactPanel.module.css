@@ -1,0 +1,201 @@
+/* src/components/ContactPanel/ContactPanel.module.css */
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 56rem; /* Match Timeline width */
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  /* Glass Base */
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--glass-strong) 85%, transparent),
+    color-mix(in oklab, var(--glass) 85%, transparent)
+  );
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+
+  /* Flex Layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* --- THE AMBIENT GLOW --- */
+/* A warm/cool mix to represent the Dev/Writer duality */
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* --- TEXT CONTENT --- */
+.header {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--foreground) 0%,
+    var(--muted-foreground) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+
+/* --- ACTION BUTTONS ROW --- */
+.actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Primary "Hire Me" Button - GLOWING */
+.primaryBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  border-radius: 99px;
+
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--foreground) 30%, transparent);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Shine effect on hover */
+.primaryBtn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+.primaryBtn:hover::after {
+  left: 100%;
+}
+
+/* Secondary "CV" Button - OUTLINE */
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  border-radius: 99px;
+
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-weight: 500;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  background: var(--card);
+  border-color: var(--foreground);
+}
+
+/* --- SOCIAL ICONS ROW --- */
+.socials {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-soft);
+  width: 100%;
+  justify-content: center;
+}
+
+.socialLink {
+  color: var(--muted);
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.socialLink:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 2.5rem 1.5rem;
+  }
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -3,10 +3,14 @@ import { useInView } from "@/hooks/useInView";
 import styles from "./Timeline.module.css";
 import { cn } from "@/lib/utils";
 
+// Define the allowed types
+export type TimelineType = "dev" | "writer" | "business";
+
 interface TimelineItemProps {
   year: string;
   title: string;
   description: string;
+  type: TimelineType; // <--- The visual driver
   icon?: React.ReactNode;
 }
 
@@ -20,23 +24,51 @@ function TimelineItem({
   const { ref, isInView } = useInView({ threshold: 0.2, triggerOnce: false });
   const isEven = index % 2 === 0;
 
+  // Map type to Card Class
+  const cardVariantClass =
+    item.type === "writer"
+      ? styles.cardWriter
+      : item.type === "business"
+        ? styles.cardBusiness
+        : styles.cardDev; // default to dev
+
+  // Map type to Dot Class
+  const dotVariantClass =
+    item.type === "writer"
+      ? styles.dotWriter
+      : item.type === "business"
+        ? styles.dotBusiness
+        : styles.dotDev;
+
   return (
     <div
       ref={ref}
       className={cn(
         styles.row,
-        isEven ? styles.rowEven : styles.rowOdd, // Desktop switching
+        isEven ? styles.rowEven : styles.rowOdd,
         isInView ? styles.visible : styles.hidden,
       )}
     >
-      {/* DOT */}
-      <div className={cn(styles.dot, isInView && styles.dotActive)} />
+      {/* DOT: Uses variant class for color */}
+      <div
+        className={cn(
+          styles.dot,
+          dotVariantClass,
+          isInView && styles.dotActive,
+        )}
+      />
 
       {/* SPACER (Desktop) */}
       <div className="hidden md:block w-1/2" />
 
-      {/* CARD */}
-      <div className={cn(styles.card, isInView && styles.cardVisible)}>
+      {/* CARD: Uses variant class for style */}
+      <div
+        className={cn(
+          styles.card,
+          cardVariantClass,
+          isInView && styles.cardVisible,
+        )}
+      >
         <div className={styles.header}>
           <span className={styles.yearBadge}>{item.year}</span>
           {item.icon && <div className={styles.icon}>{item.icon}</div>}
@@ -51,10 +83,7 @@ function TimelineItem({
 export function Timeline({ items }: { items: TimelineItemProps[] }) {
   return (
     <div className={styles.container}>
-      {/* TRUNK LINE */}
       <div className={styles.trunkLine} />
-
-      {/* ITEMS */}
       <div>
         {items.map((item, index) => (
           <TimelineItem key={index} item={item} index={index} />

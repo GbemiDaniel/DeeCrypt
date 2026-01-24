@@ -1,10 +1,4 @@
 import {
-  Download,
-  Mail,
-  Github,
-  Twitter,
-  Linkedin,
-  Award,
   Code,
   PenTool,
   CheckCircle2,
@@ -14,12 +8,14 @@ import {
 } from "lucide-react";
 import styles from "./AboutView.module.css";
 import { cn } from "@/lib/utils";
-import { Timeline } from "@/components/Timeline";
-import { useInView } from "@/hooks/useInView"; // <--- Importing your new lightweight hook
 
-// --- 1. THE LIGHTWEIGHT WRAPPER ---
-// This replaces the old "Reveal" component.
-// It uses your custom hook to keep things efficient.
+// --- IMPORT YOUR NEW COMPONENTS ---
+import { Timeline, TimelineType } from "@/components/Timeline";
+import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
+import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
+import { useInView } from "@/hooks/useInView";
+
+// --- FADE IN HELPER ---
 const FadeIn = ({
   children,
   delay = 0,
@@ -34,11 +30,7 @@ const FadeIn = ({
   return (
     <div
       ref={ref}
-      className={cn(
-        styles.reveal, // Base opacity: 0, transform: translateY
-        isInView && styles.visible, // Active state
-        className,
-      )}
+      className={cn(styles.reveal, isInView && styles.visible, className)}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
@@ -46,39 +38,42 @@ const FadeIn = ({
   );
 };
 
-// --- 2. DATA CONSTANTS ---
+// --- DATA: TIMELINE ---
 const JOURNEY = [
   {
     year: "2026",
     title: "Housing Agency Co-Founder",
     description:
-      "Launched a student housing platform in Nsukka with my brother. Merging real-world logistics with a digital-first approach to solve accommodation issues.",
+      "Launched a student housing platform in Nsukka. Merging real-world logistics with a digital-first approach.",
     icon: <Briefcase size={14} />,
+    type: "dev" as TimelineType,
   },
   {
     year: "2025",
     title: "DeeCrypt Hub & Web3",
     description:
-      "Founded a Web3 educational brand. Specializing in Technical Writing for projects like Ioxa and building community trust through simplified narratives.",
+      "Founded a Web3 educational brand. Technical writing for projects like Ioxa and building community trust.",
     icon: <Zap size={14} />,
+    type: "writer" as TimelineType,
   },
   {
     year: "2025",
     title: "NYSC Mobilization",
     description:
-      "Batch C Mobilization. A pivotal transition period from academic life to national service, while simultaneously honing my frontend craft.",
+      "Batch C Mobilization. Transitioning from academic life to national service while honing frontend craft.",
     icon: <GraduationCap size={14} />,
+    type: "dev" as TimelineType,
   },
   {
     year: "2021",
     title: "University of Nigeria",
     description:
-      "The Foundation. Physics & Astronomy background that taught me the first principles of complex systems and logical reasoning.",
+      "The Foundation. Physics & Astronomy background that taught me the first principles of complex systems.",
     icon: <PenTool size={14} />,
+    type: "dev" as TimelineType,
   },
 ];
 
-// --- 3. MAIN COMPONENT ---
 export default function AboutView() {
   return (
     <div className={styles.container}>
@@ -115,7 +110,7 @@ export default function AboutView() {
         </FadeIn>
       </section>
 
-      {/* SKILL GRID */}
+      {/* SKILL GRID (Using ModuleCard Styles from CSS Module) */}
       <section className={styles.gridSection}>
         <FadeIn delay={100}>
           <div className={styles.skillCard}>
@@ -157,7 +152,7 @@ export default function AboutView() {
         </FadeIn>
       </section>
 
-      {/* TIMELINE SECTION */}
+      {/* TIMELINE SECTION (New Component) */}
       <section className={styles.timelineSection}>
         <FadeIn>
           <h2
@@ -168,81 +163,68 @@ export default function AboutView() {
           </h2>
         </FadeIn>
 
-        {/* REMOVE <FadeIn> WRAPPER HERE. Just use the component directly. */}
-        {/* The Timeline handles its own animation now. */}
+        {/* Timeline has internal animations, so no FadeIn wrapper needed */}
         <Timeline items={JOURNEY} />
       </section>
 
-      {/* CERTIFICATES */}
+      {/* BADGES SECTION (New Component) */}
       <section className={styles.certSection}>
         <FadeIn>
-          <h2 className={styles.sectionTitle}>
-            <Award className={styles.sectionIcon} />
-            Badges & Milestones
-          </h2>
+          <h2 className={styles.sectionTitle}>Badges & Milestones</h2>
         </FadeIn>
 
         <div className={styles.certGrid}>
           <FadeIn delay={100}>
-            <div className={styles.certCard}>
-              <div className={styles.certDate}>2025</div>
-              <h4>Google Developer Profile</h4>
-              <p>Gemini for Software Development Lifecycle</p>
-              <span className={styles.badgePill}>Completed</span>
-            </div>
+            <BadgeCard
+              type="dev"
+              title="Google Developer Profile"
+              subtitle="Gemini for Software Development Lifecycle"
+              date="2025"
+              status="Completed"
+              link="https://g.dev/your-profile"
+              // Fallback icon since we might not have images yet
+              icon={<Code size={28} color="var(--accent)" />}
+            />
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className={styles.certCard}>
-              <div className={styles.certDate}>In Progress</div>
-              <h4>Frontend Mastery</h4>
-              <p>Advanced React Patterns & Performance</p>
-              <span className={`${styles.badgePill} ${styles.pillOngoing}`}>
-                Loading...
-              </span>
-            </div>
+            <BadgeCard
+              type="writer"
+              title="DeeCrypt Hub"
+              subtitle="Founder & Lead Writer for Web3 Education"
+              date="2025"
+              status="Completed"
+              link="https://twitter.com/deecrypthub"
+              icon={<Zap size={28} color="#a855f7" />}
+            />
+          </FadeIn>
+
+          <FadeIn delay={300}>
+            <BadgeCard
+              type="dev"
+              title="Frontend Mastery"
+              subtitle="Advanced React Patterns & Performance"
+              date="In Progress"
+              status="In Progress"
+              link="#"
+              icon={<Code size={28} color="var(--accent)" />}
+            />
           </FadeIn>
         </div>
       </section>
 
-      {/* CTA SECTION */}
+      {/* CTA SECTION (New Component) */}
       <section className={styles.ctaSection}>
         <FadeIn>
-          <div className={styles.glassPanel}>
-            <h2>Ready to build something legendary?</h2>
-            <p>
-              Whether you need a frontend architect for your next SaaS or a
-              technical writer to give your Web3 project a voice, I'm just one
-              click away.
-            </p>
-
-            <div className={styles.actionButtons}>
-              <a
-                href="mailto:your-email@example.com"
-                className={styles.primaryBtn}
-              >
-                <Mail size={18} />
-                Hire Me / Collaborate
-              </a>
-
-              <a href="/resume.pdf" download className={styles.secondaryBtn}>
-                <Download size={18} />
-                Download CV
-              </a>
-            </div>
-
-            <div className={styles.socialRow}>
-              <a href="#" className={styles.socialIcon} aria-label="GitHub">
-                <Github size={20} />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Twitter">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-            </div>
-          </div>
+          <ContactPanel
+            email="your-email@example.com"
+            resumeUrl="/resume.pdf"
+            socials={{
+              github: "https://github.com/yourusername",
+              twitter: "https://twitter.com/yourusername",
+              linkedin: "https://linkedin.com/in/yourusername",
+            }}
+          />
         </FadeIn>
       </section>
     </div>
