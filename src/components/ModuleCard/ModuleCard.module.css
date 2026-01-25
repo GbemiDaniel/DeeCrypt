@@ -12,7 +12,9 @@
   overflow: hidden;
   backdrop-filter: blur(12px);
   transform: translateY(0);
-  transition: transform 160ms ease, border-color 180ms ease,
+  transition:
+    transform 160ms ease,
+    border-color 180ms ease,
     box-shadow 180ms ease;
   display: flex;
   flex-direction: column;

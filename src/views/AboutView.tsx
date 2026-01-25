@@ -1,3 +1,4 @@
+import type { Mode } from "../app/modes";
 import {
   Code,
   PenTool,
@@ -5,40 +6,19 @@ import {
   Briefcase,
   Zap,
   GraduationCap,
+  Award,
+  User,
+  Mail,
 } from "lucide-react";
 import styles from "./AboutView.module.css";
 import { cn } from "@/lib/utils";
 
-// --- IMPORT YOUR NEW COMPONENTS ---
+// --- COMPONENTS ---
 import { Timeline, TimelineType } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
-import { useInView } from "@/hooks/useInView";
 
-// --- FADE IN HELPER ---
-const FadeIn = ({
-  children,
-  delay = 0,
-  className,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-}) => {
-  const { ref, isInView } = useInView({ threshold: 0.1, triggerOnce: true });
-
-  return (
-    <div
-      ref={ref}
-      className={cn(styles.reveal, isInView && styles.visible, className)}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
-// --- DATA: TIMELINE ---
+// --- DATA ---
 const JOURNEY = [
   {
     year: "2026",
@@ -74,107 +54,136 @@ const JOURNEY = [
   },
 ];
 
-export default function AboutView() {
+type Props = {
+  mode: Mode;
+  onModeChange: (m: Mode) => void;
+};
+
+export default function AboutView({ mode, onModeChange }: Props) {
   return (
-    <div className={styles.container}>
-      {/* HERO SECTION */}
-      <section className={styles.heroSection}>
-        <FadeIn>
-          <div className={styles.avatarWrapper}>
-            <img
-              src="/logos/D logo 120 x 120.png"
-              alt="Gbemi Daniel"
-              className={styles.avatar}
-            />
-            <div className={styles.statusBadge}>
-              <span className={styles.statusDot} />
-              Open to Work
+    // Pass mode to data-theme so CSS variables update
+    <div className={styles.container} data-theme={mode}>
+      {/* FIXED BACKGROUND */}
+      <div className={styles.fixedBackground} />
+
+      {/* 1. HERO SCREEN (Original Layout Restored) */}
+      <section className={styles.heroScreen}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.heroSection}>
+            <div className={styles.avatarWrapper}>
+              <img
+                src="/logos/D logo 120 x 120.png"
+                alt="Gbemi Daniel"
+                className={styles.avatar}
+              />
+              <div className={styles.statusBadge}>
+                <span className={styles.statusDot} />
+                Open to Work
+              </div>
             </div>
-          </div>
-        </FadeIn>
 
-        <FadeIn delay={200}>
-          <h1 className={styles.headline}>
-            Crafting Logic. <br />
-            <span className={styles.gradientText}>Curating Narratives.</span>
-          </h1>
-        </FadeIn>
+            <h1 className={styles.headline}>
+              Crafting Logic. <br />
+              <span className={cn(styles.metalText, styles.glowWriter)}>
+                Curating Narratives.
+              </span>
+            </h1>
 
-        <FadeIn delay={400}>
-          <p className={styles.introText}>
-            I’m <strong>Gbemi Daniel</strong> (aka <em>Deecrypt</em>). I sit at
-            the intersection of <strong>Frontend Engineering</strong> and{" "}
-            <strong>Web3 Storytelling</strong>. I build pixel-perfect interfaces
-            by day and simplify complex crypto concepts by night.
-          </p>
-        </FadeIn>
-      </section>
-
-      {/* SKILL GRID (Using ModuleCard Styles from CSS Module) */}
-      <section className={styles.gridSection}>
-        <FadeIn delay={100}>
-          <div className={styles.skillCard}>
-            <div className={styles.iconBox} data-type="dev">
-              <Code size={24} />
-            </div>
-            <h3>Frontend Dev</h3>
-            <p>
-              Building responsive, accessible, and performant UIs using React,
-              Next.js, and Tailwind CSS.
+            <p className={styles.introText}>
+              I’m{" "}
+              <strong className={cn(styles.metalText, styles.glowDev)}>
+                Gbemi Daniel
+              </strong>{" "}
+              (aka{" "}
+              <em className={cn(styles.metalText, styles.glowWriter)}>
+                Deecrypt
+              </em>
+              ). I sit at the intersection of{" "}
+              <strong>Frontend Engineering</strong> and{" "}
+              <strong>Web3 Storytelling</strong>.
             </p>
           </div>
-        </FadeIn>
-
-        <FadeIn delay={200}>
-          <div className={styles.skillCard}>
-            <div className={styles.iconBox} data-type="web3">
-              <CheckCircle2 size={24} />
-            </div>
-            <h3>Web3 Enthusiast</h3>
-            <p>
-              Exploring the frontier of decentralized apps, airdrops, and
-              blockchain analytics tools.
-            </p>
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={300}>
-          <div className={styles.skillCard}>
-            <div className={styles.iconBox} data-type="writer">
-              <PenTool size={24} />
-            </div>
-            <h3>Technical Writer</h3>
-            <p>
-              Translating lines of code into compelling human stories. Founder
-              of the <strong>DeeCrypt</strong> brand.
-            </p>
-          </div>
-        </FadeIn>
+        </div>
       </section>
 
-      {/* TIMELINE SECTION (New Component) */}
-      <section className={styles.timelineSection}>
-        <FadeIn>
-          <h2
-            className={styles.sectionTitle}
-            style={{ justifyContent: "center" }}
-          >
-            The Journey
-          </h2>
-        </FadeIn>
+      {/* 2. SKILLS (Flow Scroll) */}
+      <section className={styles.flowSection}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.headerLine} />
+            <div className={styles.headerPill}>
+              <Code className={styles.headerIcon} />
+              <span>The Arsenal</span>
+            </div>
+            <div className={styles.headerLine} />
+          </div>
 
-        {/* Timeline has internal animations, so no FadeIn wrapper needed */}
-        <Timeline items={JOURNEY} />
+          <div className={styles.gridSection}>
+            <div className={styles.skillCard}>
+              <div className={styles.iconBox} data-type="dev">
+                <Code size={24} />
+              </div>
+              <h3>Frontend Dev</h3>
+              <p>
+                Building responsive, accessible, and performant UIs using React,
+                Next.js, and Tailwind CSS.
+              </p>
+            </div>
+
+            <div className={styles.skillCard}>
+              <div className={styles.iconBox} data-type="web3">
+                <CheckCircle2 size={24} />
+              </div>
+              <h3>Web3 Enthusiast</h3>
+              <p>
+                Exploring the frontier of decentralized apps, airdrops, and
+                blockchain analytics tools.
+              </p>
+            </div>
+
+            <div className={styles.skillCard}>
+              <div className={styles.iconBox} data-type="writer">
+                <PenTool size={24} />
+              </div>
+              <h3>Technical Writer</h3>
+              <p>
+                Translating lines of code into compelling human stories. Founder
+                of the <strong>DeeCrypt</strong> brand.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* BADGES SECTION (New Component) */}
-      <section className={styles.certSection}>
-        <FadeIn>
-          <h2 className={styles.sectionTitle}>Badges & Milestones</h2>
-        </FadeIn>
+      {/* 3. JOURNEY (Flow Scroll) */}
+      <section className={styles.flowSection}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.headerLine} />
+            <div className={cn(styles.headerPill, styles.headerPillWriter)}>
+              <User className={styles.headerIcon} />
+              <span>The Journey</span>
+            </div>
+            <div className={styles.headerLine} />
+          </div>
 
-        <div className={styles.certGrid}>
-          <FadeIn delay={100}>
+          <Timeline items={JOURNEY} />
+        </div>
+      </section>
+
+      {/* 4. BADGES (Flow Scroll) */}
+      <section className={styles.flowSection}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.headerLine} />
+            <div className={cn(styles.headerPill, styles.headerPillTrophy)}>
+              <Award className={styles.headerIcon} />
+              <span>Badges & Milestones</span>
+            </div>
+            <div className={styles.headerLine} />
+          </div>
+
+          <div className={styles.certGrid}>
             <BadgeCard
               type="dev"
               title="Google Developer Profile"
@@ -182,12 +191,8 @@ export default function AboutView() {
               date="2025"
               status="Completed"
               link="https://g.dev/your-profile"
-              // Fallback icon since we might not have images yet
               icon={<Code size={28} color="var(--accent)" />}
             />
-          </FadeIn>
-
-          <FadeIn delay={200}>
             <BadgeCard
               type="writer"
               title="DeeCrypt Hub"
@@ -197,9 +202,6 @@ export default function AboutView() {
               link="https://twitter.com/deecrypthub"
               icon={<Zap size={28} color="#a855f7" />}
             />
-          </FadeIn>
-
-          <FadeIn delay={300}>
             <BadgeCard
               type="dev"
               title="Frontend Mastery"
@@ -209,23 +211,34 @@ export default function AboutView() {
               link="#"
               icon={<Code size={28} color="var(--accent)" />}
             />
-          </FadeIn>
+          </div>
         </div>
       </section>
 
-      {/* CTA SECTION (New Component) */}
-      <section className={styles.ctaSection}>
-        <FadeIn>
-          <ContactPanel
-            email="your-email@example.com"
-            resumeUrl="/resume.pdf"
-            socials={{
-              github: "https://github.com/yourusername",
-              twitter: "https://twitter.com/yourusername",
-              linkedin: "https://linkedin.com/in/yourusername",
-            }}
-          />
-        </FadeIn>
+      {/* 5. CONTACT (Flow Scroll) */}
+      <section className={styles.flowSection}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.headerLine} />
+            <div className={cn(styles.headerPill, styles.headerPillContact)}>
+              <Mail className={styles.headerIcon} />
+              <span>Get In Touch</span>
+            </div>
+            <div className={styles.headerLine} />
+          </div>
+
+          <div className={styles.ctaSection}>
+            <ContactPanel
+              email="your-email@example.com"
+              resumeUrl="/resume.pdf"
+              socials={{
+                github: "https://github.com/yourusername",
+                twitter: "https://twitter.com/yourusername",
+                linkedin: "https://linkedin.com/in/yourusername",
+              }}
+            />
+          </div>
+        </div>
       </section>
     </div>
   );

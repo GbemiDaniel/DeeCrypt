@@ -1,4 +1,71 @@
-.platformTicker {
-  min-height: 0;
-  height: clamp(56px, 9vw, 64px);
+/* src/views/WriterView.module.css */
+
+/* Container for the badges (replaces the ticker container) */
+.platformContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; /* Tight spacing like a stack */
+  width: 100%;
+}
+
+/* The "Writer's Glow" Badge */
+.platformBadge {
+  /* Base Structure (Pill) */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+
+  /* Glass Chassis */
+  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  border: 1px solid var(--border-soft);
+
+  /* Typography */
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+
+  /* Physics */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Icon Styling */
+.platformIcon {
+  display: flex;
+  color: var(--badge-color);
+  transition: filter 0.2s ease;
+}
+
+/* --- HOVER STATE (The "Writer's Glow") --- */
+@media (hover: hover) {
+  .platformBadge:hover {
+    border-color: var(--badge-color);
+    transform: translateY(-2px);
+    cursor: pointer;
+
+    /* THE GLOW: 
+       1. Inner tint of the brand color 
+       2. Outer soft purple/pink ambiance 
+    */
+    background: color-mix(in srgb, var(--badge-color) 8%, var(--glass-strong));
+
+    box-shadow:
+      0 2px 8px -1px color-mix(in srgb, var(--badge-color) 40%, transparent),
+      0 0 15px -5px rgba(168, 85, 247, 0.4); /* The "Writer" Violet Haze */
+  }
+
+  /* Subtle Icon Bloom */
+  .platformBadge:hover .platformIcon {
+    filter: drop-shadow(0 0 4px var(--badge-color));
+  }
+}
+
+.platformBadge:active {
+  transform: scale(0.98);
 }

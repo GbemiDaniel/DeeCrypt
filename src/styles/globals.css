@@ -159,6 +159,52 @@ button {
   --sidequest-accent-glow: 270 85% 65%;
 
   --sidequest-progress-track: 220 12% 28%;
+
+  /* --- 1. THE ENERGY SOURCES (Glow Colors) --- */
+  --energy-dev: #22d3ee; /* Electric Cyan (Tailwind cyan-400) */
+  --energy-writer: #34d399; /* Neon Mint (Tailwind emerald-400) */
+
+  /* --- 2. THE CHROME GRADIENT (The "D" Texture) --- */
+  /* This creates a "Horizon Line" at 50% to simulate a 3D bevel */
+  --metal-gradient: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    /* Top Shine */ #e2e8f0 35%,
+    /* Upper Highlight (Cool Grey) */ #64748b 50%,
+    /* THE RIDGE: Dark Slate (Horizon Line) */ #94a3b8 51%,
+    /* THE BOUNCE: Lighter Slate (Sharp Cut) */ #f8fafc 80%,
+    /* Lower Highlight */ #ffffff 100% /* Bottom Shine */
+  );
+}
+
+/* --- 3. THE UTILITY CLASS --- */
+.text-metal {
+  /* Apply the texture */
+  background-image: var(--metal-gradient);
+  background-size: 100% 110%; /* Stretch slightly to fit text height */
+
+  /* Clip it to the text */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* Typography weights */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  /* CRITICAL: A dark drop-shadow creates the "Physical Object" illusion */
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.6));
+}
+
+/* --- 4. ENERGY VARIANTS (The Outer Glow) --- */
+/* Usage: className="text-metal metal-dev" */
+.metal-dev {
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5)); /* Cyan Haze */
+}
+
+/* Usage: className="text-metal metal-writer" */
+.metal-writer {
+  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5)); /* Mint Haze */
 }
 
 @layer base {

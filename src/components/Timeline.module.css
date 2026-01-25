@@ -1,17 +1,24 @@
-/* src/components/Timeline.module.css */
+/* src/components/Timeline/Timeline.module.css */
 
-/* --- LAYOUT & TRUNK (Unchanged) --- */
+/* --- CONTAINER --- */
 .container {
   position: relative;
-  max-width: 56rem;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2.5rem 1rem;
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  overflow-x: hidden;
 }
 
-.trunkLine {
+/* --- THE SPINE (Desktop Center Line) --- */
+.desktopSpine {
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 50%;
   width: 2px;
   background: linear-gradient(
     180deg,
@@ -20,256 +27,297 @@
     var(--border-soft) 90%,
     transparent 100%
   );
-  left: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 0;
+  display: block;
+}
+
+/* --- ROW ARCHITECTURE --- */
+.row {
+  display: flex;
+  align-items: center;
+  width: 50%; /* Desktop: Each row is half screen */
+  box-sizing: border-box;
+  position: relative;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+/* RIGHT SIDE (Odd) - Standard Flow */
+.rowRight {
+  align-self: flex-end;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* LEFT SIDE (Even) - Reverse Flow */
+.rowLeft {
+  align-self: flex-start;
+  justify-content: flex-start; /* Start from spine */
+  flex-direction: row-reverse; /* Flip visual order: [Card] [Line] [Node] */
+  text-align: right;
+}
+
+/* --- THE CONNECTOR SYSTEM --- */
+
+/* 1. THE NODE (Anchor Dot) */
+.node {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent-color);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--accent-color) 40%, transparent);
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+
+  /* Shift to cover the spine exactly */
+  transform: translateX(50%);
+}
+/* Fix offset for right side */
+.rowRight .node {
   transform: translateX(-50%);
 }
 
-@media (min-width: 768px) {
-  .trunkLine {
-    left: 50%;
-  }
+/* 2. THE BEAM (Horizontal Line) */
+.connector {
+  width: 3rem; /* Fixed Arm Length */
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-color), transparent);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+.rowLeft .connector {
+  background: linear-gradient(-90deg, var(--accent-color), transparent);
 }
 
-/* --- THE ROW WRAPPER --- */
-.row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 3.5rem;
+/* --- THEMES & CARD VISUALS (Restored) --- */
 
-  /* THIS WAS MISSING: The engine for the animation */
-  transition:
-    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.8s ease;
-}
-
-@media (min-width: 768px) {
-  .row {
-    justify-content: space-between;
-  }
-  .rowEven {
-    flex-direction: row-reverse;
-  }
-  .rowOdd {
-    flex-direction: row;
-  }
-}
-
-/* --- ANIMATION --- */
-/* --- ANIMATION STATES --- */
-.hidden {
-  opacity: 0;
-  transform: translateY(3rem) scale(0.95); /* Starts lower and slightly smaller */
-  filter: blur(8px);
-}
-
-.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
-}
-
-/* --- BASE CARD STYLES --- */
+/* Base Card */
 .card {
-  position: relative;
-  width: 100%;
-  margin-left: 4.5rem;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
+  flex: 1;
+  max-width: 420px;
+  border-radius: 16px;
   padding: 1.5rem;
   backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid transparent;
   transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  border: 1px solid transparent; /* Set by variant */
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
-  .card {
-    width: 44%;
-    margin-left: 0;
-  }
+/* Fix Header for Left Cards */
+.rowLeft .header {
+  flex-direction: row-reverse;
+}
+.rowLeft .yearBadge {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+.rowRight .yearBadge {
+  margin-right: 0.5rem;
 }
 
-/* --- VARIANT 1: DEV (The "PreviewCarousel" Look) --- */
-/* Clean, Tech-focused, Cyan/Blue hints */
-.cardDev {
+/* THEME: DEV (Cyan Glass) */
+.themeDev {
+  --accent-color: #22d3ee;
+}
+.themeDev .card {
   background: color-mix(in oklab, var(--glass-strong) 80%, transparent);
   border-color: var(--border-soft);
-  --variant-accent: var(--accent); /* Cyan */
+}
+.themeDev .card:hover {
+  border-color: #22d3ee;
+  box-shadow: 0 12px 40px -10px rgba(34, 211, 238, 0.15);
+  transform: translateY(-2px);
 }
 
-.cardDev:hover {
-  border-color: color-mix(in oklab, var(--border) 60%, var(--accent) 25%);
-  box-shadow: 0 12px 40px -10px rgba(34, 211, 238, 0.15); /* Subtle Cyan Glow */
+/* THEME: WRITER (Purple/Mint + Gradient Overlay) */
+.themeWriter {
+  --accent-color: #a855f7;
 }
-
-/* --- VARIANT 2: WRITER (The "WriterCarousel" Look) --- */
-/* Narrative, Serif fonts, Purple/Mint hints, Radial Gradient */
-.cardWriter {
+.themeWriter .card {
   background: color-mix(in oklab, var(--bg) 92%, var(--glass));
   border-color: var(--border-soft);
-  --variant-accent: #a855f7; /* Purple */
 }
-
-/* The Writer Radial Gradient Overlay */
-.cardWriter::after {
+.themeWriter .card::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(168, 85, 247, 0.08),
-      transparent 60%
-    ),
-    radial-gradient(circle at 10% 90%, rgba(0, 220, 130, 0.08), transparent 60%);
+  background: radial-gradient(
+    circle at 90% 10%,
+    rgba(168, 85, 247, 0.08),
+    transparent 60%
+  );
 }
-
-.cardWriter:hover {
-  border-color: color-mix(in oklab, var(--border) 60%, #a855f7 25%);
-  box-shadow: 0 12px 40px -10px rgba(168, 85, 247, 0.15); /* Purple Glow */
+.themeWriter .card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 12px 40px -10px rgba(168, 85, 247, 0.15);
+  transform: translateY(-2px);
 }
-
-.cardWriter .title {
-  font-family: var(--font-serif); /* Distinctive Serif Title */
+.themeWriter .title {
+  font-family: var(--font-serif);
   letter-spacing: -0.01em;
 }
 
-/* --- VARIANT 3: BUSINESS (The "Agency" Look) --- */
-/* Professional, Amber/Gold hints */
-.cardBusiness {
+/* THEME: BUSINESS (Amber) */
+.themeBiz {
+  --accent-color: #f59e0b;
+}
+.themeBiz .card {
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--card) 40%, transparent),
     color-mix(in srgb, var(--bg) 60%, transparent)
   );
   border-color: var(--border-soft);
-  --variant-accent: #f59e0b; /* Amber */
 }
-
-.cardBusiness:hover {
+.themeBiz .card:hover {
   border-color: #f59e0b;
   box-shadow: 0 12px 40px -10px rgba(245, 158, 11, 0.15);
+  transform: translateY(-2px);
 }
 
-/* --- SHARED CARD ELEMENTS --- */
+/* --- TYPOGRAPHY --- */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
-  position: relative;
-  z-index: 2;
 }
-
 .yearBadge {
   font-family: var(--font-mono, monospace);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--variant-accent); /* Dynamic Color */
+  color: var(--accent-color);
   padding: 0.25rem 0.6rem;
   border-radius: 99px;
-  background: color-mix(in srgb, var(--variant-accent) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--variant-accent) 15%, transparent);
+  background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 15%, transparent);
 }
-
 .icon {
-  color: var(--muted);
+  color: var(--muted-foreground);
   transition: color 0.3s;
 }
-
 .card:hover .icon {
-  color: var(--variant-accent); /* Icon lights up on hover */
+  color: var(--accent-color);
 }
-
 .title {
-  position: relative;
-  z-index: 2;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 0.5rem;
   line-height: 1.2;
 }
-
 .description {
-  position: relative;
-  z-index: 2;
   font-size: 0.9rem;
   color: var(--muted-foreground);
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
-/* --- CONNECTORS (Logic remains purely positional) --- */
-.card::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--border-soft), transparent);
-  transform: translateY(-50%);
-  transition: width 0.7s ease 0.3s;
-  left: -2.5rem;
-  width: 0;
+/* --- ANIMATION --- */
+.hidden {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.cardVisible::before {
-  width: 2.5rem;
-}
-
-@media (min-width: 768px) {
-  .rowEven .card::before {
-    left: auto;
-    right: -2.5rem;
-    background: linear-gradient(-90deg, var(--border-soft), transparent);
+/* =========================================
+   MOBILE FIX: THE "SNAKE" GRID
+   ========================================= */
+@media (max-width: 768px) {
+  /* 1. Hide Desktop Spine */
+  .desktopSpine {
+    display: none;
   }
-  .rowOdd .card::before {
-    left: -2.5rem;
+
+  /* 2. Convert Row to Grid (Full Width) */
+  .row {
+    width: 100%;
+    padding: 0 1rem;
+    display: grid;
+    gap: 0;
+    align-self: center;
   }
-}
 
-/* --- CENTRAL DOT (Matches Variant Color) --- */
-.dot {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: 50%;
-  z-index: 20;
-  left: 1.5rem;
-  transform: translateX(-50%);
-  transition: all 0.5s ease;
-}
-
-@media (min-width: 768px) {
-  .dot {
+  /* 3. ROW RIGHT CONFIG (Spine Left -> Card Right) */
+  .rowRight {
+    grid-template-columns: 2rem 1fr; /* 10% Spine, 90% Card */
+    grid-template-areas: "node card";
+    text-align: left;
+  }
+  .rowRight .node {
+    grid-area: node;
+    margin: 0 auto;
+    transform: none;
+  }
+  .rowRight .card {
+    grid-area: card;
+  }
+  /* Vertical Line Down */
+  .rowRight .node::after {
+    content: "";
+    position: absolute;
+    top: 100%;
     left: 50%;
+    width: 2px;
+    height: 5rem;
+    background: var(--border-soft);
+    transform: translateX(-50%);
+    z-index: -1;
   }
-}
 
-/* Dynamic Dot Coloring */
-.dotDev.dotActive {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow:
-    0 0 0 4px var(--bg),
-    0 0 15px var(--accent);
-}
-.dotWriter.dotActive {
-  background: #a855f7;
-  border-color: #a855f7;
-  box-shadow:
-    0 0 0 4px var(--bg),
-    0 0 15px #a855f7;
-}
-.dotBusiness.dotActive {
-  background: #f59e0b;
-  border-color: #f59e0b;
-  box-shadow:
-    0 0 0 4px var(--bg),
-    0 0 15px #f59e0b;
+  /* 4. ROW LEFT CONFIG (Card Left <- Spine Right) */
+  .rowLeft {
+    grid-template-columns: 1fr 2rem; /* 90% Card, 10% Spine */
+    grid-template-areas: "card node";
+    text-align: left; /* Reset text align for readability */
+    flex-direction: row; /* Reset flex direction */
+  }
+  .rowLeft .node {
+    grid-area: node;
+    margin: 0 auto;
+    transform: none;
+  }
+  .rowLeft .card {
+    grid-area: card;
+  }
+  /* Vertical Line Down */
+  .rowLeft .node::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 2px;
+    height: 5rem;
+    background: var(--border-soft);
+    transform: translateX(-50%);
+    z-index: -1;
+  }
+
+  /* Reset Card Internals for Mobile */
+  .rowLeft .header {
+    flex-direction: row;
+  }
+  .rowLeft .yearBadge {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+
+  /* 5. Hide Horizontal Beam on Mobile */
+  .connector {
+    display: none;
+  }
+
+  /* 6. Maximize Card Width */
+  .card {
+    max-width: 100%;
+  }
 }

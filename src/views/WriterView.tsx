@@ -1,22 +1,53 @@
 import type { Mode } from "../app/modes";
-import { useMemo, useState } from "react";
+import { useMemo, useState, CSSProperties } from "react";
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
 import ModuleGrid from "../components/ModuleGrid/ModuleGrid";
 import ModuleCard from "../components/ModuleCard/ModuleCard";
-import MiniIcon from "../components/MiniIcon/MiniIcon";
 import Tag from "../components/Tag/Tag";
 import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
-import PlatformsTicker from "../components/PlatformsTicker/PlatformsTicker";
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
-import { BookOpen, Newspaper, X } from "lucide-react";
+// Added Icons
+import { BookOpen, Newspaper, X, Linkedin } from "lucide-react";
 
 type Props = {
   mode: Mode;
   onModeChange: (m: Mode) => void;
 };
+
+// Platform Data with Brand Colors
+const PLATFORMS = [
+  {
+    id: "twitter",
+    href: "https://x.com/",
+    label: "X (Twitter)",
+    icon: <X size={14} />,
+    color: "#ffffff", // White (Dark Mode) / Black (Light Mode)
+  },
+  {
+    id: "linkedin",
+    href: "https://linkedin.com/",
+    label: "LinkedIn",
+    icon: <Linkedin size={14} />,
+    color: "#0a66c2", // LinkedIn Blue
+  },
+  {
+    id: "mirror",
+    href: "https://mirror.xyz/",
+    label: "Mirror",
+    icon: <BookOpen size={14} />,
+    color: "#3898FF", // Mirror Blue
+  },
+  {
+    id: "medium",
+    href: "https://medium.com/",
+    label: "Medium",
+    icon: <Newspaper size={14} />,
+    color: "#FFC017", // Medium Gold
+  },
+];
 
 export default function WriterView({ mode, onModeChange }: Props) {
   const [activePostId, setActivePostId] = useState(posts[0]?.id);
@@ -24,7 +55,7 @@ export default function WriterView({ mode, onModeChange }: Props) {
 
   const activePost = useMemo(
     () => posts.find((p) => p.id === activePostId) ?? posts[0],
-    [activePostId]
+    [activePostId],
   );
 
   return (
@@ -67,35 +98,28 @@ export default function WriterView({ mode, onModeChange }: Props) {
             }
           />
         }
+        /* --- REFINED PLATFORM BADGES --- */
         rightBottom={
           <ModuleCard
             title="Platforms"
             subtitle="Where I publish and share."
             icon={Newspaper}
             footer={
-              <div className={styles.platformTicker}>
-                <PlatformsTicker
-                  items={[
-                    {
-                      href: "https://x.com/",
-                      label: "X (Twitter)",
-                      sublabel: "Threads + shorter notes",
-                      icon: <X size={16} />,
-                    },
-                    {
-                      href: "https://mirror.xyz/",
-                      label: "Mirror",
-                      sublabel: "Longform essays",
-                      icon: <BookOpen size={16} />,
-                    },
-                    {
-                      href: "https://medium.com/",
-                      label: "Medium",
-                      sublabel: "Archived posts",
-                      icon: <Newspaper size={16} />,
-                    },
-                  ]}
-                />
+              <div className={styles.platformContainer}>
+                {PLATFORMS.map((p) => (
+                  <a
+                    key={p.id}
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.platformBadge}
+                    // Pass color to CSS variable for the hover glow
+                    style={{ "--badge-color": p.color } as CSSProperties}
+                  >
+                    <span className={styles.platformIcon}>{p.icon}</span>
+                    {p.label}
+                  </a>
+                ))}
               </div>
             }
           />

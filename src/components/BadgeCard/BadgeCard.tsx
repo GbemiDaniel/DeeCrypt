@@ -1,5 +1,5 @@
-import React from "react";
-import { ExternalLink } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { ExternalLink, Code, PenTool, Zap, Award } from "lucide-react"; // Add generic icons just in case
 import { cn } from "@/lib/utils";
 import styles from "./BadgeCard.module.css";
 
@@ -12,8 +12,8 @@ interface BadgeCardProps {
   date: string;
   status: "Completed" | "In Progress";
   link: string;
-  image?: string; // Path to image (e.g., "/badges/google.png")
-  icon?: React.ReactNode; // Fallback icon if no image
+  image?: string;
+  icon?: React.ReactNode;
 }
 
 export function BadgeCard({
@@ -26,16 +26,36 @@ export function BadgeCard({
   image,
   icon,
 }: BadgeCardProps) {
+  const [isActive, setIsActive] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const isWriter = type === "writer";
 
+  // "Click Outside" logic to deactivate the card
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        setIsActive(false);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [cardRef]);
+
   return (
-    <a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(styles.card, isWriter ? styles.cardWriter : styles.cardDev)}
+    <div
+      ref={cardRef}
+      className={cn(
+        styles.card,
+        isWriter ? styles.cardWriter : styles.cardDev,
+        isActive && styles.active, // Toggle the "Life" class
+      )}
+      onClick={() => setIsActive(true)} // First Click: Wake it up
     >
-      {/* 1. GLORIFIED BADGE ZONE */}
+      {/* 1. EMBEDDED ICON ZONE */}
       <div className={styles.iconZone}>
         {image ? (
           <img src={image} alt={title} className={styles.badgeImage} />
@@ -69,8 +89,20 @@ export function BadgeCard({
         <p className={styles.subtitle}>{subtitle}</p>
       </div>
 
-      {/* 3. HOVER LINK INDICATOR */}
-      <ExternalLink size={18} className={styles.linkIcon} />
-    </a>
+      {/* 3. LINK ICON (The Portal) */}
+      {/* Only clickable when the card is active */}
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.linkWrapper}
+        onClick={(e) => {
+          if (!isActive) e.preventDefault(); // Prevent click if not woke
+        }}
+        aria-label="View Project"
+      >
+        <ExternalLink size={20} className={styles.linkIcon} />
+      </a>
+    </div>
   );
 }

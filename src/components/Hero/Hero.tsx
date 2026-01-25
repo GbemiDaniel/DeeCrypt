@@ -33,7 +33,7 @@ export default function Hero({
             {headlineTop}
           </TextReveal>
         </span>
-        <span className={styles.bottom}>
+        <span className={`${styles.bottom} ${".text-metal"}`}>
           <TextReveal variant="dev" split="words" delay={0.59}>
             {headlineBottom}
           </TextReveal>

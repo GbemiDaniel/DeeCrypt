@@ -13,12 +13,8 @@
   /* --- CHASSIS --- */
   border-radius: 20px;
 
-  /* Deep, Dark, Premium Glass */
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bg) 10%, #000) 0%,
-    color-mix(in srgb, var(--card) 30%, #111) 100%
-  );
+  /* Default State: Dormant Dark Glass */
+  background: color-mix(in srgb, var(--bg) 5%, #050505);
 
   /* The "Galaxy Edge" Spines */
   box-shadow:
@@ -29,7 +25,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-left: 0; /* Left is handled by the specular ridge */
 
-  text-decoration: none;
+  /* Interaction Props */
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
@@ -52,8 +48,9 @@
     transparent
   );
   box-shadow: 0 0 15px 1px var(--badge-accent);
-  opacity: 0.8;
+  opacity: 0.6; /* Dimmer by default */
   z-index: 10;
+  transition: opacity 0.5s ease;
 }
 
 /* --- VARIANTS --- */
@@ -65,7 +62,7 @@
 }
 
 /* --- THE "PULSING HEART" (Right Side Illumination) --- */
-/* This creates the ambient glow behind the icon */
+/* Dormant state: Hidden or very faint */
 .card::after {
   content: "";
   position: absolute;
@@ -80,90 +77,94 @@
     transparent 70%
   );
   filter: blur(25px);
-  opacity: 0.4;
+  opacity: 0; /* Hidden initially */
   z-index: 0;
   pointer-events: none;
-  animation: pulseGlow 4s ease-in-out infinite;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
-@keyframes pulseGlow {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translateY(-50%) scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translateY(-50%) scale(1.1);
-  }
-}
+/* =========================================
+   INTERACTION STATES
+   ========================================= */
 
-/* --- HOVER PHYSICS --- */
+/* 1. HOVER (Preview) - Just a subtle lift */
 .card:hover {
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 2. ACTIVE (Woken Up) - The "SideQuest" Activation */
+.card.active {
+  transform: scale(1.02); /* Pop out */
   background: linear-gradient(
     90deg,
     color-mix(in srgb, var(--bg) 5%, #000) 0%,
     color-mix(in srgb, var(--card) 20%, #0a0a0a) 100%
   );
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
 }
 
-/* Intensify the glow on hover */
-.card:hover::after {
-  opacity: 0.8;
-  filter: blur(35px);
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--badge-accent) 50%, transparent) 0%,
-    transparent 70%
-  );
+/* Activate the Pulsing Heart */
+.card.active::after {
+  opacity: 0.6;
+  animation: pulseGlow 4s ease-in-out infinite;
 }
 
-/* --- ICON ZONE (THE "EMBEDDED" EFFECT) --- */
+/* Brighten the Specular Ridge */
+.card.active::before {
+  opacity: 1;
+  box-shadow: 0 0 20px 2px var(--badge-accent);
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-50%) scale(1.15);
+  }
+}
+
+/* --- ICON ZONE --- */
 .iconZone {
   order: 2;
   flex-shrink: 0;
   width: 60px;
   height: 60px;
   z-index: 2;
-
   display: grid;
   place-items: center;
   position: relative;
-
-  /* No Border! It merges into the glass */
-  border-radius: 50%; /* Softer blend */
-
-  /* This gradient acts as the "lens" distortion around the icon */
+  border-radius: 50%;
   background: radial-gradient(
     circle at 30% 30%,
-    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05),
     transparent 60%
   );
-
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .badgeImage {
   width: 38px;
   height: 38px;
   object-fit: contain;
-
-  /* CRITICAL: This makes the icon look like it's emitting light */
   filter: drop-shadow(
-    0 0 8px color-mix(in srgb, var(--badge-accent) 80%, transparent)
+    0 0 5px color-mix(in srgb, var(--badge-accent) 40%, transparent)
   );
-
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0.9;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0.8;
 }
 
-/* On hover, the icon floats OUT of the glass */
-.card:hover .badgeImage {
+/* Active State Icon Animation */
+.card.active .badgeImage {
   transform: scale(1.25) rotate(5deg);
-  filter: drop-shadow(0 0 15px var(--badge-accent)); /* Super bright glow */
+  filter: drop-shadow(0 0 15px var(--badge-accent));
   opacity: 1;
 }
 
@@ -184,11 +185,10 @@
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
-
 .date {
   font-family: var(--font-mono, monospace);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5); /* Muted white */
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.05em;
 }
 
@@ -201,15 +201,14 @@
   border-radius: 6px;
   white-space: nowrap;
 }
-
 .statusCompleted {
-  color: #4ade80; /* Brighter Green */
+  color: #4ade80;
   background: rgba(74, 222, 128, 0.1);
   border: 1px solid rgba(74, 222, 128, 0.2);
-  box-shadow: 0 0 10px -2px rgba(74, 222, 128, 0.3); /* Tiny Glow */
+  box-shadow: 0 0 10px -2px rgba(74, 222, 128, 0.3);
 }
 .statusOngoing {
-  color: #fbbf24; /* Brighter Amber */
+  color: #fbbf24;
   background: rgba(251, 191, 36, 0.1);
   border: 1px solid rgba(251, 191, 36, 0.2);
 }
@@ -221,14 +220,11 @@
   color: #fff;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  /* Premium Text Shadow */
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
 }
-
 .cardWriter .title {
   font-family: var(--font-serif);
 }
-
 .subtitle {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.7);
@@ -237,22 +233,38 @@
   max-width: 95%;
 }
 
-/* --- LINK INDICATOR --- */
-.linkIcon {
+/* --- LINK INDICATOR (THE PORTAL) --- */
+.linkWrapper {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  z-index: 10;
+  /* Crucial: Disable pointer events until active */
+  pointer-events: none;
+}
+
+.card.active .linkWrapper {
+  pointer-events: auto;
+}
+
+.linkIcon {
   color: var(--badge-accent);
   opacity: 0;
   transform: translateX(-10px) scale(0.8);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 10;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.card:hover .linkIcon {
-  opacity: 1;
+/* When active, show the icon */
+.card.active .linkIcon {
+  opacity: 0.6;
   transform: translateX(0) scale(1);
-  filter: drop-shadow(0 0 5px var(--badge-accent));
+}
+
+/* When hovering specifically on the link icon (CTA) */
+.linkWrapper:hover .linkIcon {
+  opacity: 1;
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 8px var(--badge-accent));
 }
 
 /* --- MOBILE OPTIMIZATION --- */
@@ -262,30 +274,23 @@
     gap: 1rem;
     align-items: flex-start;
   }
-
   .iconZone {
     width: 42px;
     height: 42px;
     margin-top: 0.25rem;
   }
-
   .badgeImage {
     width: 28px;
     height: 28px;
   }
-
-  /* The glow needs to be smaller on mobile so it doesn't flood the screen */
   .card::after {
     width: 80px;
     height: 80px;
     right: -10px;
-    opacity: 0.3;
   }
-
   .title {
     font-size: 1.15rem;
   }
-
   .subtitle {
     font-size: 0.85rem;
     line-height: 1.4;
