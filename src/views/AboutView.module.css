@@ -352,6 +352,21 @@
 }
 .ctaSection {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  /* FIX: Ensure no extra margin is crushing it on mobile */
+  padding: 1rem 0;
+}
+
+/* Ensure contentWrapper allows full width on mobile */
+@media (max-width: 640px) {
+  .contentWrapper {
+    padding: 0 1rem; /* Reduce global side padding on mobile */
+  }
+
+  .ctaSection {
+    padding: 0; /* Let the card handle its own spacing */
+  }
 }
 @keyframes pulse {
   0%,

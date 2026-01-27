@@ -13,12 +13,14 @@ import {
 import styles from "./AboutView.module.css";
 import { cn } from "@/lib/utils";
 
-// --- COMPONENTS ---
+// 1. IMPORTS FOR SCROLL SPY
+import { useInView } from "react-intersection-observer";
+import { setSectionLabel } from "../hooks/useScrollSpy";
+
 import { Timeline, TimelineType } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
 
-// --- DATA ---
 const JOURNEY = [
   {
     year: "2026",
@@ -54,20 +56,63 @@ const JOURNEY = [
   },
 ];
 
+// 2. CONFIG
+const SPY_CONFIG = {
+  threshold: 0,
+  rootMargin: "-45% 0px -45% 0px",
+  triggerOnce: false,
+  delay: 100, // <--- THE FIX: Wait 100ms before firing. Ignores fast scrolls.
+};
+
 type Props = {
   mode: Mode;
   onModeChange: (m: Mode) => void;
 };
 
 export default function AboutView({ mode, onModeChange }: Props) {
+  // Hero: Resets to default (which is "THE STORY" in Navbar logic)
+  const { ref: heroRef } = useInView({
+    threshold: 0,
+    rootMargin: "-10% 0px -90% 0px",
+    onChange: (inView) => {
+      if (inView) setSectionLabel(null);
+    },
+  });
+
+  const { ref: arsenalRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => {
+      if (inView) setSectionLabel("THE ARSENAL");
+    },
+  });
+
+  const { ref: journeyRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => {
+      if (inView) setSectionLabel("THE JOURNEY");
+    },
+  });
+
+  const { ref: badgesRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => {
+      if (inView) setSectionLabel("MILESTONES");
+    },
+  });
+
+  const { ref: contactRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => {
+      if (inView) setSectionLabel("GET IN TOUCH");
+    },
+  });
+
   return (
-    // Pass mode to data-theme so CSS variables update
     <div className={styles.container} data-theme={mode}>
-      {/* FIXED BACKGROUND */}
       <div className={styles.fixedBackground} />
 
-      {/* 1. HERO SCREEN (Original Layout Restored) */}
-      <section className={styles.heroScreen}>
+      {/* 1. HERO (The Story) */}
+      <section className={styles.heroScreen} ref={heroRef}>
         <div className={styles.contentWrapper}>
           <div className={styles.heroSection}>
             <div className={styles.avatarWrapper}>
@@ -106,8 +151,8 @@ export default function AboutView({ mode, onModeChange }: Props) {
         </div>
       </section>
 
-      {/* 2. SKILLS (Flow Scroll) */}
-      <section className={styles.flowSection}>
+      {/* 2. SKILLS (The Arsenal) */}
+      <section className={styles.flowSection} ref={arsenalRef}>
         <div className={styles.contentWrapper}>
           <div className={styles.sectionHeader}>
             <div className={styles.headerLine} />
@@ -129,7 +174,6 @@ export default function AboutView({ mode, onModeChange }: Props) {
                 Next.js, and Tailwind CSS.
               </p>
             </div>
-
             <div className={styles.skillCard}>
               <div className={styles.iconBox} data-type="web3">
                 <CheckCircle2 size={24} />
@@ -140,7 +184,6 @@ export default function AboutView({ mode, onModeChange }: Props) {
                 blockchain analytics tools.
               </p>
             </div>
-
             <div className={styles.skillCard}>
               <div className={styles.iconBox} data-type="writer">
                 <PenTool size={24} />
@@ -155,8 +198,8 @@ export default function AboutView({ mode, onModeChange }: Props) {
         </div>
       </section>
 
-      {/* 3. JOURNEY (Flow Scroll) */}
-      <section className={styles.flowSection}>
+      {/* 3. JOURNEY (The Journey) */}
+      <section className={styles.flowSection} ref={journeyRef}>
         <div className={styles.contentWrapper}>
           <div className={styles.sectionHeader}>
             <div className={styles.headerLine} />
@@ -166,13 +209,12 @@ export default function AboutView({ mode, onModeChange }: Props) {
             </div>
             <div className={styles.headerLine} />
           </div>
-
           <Timeline items={JOURNEY} />
         </div>
       </section>
 
-      {/* 4. BADGES (Flow Scroll) */}
-      <section className={styles.flowSection}>
+      {/* 4. BADGES (Milestones) */}
+      <section className={styles.flowSection} ref={badgesRef}>
         <div className={styles.contentWrapper}>
           <div className={styles.sectionHeader}>
             <div className={styles.headerLine} />
@@ -182,7 +224,6 @@ export default function AboutView({ mode, onModeChange }: Props) {
             </div>
             <div className={styles.headerLine} />
           </div>
-
           <div className={styles.certGrid}>
             <BadgeCard
               type="dev"
@@ -215,8 +256,8 @@ export default function AboutView({ mode, onModeChange }: Props) {
         </div>
       </section>
 
-      {/* 5. CONTACT (Flow Scroll) */}
-      <section className={styles.flowSection}>
+      {/* 5. CONTACT (Get In Touch) */}
+      <section className={styles.flowSection} ref={contactRef}>
         <div className={styles.contentWrapper}>
           <div className={styles.sectionHeader}>
             <div className={styles.headerLine} />
@@ -226,7 +267,6 @@ export default function AboutView({ mode, onModeChange }: Props) {
             </div>
             <div className={styles.headerLine} />
           </div>
-
           <div className={styles.ctaSection}>
             <ContactPanel
               email="your-email@example.com"

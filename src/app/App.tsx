@@ -7,6 +7,7 @@ import DevView from "../views/DevView";
 import WriterView from "../views/WriterView";
 import AboutView from "../views/AboutView";
 import Footer from "@/components/Footer/Footer";
+import { setSectionLabel } from "../hooks/useScrollSpy";
 
 const LS_MODE = "deecrypt:mode";
 const LS_THEME = "deecrypt:theme";
@@ -31,6 +32,8 @@ export default function App() {
   useEffect(() => {
     // Scroll to top whenever the View changes
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    // This wipes the "stale" text from the previous page
+    setSectionLabel(null);
   }, [mode]);
 
   useEffect(() => {

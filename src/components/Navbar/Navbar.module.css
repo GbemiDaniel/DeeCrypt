@@ -20,11 +20,14 @@
   min-width: 0;
 }
 
+/* --- BRAND WRAPPER (Interactive Area) --- */
 .brandWrap {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Remove blue tap box on mobile */
 }
 
 .logo {
@@ -33,23 +36,151 @@
   object-fit: contain;
 }
 
+/* --- BRAND TEXT CONTAINER --- */
 .brandText {
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* FIX: Give it enough width so "Story . Dev . Writer" fits without jittering */
+  min-width: 140px;
+  position: relative;
+  /* FIX: Lock the height to prevent layout shifts */
+  height: 38px;
 }
 
 .brandName {
   font-weight: 700;
   letter-spacing: 0.2px;
+  line-height: 1;
 }
 
+/* --- THE DYNAMIC CONTAINER --- */
 .brandVer {
+  position: relative;
+  height: 16px; /* Lock height for subtext */
+  margin-top: 4px;
+  /* Hint browser to optimize for changes */
+  will-change: transform, opacity;
+}
+
+/* 1. SCROLL LABEL ("My Projects") */
+.statusLabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
   color: var(--muted);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-top: 2px;
+  white-space: nowrap;
+
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+  pointer-events: none;
 }
 
+/* 2. INTRO LABEL ("Dev | Writer") */
+.introLabel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  /* SLOWER FADE: 1.2s makes it dissolve like smoke */
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s ease;
+  pointer-events: none;
+}
+
+/* 3. MENU ("Story . Dev . Writer") */
+.navMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  /* Standard transition for the menu appearing */
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+/* --- INTERACTION LOGIC --- */
+/* If Hovered OR Open (Mobile), force Menu visible & hide others */
+/* .brandWrap:hover .navMenu,
+.brandWrap.open .navMenu {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+.brandWrap:hover .statusLabel,
+.brandWrap:hover .introLabel,
+.brandWrap.open .statusLabel,
+.brandWrap.open .introLabel {
+  opacity: 0 !important;
+  transform: translateY(-5px) !important;
+} */
+
+/* When React says "showMenu" is true, apply these styles */
+.showMenu .navMenu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.showMenu .statusLabel,
+.showMenu .introLabel {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+/* --- MENU LINKS --- */
+.navLink {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: var(--foreground); /* Light up on hover */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.navLinkActive {
+  color: var(--accent); /* Highlight active page */
+}
+
+.separator {
+  font-size: 0.6rem;
+  color: var(--border);
+  opacity: 0.5;
+}
+
+/* --- RIGHT SIDE (Theme Toggle) --- */
 .right {
   display: flex;
   align-items: center;

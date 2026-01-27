@@ -1,6 +1,11 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState } from "react";
 
+// --- 1. IMPORTS FOR SCROLL SPY ---
+import { useInView } from "react-intersection-observer";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { setSectionLabel } from "../hooks/useScrollSpy";
+
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
 import ModuleGrid from "../components/ModuleGrid/ModuleGrid";
@@ -25,14 +30,12 @@ import {
   SiNextdotjs,
   SiSupabase,
   SiFramer,
-  SiGreensock, // If you use GSAP
-  SiVite,
 } from "react-icons/si";
 
 const TECH_STACK = [
   { name: "React", color: "#61DAFB", icon: SiReact },
   { name: "TypeScript", color: "#3178C6", icon: SiTypescript },
-  { name: "Next.js", color: "#FFFFFF", icon: SiNextdotjs }, // White glow for Dark Mode
+  { name: "Next.js", color: "#FFFFFF", icon: SiNextdotjs },
   { name: "Tailwind", color: "#06B6D4", icon: SiTailwindcss },
   { name: "Supabase", color: "#3ECF8E", icon: SiSupabase },
   { name: "Framer", color: "#0055FF", icon: SiFramer },
@@ -61,6 +64,16 @@ const sideProjects: SideProject[] = [
   },
 ];
 
+// --- 2. OBSERVER CONFIGURATION ---
+// "The Laser Scanner": Only triggers when element hits the MIDDLE 10% of screen.
+// This prevents mobile sections from overlapping or triggering too early.
+const SPY_CONFIG = {
+  threshold: 0,
+  rootMargin: "-45% 0px -45% 0px",
+  triggerOnce: false,
+  delay: 100, // <--- THE FIX: Wait 100ms before firing. Ignores fast scrolls.
+};
+
 type Props = {
   mode: Mode;
   onModeChange: (m: Mode) => void;
@@ -74,19 +87,66 @@ export default function DevView({ mode, onModeChange }: Props) {
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
 
-  // ✅ Always safe
+  // 3. DETECT LAYOUT (768px matches Tailwind 'md')
+  // We use this to decide if we show one big label or granular labels
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  // --- DESKTOP OBSERVER (The Unified Grid) ---
+  const { ref: desktopGridRef } = useInView({
+    ...SPY_CONFIG,
+    skip: !isDesktop, // Disable on mobile to save performance
+    onChange: (inView) => {
+      if (inView && isDesktop) setSectionLabel("PROJECTS & STACK");
+    },
+  });
+
+  // --- MOBILE OBSERVERS (Granular Sections) ---
+  const { ref: mobileProjectsRef } = useInView({
+    ...SPY_CONFIG,
+    skip: isDesktop, // Disable on desktop
+    onChange: (inView) => {
+      if (inView && !isDesktop) setSectionLabel("MY PROJECTS");
+    },
+  });
+
+  const { ref: mobileSideQuestRef } = useInView({
+    ...SPY_CONFIG,
+    skip: isDesktop,
+    onChange: (inView) => {
+      if (inView && !isDesktop) setSectionLabel("SIDE QUESTS");
+    },
+  });
+
+  const { ref: mobileStackRef } = useInView({
+    ...SPY_CONFIG,
+    skip: isDesktop,
+    onChange: (inView) => {
+      if (inView && !isDesktop) setSectionLabel("TECH STACK");
+    },
+  });
+
+  // --- HERO OBSERVER (Resets label to Default) ---
+  const { ref: heroRef } = useInView({
+    threshold: 0,
+    // Triggers when the TOP of the hero leaves the screen (scrolling down)
+    rootMargin: "-10% 0px -90% 0px",
+    onChange: (inView) => {
+      // If Hero is visible, clear the label to show default Navbar text
+      if (inView) setSectionLabel(null);
+    },
+  });
+
   const active: Project | undefined = useMemo(() => {
     if (projects.length === 0) return undefined;
     const safe = clamp(activeProject, 0, projects.length - 1);
     return projects[safe];
   }, [activeProject]);
 
-  // ✅ Best practice: typed props object (prevents prop drift forever)
   const carouselProps: PreviewCarouselProps = useMemo(
     () => ({
       items: projects.map((p) => ({
         ...p,
-        icon: p.icon ?? <MiniIcon variant="accent" />, // default icon if missing
+        icon: p.icon ?? <MiniIcon variant="accent" />,
       })),
       onOpen: (item) => {
         const idx = projects.findIndex((p) => p.id === item.id);
@@ -99,47 +159,72 @@ export default function DevView({ mode, onModeChange }: Props) {
 
   return (
     <>
-      <Hero
-        key={mode}
-        mode={mode}
-        availabilityLabel="AVAILABLE FOR HIRE"
-        headlineTop="Welcome"
-        headlineBottom="I'm Gbemi Daniel"
-        subcopy="I’m a front-end developer building for the modern web and the decentralized future.
+      {/* 4. HERO SECTION (Ref attached to detect top of page) */}
+      <div ref={heroRef}>
+        <Hero
+          key={mode}
+          mode={mode}
+          availabilityLabel="AVAILABLE FOR HIRE"
+          headlineTop="Welcome"
+          headlineBottom="I'm Gbemi Daniel"
+          subcopy="I’m a front-end developer building for the modern web and the decentralized future.
 I focus on simplifying features and interactions so digital products feel clear, intuitive, and accessible."
-        modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
-      />
+          modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
+        />
+      </div>
 
-      <ModuleGrid
-        left={<PreviewCarousel {...carouselProps} />}
-        rightTop={
-          <SideQuestCard
-            title="Side Quests"
-            subtitle="Personal projects I'm tinkering with"
-            icon={Rocket}
-            projects={sideProjects}
-          />
-        }
-        rightBottom={
-          <ModuleCard
-            title="Stack"
-            subtitle="Tools I’m building with (and growing into)."
-            icon={Layers2}
-            footer={
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {TECH_STACK.map((tech) => (
-                  <SkillBadge
-                    key={tech.name}
-                    name={tech.name}
-                    icon={tech.icon}
-                    color={tech.color}
-                  />
-                ))}
-              </div>
-            }
-          />
-        }
-      />
+      {/* 5. GRID SECTION WRAPPER */}
+      {/* On Desktop, this wrapper triggers "PROJECTS & STACK" */}
+      <div ref={isDesktop ? desktopGridRef : undefined}>
+        <ModuleGrid
+          // On Mobile, we attach refs to the inner children for granular tracking
+          left={
+            <div
+              ref={!isDesktop ? mobileProjectsRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <PreviewCarousel {...carouselProps} />
+            </div>
+          }
+          rightTop={
+            <div
+              ref={!isDesktop ? mobileSideQuestRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <SideQuestCard
+                title="Side Quests"
+                subtitle="Personal projects I'm tinkering with"
+                icon={Rocket}
+                projects={sideProjects}
+              />
+            </div>
+          }
+          rightBottom={
+            <div
+              ref={!isDesktop ? mobileStackRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <ModuleCard
+                title="Stack"
+                subtitle="Tools I’m building with (and growing into)."
+                icon={Layers2}
+                footer={
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {TECH_STACK.map((tech) => (
+                      <SkillBadge
+                        key={tech.name}
+                        name={tech.name}
+                        icon={tech.icon}
+                        color={tech.color}
+                      />
+                    ))}
+                  </div>
+                }
+              />
+            </div>
+          }
+        />
+      </div>
 
       <PreviewDialog
         open={openPreview}

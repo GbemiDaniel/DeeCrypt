@@ -3,16 +3,22 @@
 .container {
   position: relative;
   width: 100%;
-  max-width: 56rem; /* Match Timeline width */
+  max-width: 50rem; /* Slightly tighter for better focus */
   margin: 0 auto;
-  padding: 0 1rem;
 }
 
 .panel {
   position: relative;
   overflow: hidden;
-  border-radius: 1.5rem;
-  padding: 3rem 2rem;
+  /* Responsive Border Radius: Smaller on mobile to look less "toy-like" */
+  border-radius: clamp(1rem, 3vw, 1.5rem);
+
+  /* FLUID PADDING:
+     Mobile: 2rem top/bottom, 1.25rem sides (More breathing room for text)
+     Desktop: 3.5rem top/bottom, 3rem sides
+  */
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 5vw, 3rem);
+
   text-align: center;
 
   /* Glass Base */
@@ -25,15 +31,14 @@
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-md);
 
-  /* Flex Layout */
+  /* Layout */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(1.5rem, 4vw, 2.5rem); /* Fluid gap between sections */
 }
 
 /* --- THE AMBIENT GLOW --- */
-/* A warm/cool mix to represent the Dev/Writer duality */
 .panel::before {
   content: "";
   position: absolute;
@@ -56,15 +61,18 @@
 .header {
   position: relative;
   z-index: 2;
-  max-width: 600px;
+  max-width: 550px; /* Keep text measure readable */
+  margin: 0 auto;
 }
 
 .title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  /* SCALE FONT: 1.75rem on Mobile -> 2.5rem on Desktop */
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   margin-bottom: 1rem;
+
   background: linear-gradient(
     135deg,
     var(--foreground) 0%,
@@ -75,12 +83,13 @@
 }
 
 .subtitle {
-  font-size: 1.125rem;
+  /* SCALE FONT: 1rem on Mobile -> 1.125rem on Desktop */
+  font-size: clamp(1rem, 2vw, 1.125rem);
   color: var(--muted-foreground);
   line-height: 1.6;
 }
 
-/* --- ACTION BUTTONS ROW --- */
+/* --- ACTIONS ROW --- */
 .actions {
   position: relative;
   z-index: 2;
@@ -88,29 +97,39 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
+  width: 100%;
 }
 
-/* Primary "Hire Me" Button - GLOWING */
-.primaryBtn {
+/* --- BUTTON SHARED STYLES --- */
+.primaryBtn,
+.secondaryBtn {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center; /* Center text/icon */
   gap: 0.75rem;
-  padding: 0.875rem 2rem;
+
+  /* FLUID PADDING: Slightly smaller on mobile to fit "Hire Me..." text */
+  padding: 0.875rem clamp(1.5rem, 3vw, 2.5rem);
   border-radius: 99px;
 
-  background: var(--foreground);
-  color: var(--background);
   font-weight: 600;
   font-size: 1rem;
   text-decoration: none;
+  white-space: nowrap; /* Prevent awkward breaks */
 
-  box-shadow: 0 4px 15px color-mix(in srgb, var(--foreground) 30%, transparent);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* PRIMARY */
+.primaryBtn {
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--foreground) 30%, transparent);
   overflow: hidden;
 }
 
-/* Shine effect on hover */
+/* Shine Effect */
 .primaryBtn::after {
   content: "";
   position: absolute;
@@ -131,26 +150,15 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 25px color-mix(in srgb, var(--foreground) 40%, transparent);
 }
-
 .primaryBtn:hover::after {
   left: 100%;
 }
 
-/* Secondary "CV" Button - OUTLINE */
+/* SECONDARY */
 .secondaryBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  border-radius: 99px;
-
   background: transparent;
   border: 1px solid var(--border);
   color: var(--foreground);
-  font-weight: 500;
-  text-decoration: none;
-
-  transition: all 0.2s ease;
 }
 
 .secondaryBtn:hover {
@@ -164,19 +172,24 @@
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  padding-top: 2rem;
+  justify-content: center;
+  gap: 1rem; /* Tighter gap on mobile */
+
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--border-soft);
   width: 100%;
-  justify-content: center;
+  flex-wrap: wrap; /* Safety wrap for tiny screens */
 }
 
 .socialLink {
   color: var(--muted);
   transition: all 0.3s ease;
-  padding: 0.5rem;
+  padding: 0.75rem; /* Larger touch target for mobile */
   border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .socialLink:hover {
@@ -185,17 +198,21 @@
   transform: translateY(-2px);
 }
 
+/* --- MOBILE SPECIFIC TWEAKS --- */
 @media (max-width: 640px) {
-  .panel {
-    padding: 2.5rem 1.5rem;
-  }
   .actions {
-    flex-direction: column;
-    width: 100%;
+    flex-direction: column; /* Stack buttons */
+    gap: 0.75rem;
   }
+
+  /* Make buttons full width for easier tapping */
   .primaryBtn,
   .secondaryBtn {
     width: 100%;
-    justify-content: center;
+  }
+
+  /* Ensure the "Hire Me" text doesn't hit the icon on tiny screens */
+  .primaryBtn {
+    font-size: 0.95rem;
   }
 }
