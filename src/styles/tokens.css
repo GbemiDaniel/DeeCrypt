@@ -25,24 +25,29 @@
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
   /* radii */
-  --radius-lg: 22px;
-  --radius-md: 18px;
-  --radius-pill: 999px;
+  --radius-lg: 1.375rem;
+  --radius-md: 1.125rem;
+  --radius-pill: 62.4375rem;
 
   /* layout rhythm */
-  --space-1: 8px;
-  --space-2: 12px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 44px;
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 2.75rem;
 
   /* grid bg */
   --grid-opacity: 0.055;
-  --grid-size: 64px;
+  --grid-size: 4rem;
 
   /* ring */
   --ring: rgba(56, 189, 248, 0.26);
+
+  /* metal gradient */
+  --metal-shine: #ffffff;
+  --metal-highlight: #cbd5e1;
+  --metal-crease: #64748b;
 }
 
 :root[data-theme="light"] {
@@ -63,7 +68,12 @@
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 
   --grid-opacity: 0.06;
-  --grid-size: 72px;
+  --grid-size: 4.5rem;
 
   --ring: rgba(56, 189, 248, 0.18);
+
+  /* metal gradient (inverted for light theme) */
+  --metal-shine: #111827;
+  --metal-highlight: #4b5563;
+  --metal-crease: #d1d5db;
 }

@@ -18,7 +18,7 @@
 }
 
 .kicker {
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
@@ -26,7 +26,7 @@
 
 .title {
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 1.75rem;
   line-height: 1.1;
   margin-top: 6px;
 }
@@ -71,7 +71,7 @@
 
 .authorHandle {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .platform {
@@ -79,7 +79,7 @@
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .nativeBody {
@@ -108,7 +108,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .metricIcon {
@@ -131,7 +131,7 @@
   gap: 10px;
   align-items: center;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .dot {
@@ -150,7 +150,7 @@
 
 .isX .title {
   /* less “essay headline”, more “post title” */
-  font-size: 22px;
+  font-size: 1.375rem;
   line-height: 1.2;
 }
 
@@ -161,7 +161,7 @@
 .isX .nativeBody {
   padding: 12px;
   gap: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .isX .nativeFooter {
@@ -182,7 +182,7 @@
 .isEssay .nativeBody {
   padding: 18px;
   gap: 16px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .isEssay .paragraph {

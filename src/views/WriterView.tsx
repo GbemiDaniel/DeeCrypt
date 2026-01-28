@@ -15,6 +15,7 @@ import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
+import heroStyles from "../components/Hero/Hero.module.css";
 import { BookOpen, Newspaper, X, Linkedin } from "lucide-react";
 
 // 2. SPY CONFIGURATION
@@ -122,8 +123,22 @@ export default function WriterView({ mode, onModeChange }: Props) {
         <Hero
           availabilityLabel="WRITING"
           headlineTop="Writing in"
-          headlineBottom="public, on purpose."
-          subcopy="Essays, threads, and notes about frontend clarity, Web3 UX, learning, and building in the open."
+          headlineBottom={
+            <>
+              <span className={heroStyles.writerHighlight}>public</span>, on
+              purpose.
+            </>
+          }
+          subcopy={
+            <>
+              Essays, threads, and notes about frontend clarity, Web3 UX,
+              learning, and{" "}
+              <span className={heroStyles.writerHighlight}>
+                building in the open
+              </span>
+              .
+            </>
+          }
           modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
         />
       </div>

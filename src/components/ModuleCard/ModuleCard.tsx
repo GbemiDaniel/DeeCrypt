@@ -1,14 +1,16 @@
 import type { LucideIcon } from "lucide-react";
 import styles from "./ModuleCard.module.css";
+import type { ReactNode } from "react";
 
-type ModuleCardProps = {
+interface ModuleCardProps {
   title: string;
-  subtitle?: string;
-  topRight?: React.ReactNode;
+  subtitle?: string; // This is our narrative intro
+  topRight?: ReactNode;
   icon?: LucideIcon;
-  footer?: React.ReactNode;
-  children?: React.ReactNode;
-};
+  footer?: ReactNode;
+  children?: ReactNode;
+  className?: string; // Allow passing external styles
+}
 
 export default function ModuleCard({
   title,
@@ -17,28 +19,30 @@ export default function ModuleCard({
   icon: Icon,
   footer,
   children,
+  className,
 }: ModuleCardProps) {
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${className || ""}`}>
       <div className={styles.head}>
         <div className={styles.left}>
           {Icon && (
             <div className={styles.iconWrap}>
-              <Icon size={22} className={styles.icon} />
+              <Icon size={20} className={styles.icon} />
             </div>
           )}
-          <div>
+          <div className={styles.titleBlock}>
             <h3 className={styles.title}>{title}</h3>
-            {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
+            {/* The Narrative Microcopy */}
+            {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
           </div>
         </div>
 
-        {topRight ? <div className={styles.topRight}>{topRight}</div> : null}
+        {topRight && <div className={styles.topRight}>{topRight}</div>}
       </div>
 
-      {children ? <div className={styles.body}>{children}</div> : null}
+      <div className={styles.body}>{children}</div>
 
-      {footer ? <div className={styles.footer}>{footer}</div> : null}
+      {footer && <div className={styles.footer}>{footer}</div>}
     </article>
   );
 }

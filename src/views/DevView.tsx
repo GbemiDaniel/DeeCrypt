@@ -164,11 +164,12 @@ export default function DevView({ mode, onModeChange }: Props) {
         <Hero
           key={mode}
           mode={mode}
-          availabilityLabel="AVAILABLE FOR HIRE"
-          headlineTop="Welcome"
-          headlineBottom="I'm Gbemi Daniel"
-          subcopy="I’m a front-end developer building for the modern web and the decentralized future.
-I focus on simplifying features and interactions so digital products feel clear, intuitive, and accessible."
+          /* --- NARRATIVE UPDATE: INTENTIONALITY --- */
+          availabilityLabel="OPEN FOR COLLABORATION"
+          headlineTop="Gbemi Daniel"
+          headlineBottom="Frontend Developer"
+          /* The 'Intent' Statement: Focus on friction reduction and clarity. */
+          subcopy="I’m a front-end developer building for the modern web and the decentralized future. I believe complex digital products can be simplified into clear, human experiences — without losing depth or intention."
           modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
         />
       </div>
@@ -193,7 +194,8 @@ I focus on simplifying features and interactions so digital products feel clear,
             >
               <SideQuestCard
                 title="Side Quests"
-                subtitle="Personal projects I'm tinkering with"
+                /* Narrative: Experimental nature */
+                subtitle="Experimental labs where I test new ideas."
                 icon={Rocket}
                 projects={sideProjects}
               />
@@ -206,7 +208,8 @@ I focus on simplifying features and interactions so digital products feel clear,
             >
               <ModuleCard
                 title="Stack"
-                subtitle="Tools I’m building with (and growing into)."
+                /* Narrative: Reliability and Structure */
+                subtitle="My Tech Stack"
                 icon={Layers2}
                 footer={
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>

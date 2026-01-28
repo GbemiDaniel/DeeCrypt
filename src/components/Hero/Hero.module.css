@@ -1,39 +1,126 @@
+/* src/components/Hero/Hero.module.css */
+
 .hero {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: var(--space-4);
   min-height: 28rem;
+  transition: min-height 0.3s ease;
 }
 
 .availability {
   margin-bottom: 0;
 }
 
+/* === SHARED HEADLINE BASE === */
 .headline {
   margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.02em;
   line-height: 0.92;
   font-size: clamp(2.8rem, 6.6vw, 5.4rem);
+  font-family: var(--font-serif);
+  /* Smooth transition for font changes */
+  transition: all 0.4s ease;
 }
 
 .top {
   display: block;
-  padding: var(--space-2) 0;
+  padding: 0.5rem 0;
+  /* Add responsive font size to scale down on smaller screens */
+  font-size: clamp(2rem, 5vw, 5.4rem);
 }
 
 .bottom {
   display: block;
-  font-style: italic;
-  color: color-mix(in oklab, var(--text) 85%, var(--muted));
+  transition: all 0.4s ease;
 }
+
+/* ================================================= */
+/* === MODE 1: DEV VIEW ("Coder/Techy Vibe") === */
+/* ================================================= */
+
+.hero[data-mode="dev"] .headline {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.hero[data-mode="dev"] .top {
+  font-style: normal;
+  color: var(--text, #ffffff);
+}
+
+.hero[data-mode="dev"] .bottom {
+  /* 1. THE FONT: Monospace for the "Coder" feel */
+  font-family: var(--font-mono, monospace);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  /* Scale font aggressively on small screens to prevent wrapping */
+  font-size: clamp(1.5rem, 4.8vw, 4.59rem);
+
+  /* 2. THE METAL GRADIENT (Self-Contained) */
+  /* Replaces the global .text-metal class & is now theme-aware */
+  background-image: linear-gradient(
+    180deg,
+    var(--metal-shine) 0%,
+    var(--metal-highlight) 45%,
+    var(--metal-crease) 50%,
+    var(--metal-highlight) 55%,
+    var(--metal-shine) 100%
+  );
+  background-size: 100% 120%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* Makes the text take the gradient */
+
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* ================================================= */
+/* === MODE 2: WRITER VIEW ("Writer's Calligraphy") === */
+/* ================================================= */
+
+.hero[data-mode="writer"] .headline {
+  font-family: var(--font-serif);
+  font-weight: 400; /* Lighter weight = Elegant */
+  letter-spacing: -0.04em; /* Tighter tracking */
+  /* Define the scoped variable for this mode */
+  --highlight-color: var(--accent2);
+}
+
+.hero[data-mode="writer"] .top {
+  font-style: italic;
+  color: var(--text, #ffffff);
+}
+
+.hero[data-mode="writer"] .bottom {
+  /* 1. THE FONT: Serif Italic for "Calligraphy" */
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.8vw, 4.59rem);
+
+  /* 2. THE COLOR: Solid Ink (No metal gradient) */
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--text, #ffffff);
+  opacity: 0.9;
+}
+
+/* Renamed to be more generic, color is now scoped by the variable */
+.highlight {
+  color: var(--highlight-color);
+  font-style: normal;
+}
+
+/* ================================================= */
 
 .bottomRow {
   display: grid;
   gap: 1rem;
   align-items: center;
+  margin-top: 1.5rem;
 }
 
 .subcopy {
@@ -51,8 +138,5 @@
 @media (min-width: 900px) {
   .bottomRow {
     grid-template-columns: 1fr auto;
-  }
-  .modeSlot {
-    justify-self: start; /* matches AI Studio positioning near text */
   }
 }

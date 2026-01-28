@@ -1,28 +1,36 @@
+/* === MAIN CARD CONTAINER === */
 .card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  /* Narrative Spacing: Increased from 1.2rem to 1.5rem for better reading flow */
+  padding: 1.5rem;
+
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
+
+  /* PREMIUM GLASS BACKGROUND */
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--glass-strong) 85%, transparent),
     color-mix(in oklab, var(--glass) 85%, transparent)
   );
-  border-radius: var(--radius-lg);
-  padding: 1.2rem;
+
   box-shadow: var(--shadow-md), var(--shadow-inset);
-  overflow: hidden;
   backdrop-filter: blur(12px);
+  overflow: hidden;
+
+  /* HOVER TRANSITIONS */
   transform: translateY(0);
   transition:
     transform 160ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
 }
 
-/* inner highlight (premium glass edge) */
+/* Inner highlight (premium glass edge) */
 .card::before {
   content: "";
   position: absolute;
@@ -37,7 +45,7 @@
   opacity: 0.55;
 }
 
-/* hover lift: super subtle */
+/* Hover Lift Effect */
 .card:hover {
   transform: translateY(-2px);
   border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 18%);
@@ -53,6 +61,7 @@
   }
 }
 
+/* === HEADER SECTION === */
 .head {
   display: flex;
   align-items: flex-start;
@@ -67,16 +76,17 @@
   min-width: 0;
 }
 
+/* ICON WRAPPER */
 .iconWrap {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   border: 1px solid var(--border-soft);
-  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  background: color-mix(in oklab, var(--glass-strong) 50%, transparent);
   box-shadow: var(--shadow-sm), var(--shadow-inset);
   display: grid;
   place-items: center;
-  flex: 0 0 auto;
+  flex-shrink: 0;
 }
 
 .icon {
@@ -84,37 +94,53 @@
   opacity: 0.9;
 }
 
+/* TITLE & SUBTITLE WRAPPER */
+.titleBlock {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
   margin: 0;
   font-family: var(--font-serif);
-  font-weight: 520;
-  font-size: clamp(1.5rem, 1.8vw, 1.95rem);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 1.5vw, 1.5rem); /* Slightly adjusted for balance */
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--text);
 }
 
+/* NARRATIVE SUBTITLE (The Microcopy) */
 .subtitle {
-  margin: 0.45rem 0 0;
-  color: var(--muted);
+  margin: 0.35rem 0 0;
+  font-size: 0.925rem;
   line-height: 1.55;
-  max-width: 70ch;
+  font-weight: 400;
+  color: var(--muted);
+  opacity: 0.9;
+  max-width: 65ch;
 }
 
+/* TOP RIGHT SLOT (e.g. for extra actions/badges) */
 .topRight {
   color: var(--muted);
   font-size: 0.9rem;
   white-space: nowrap;
 }
 
+/* === BODY CONTENT === */
 .body {
-  margin-top: 1.05rem;
+  margin-top: 1.25rem;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: auto;
+  /* Ensure content doesn't break layout */
+  overflow-wrap: break-word;
 }
 
+/* === FOOTER SECTION === */
 .footer {
-  margin-top: 1.15rem;
-  padding-top: 1rem;
+  margin-top: auto; /* Pushes footer to bottom if card stretches */
+  padding-top: 1.25rem;
   border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
 }
