@@ -1,5 +1,6 @@
 /* src/components/Hero/Hero.module.css */
 
+/* === 1. BASE LAYOUT === */
 .hero {
   display: flex;
   flex-direction: column;
@@ -14,20 +15,26 @@
 }
 
 /* === SHARED HEADLINE BASE === */
+/* MASTER CONTROLLER */
 .headline {
   margin: 0;
-  line-height: 0.92;
-  font-size: clamp(2.8rem, 6.6vw, 5.4rem);
+  line-height: 1.05;
   font-family: var(--font-serif);
-  /* Smooth transition for font changes */
+
+  /* TUNED FOR "NATURAL" FEEL */
+  /* Min: 2.5rem (40px) - clean on mobile */
+  /* Growth: 7vw - scales up quickly on tablet */
+  /* Max: 5.2rem (83px) - impressive on desktop */
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+
   transition: all 0.4s ease;
 }
 
+/* Default Top Line Style */
 .top {
   display: block;
   padding: 0.5rem 0;
-  /* Add responsive font size to scale down on smaller screens */
-  font-size: clamp(2rem, 5vw, 5.4rem);
+  /* Removed specific font-size so it obeys the clamp above */
 }
 
 .bottom {
@@ -50,28 +57,29 @@
 }
 
 .hero[data-mode="dev"] .bottom {
-  /* 1. THE FONT: Monospace for the "Coder" feel */
+  /* 1. FONT: Monospace */
   font-family: var(--font-mono, monospace);
   font-style: normal;
   font-weight: 400;
   letter-spacing: -0.03em;
-  /* Scale font aggressively on small screens to prevent wrapping */
-  font-size: clamp(1.5rem, 4.8vw, 4.59rem);
 
-  /* 2. THE METAL GRADIENT (Self-Contained) */
-  /* Replaces the global .text-metal class & is now theme-aware */
+  /* 2. SCALE DOWN: Mono is wide, so we shrink it to 75% of the serif size */
+  font-size: 0.75em;
+  line-height: 1.3;
+
+  /* 3. METAL GRADIENT */
   background-image: linear-gradient(
     180deg,
-    var(--metal-shine) 0%,
-    var(--metal-highlight) 45%,
-    var(--metal-crease) 50%,
-    var(--metal-highlight) 55%,
-    var(--metal-shine) 100%
+    var(--metal-shine, #ffffff) 0%,
+    var(--metal-highlight, #cbd5e1) 45%,
+    var(--metal-crease, #64748b) 50%,
+    var(--metal-highlight, #cbd5e1) 55%,
+    var(--metal-shine, #ffffff) 100%
   );
   background-size: 100% 120%;
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent; /* Makes the text take the gradient */
+  color: transparent;
 
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
@@ -83,24 +91,29 @@
 .hero[data-mode="writer"] .headline {
   font-family: var(--font-serif);
   font-weight: 400; /* Lighter weight = Elegant */
-  letter-spacing: -0.04em; /* Tighter tracking */
-  /* Define the scoped variable for this mode */
+  letter-spacing: -0.04em;
+
+  /* Define highlight color */
   --highlight-color: var(--accent2);
 }
 
 .hero[data-mode="writer"] .top {
   font-style: italic;
   color: var(--text, #ffffff);
+  /* Inherit the 2.5rem clamp directly */
+  font-size: inherit;
 }
 
 .hero[data-mode="writer"] .bottom {
-  /* 1. THE FONT: Serif Italic for "Calligraphy" */
+  /* 1. FONT: Serif Italic */
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(1.5rem, 4.8vw, 4.59rem);
 
-  /* 2. THE COLOR: Solid Ink (No metal gradient) */
+  /* 2. SCALE: Full size (1em) because Serif is narrower than Mono */
+  font-size: inherit;
+
+  /* 3. SOLID INK COLOR */
   background: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
@@ -108,12 +121,15 @@
   opacity: 0.9;
 }
 
-/* Renamed to be more generic, color is now scoped by the variable */
-.highlight {
+/* Highlights */
+.writerHighlight {
   color: var(--highlight-color);
-  font-style: normal;
+  font-style: italic;
+  font-weight: 500;
 }
 
+/* ================================================= */
+/* === FOOTER & UTILS === */
 /* ================================================= */
 
 .bottomRow {

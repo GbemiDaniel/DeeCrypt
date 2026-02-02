@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ExternalLink, Code, PenTool, Zap, Award } from "lucide-react"; // Add generic icons just in case
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import styles from "./BadgeCard.module.css";
 
@@ -31,14 +31,13 @@ export function BadgeCard({
 
   const isWriter = type === "writer";
 
-  // "Click Outside" logic to deactivate the card
+  // "Click Outside" logic
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
         setIsActive(false);
       }
     }
-    // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -51,11 +50,11 @@ export function BadgeCard({
       className={cn(
         styles.card,
         isWriter ? styles.cardWriter : styles.cardDev,
-        isActive && styles.active, // Toggle the "Life" class
+        isActive && styles.active,
       )}
-      onClick={() => setIsActive(true)} // First Click: Wake it up
+      onClick={() => setIsActive(true)}
     >
-      {/* 1. EMBEDDED ICON ZONE */}
+      {/* 1. ICON ZONE */}
       <div className={styles.iconZone}>
         {image ? (
           <img src={image} alt={title} className={styles.badgeImage} />
@@ -89,15 +88,14 @@ export function BadgeCard({
         <p className={styles.subtitle}>{subtitle}</p>
       </div>
 
-      {/* 3. LINK ICON (The Portal) */}
-      {/* Only clickable when the card is active */}
+      {/* 3. LINK PORTAL */}
       <a
         href={link}
         target="_blank"
         rel="noopener noreferrer"
         className={styles.linkWrapper}
         onClick={(e) => {
-          if (!isActive) e.preventDefault(); // Prevent click if not woke
+          if (!isActive) e.preventDefault();
         }}
         aria-label="View Project"
       >

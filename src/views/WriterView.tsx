@@ -1,10 +1,12 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState, CSSProperties } from "react";
 
-// 1. IMPORTS FOR SCROLL SPY
+// 1. IMPORTS FOR SCROLL SPY & PRELOADER
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
+import { AnimatePresence } from "framer-motion"; // <--- NEW IMPORT
+import { Preloader } from "@/components/Preloader/Preloader"; // <--- NEW IMPORT
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -23,7 +25,7 @@ const SPY_CONFIG = {
   threshold: 0,
   rootMargin: "-45% 0px -45% 0px",
   triggerOnce: false,
-  delay: 100, // <--- THE FIX: Wait 100ms before firing. Ignores fast scrolls.
+  delay: 100,
 };
 
 type Props = {
@@ -63,6 +65,9 @@ const PLATFORMS = [
 ];
 
 export default function WriterView({ mode, onModeChange }: Props) {
+  // --- LOADING STATE ---
+  const [isLoading, setIsLoading] = useState(true); // <--- NEW STATE
+
   const [activePostId, setActivePostId] = useState(posts[0]?.id);
   const [open, setOpen] = useState(false);
 
@@ -118,110 +123,130 @@ export default function WriterView({ mode, onModeChange }: Props) {
   );
 
   return (
-    <>
-      <div ref={heroRef}>
-        <Hero
-          availabilityLabel="WRITING"
-          headlineTop="Writing in"
-          headlineBottom={
-            <>
-              <span className={heroStyles.writerHighlight}>public</span>, on
-              purpose.
-            </>
-          }
-          subcopy={
-            <>
-              Essays, threads, and notes about frontend clarity, Web3 UX,
-              learning, and{" "}
-              <span className={heroStyles.writerHighlight}>
-                building in the open
-              </span>
-              .
-            </>
-          }
-          modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
-        />
-      </div>
+    <div className={styles.writerScope}>
+      {/* 1. LOADING OVERLAY */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Preloader key="loader" onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
 
-      {/* 4. ATTACH REFS */}
-      <div ref={isDesktop ? desktopGridRef : undefined}>
-        <ModuleGrid
-          left={
-            <div
-              ref={!isDesktop ? mobileNotesRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <WriterCarousel
-                items={posts}
-                activeId={activePostId}
-                onActiveIdChange={setActivePostId}
-                onOpen={() => setOpen(true)}
-              />
-            </div>
-          }
-          rightTop={
-            <div
-              ref={!isDesktop ? mobileTopicsRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <ModuleCard
-                title="Topics"
-                subtitle="Themes I keep circling back to."
-                icon={BookOpen}
-                footer={
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {[
-                      "UI clarity",
-                      "Frontend systems",
-                      "Web3 UX",
-                      "Writing craft",
-                      "Learning notes",
-                      "Product thinking",
-                    ].map((t) => (
-                      <Tag key={t}>{t}</Tag>
-                    ))}
-                  </div>
-                }
-              />
-            </div>
-          }
-          rightBottom={
-            <div
-              ref={!isDesktop ? mobilePlatformRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <ModuleCard
-                title="Platforms"
-                subtitle="Where I publish and share."
-                icon={Newspaper}
-                footer={
-                  <div className={styles.platformContainer}>
-                    {PLATFORMS.map((p) => (
-                      <a
-                        key={p.id}
-                        href={p.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.platformBadge}
-                        style={{ "--badge-color": p.color } as CSSProperties}
+      {/* 2. MAIN CONTENT */}
+      {!isLoading && (
+        <>
+          <div ref={heroRef}>
+            <Hero
+              availabilityLabel="WRITING"
+              headlineTop="Writing in"
+              headlineBottom={
+                <>
+                  <span className={heroStyles.writerHighlight}>public</span>, on
+                  purpose.
+                </>
+              }
+              subcopy={
+                <>
+                  Essays, threads, and notes about frontend clarity, Web3 UX,
+                  learning, and{" "}
+                  <span className={heroStyles.writerHighlight}>
+                    building in the open
+                  </span>
+                  .
+                </>
+              }
+              modeToggleSlot={
+                <ModeToggle mode={mode} onChange={onModeChange} />
+              }
+            />
+          </div>
+
+          {/* 4. ATTACH REFS */}
+          <div ref={isDesktop ? desktopGridRef : undefined}>
+            <ModuleGrid
+              left={
+                <div
+                  ref={!isDesktop ? mobileNotesRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <WriterCarousel
+                    items={posts}
+                    activeId={activePostId}
+                    onActiveIdChange={setActivePostId}
+                    onOpen={() => setOpen(true)}
+                  />
+                </div>
+              }
+              rightTop={
+                <div
+                  ref={!isDesktop ? mobileTopicsRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <ModuleCard
+                    title="Topics"
+                    subtitle="Themes I keep circling back to."
+                    icon={BookOpen}
+                    footer={
+                      <div
+                        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
                       >
-                        <span className={styles.platformIcon}>{p.icon}</span>
-                        {p.label}
-                      </a>
-                    ))}
-                  </div>
-                }
-              />
-            </div>
-          }
-        />
-      </div>
+                        {[
+                          "UI clarity",
+                          "Frontend systems",
+                          "Web3 UX",
+                          "Writing craft",
+                          "Learning notes",
+                          "Product thinking",
+                        ].map((t) => (
+                          <Tag key={t}>{t}</Tag>
+                        ))}
+                      </div>
+                    }
+                  />
+                </div>
+              }
+              rightBottom={
+                <div
+                  ref={!isDesktop ? mobilePlatformRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <ModuleCard
+                    title="Platforms"
+                    subtitle="Where I publish and share."
+                    icon={Newspaper}
+                    footer={
+                      <div className={styles.platformContainer}>
+                        {PLATFORMS.map((p) => (
+                          <a
+                            key={p.id}
+                            href={p.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.platformBadge}
+                            style={
+                              { "--badge-color": p.color } as CSSProperties
+                            }
+                          >
+                            <span className={styles.platformIcon}>
+                              {p.icon}
+                            </span>
+                            {p.label}
+                          </a>
+                        ))}
+                      </div>
+                    }
+                  />
+                </div>
+              }
+            />
+          </div>
 
-      <WriterDialog
-        open={open}
-        post={activePost}
-        onClose={() => setOpen(false)}
-      />
-    </>
+          <WriterDialog
+            open={open}
+            post={activePost}
+            onClose={() => setOpen(false)}
+          />
+        </>
+      )}
+    </div>
   );
 }

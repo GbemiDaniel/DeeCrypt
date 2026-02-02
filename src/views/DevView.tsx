@@ -1,10 +1,12 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState } from "react";
 
-// --- 1. IMPORTS FOR SCROLL SPY ---
+// --- 1. IMPORTS FOR SCROLL SPY & PRELOADER ---
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
+import { AnimatePresence } from "framer-motion"; // <--- NEW IMPORT
+import { Preloader } from "@/components/Preloader/Preloader"; // <--- NEW IMPORT
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -65,13 +67,11 @@ const sideProjects: SideProject[] = [
 ];
 
 // --- 2. OBSERVER CONFIGURATION ---
-// "The Laser Scanner": Only triggers when element hits the MIDDLE 10% of screen.
-// This prevents mobile sections from overlapping or triggering too early.
 const SPY_CONFIG = {
   threshold: 0,
   rootMargin: "-45% 0px -45% 0px",
   triggerOnce: false,
-  delay: 100, // <--- THE FIX: Wait 100ms before firing. Ignores fast scrolls.
+  delay: 100,
 };
 
 type Props = {
@@ -84,26 +84,28 @@ function clamp(n: number, min: number, max: number) {
 }
 
 export default function DevView({ mode, onModeChange }: Props) {
+  // --- LOADING STATE ---
+  const [isLoading, setIsLoading] = useState(true); // <--- NEW STATE
+
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
 
-  // 3. DETECT LAYOUT (768px matches Tailwind 'md')
-  // We use this to decide if we show one big label or granular labels
+  // 3. DETECT LAYOUT
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // --- DESKTOP OBSERVER (The Unified Grid) ---
+  // --- DESKTOP OBSERVER ---
   const { ref: desktopGridRef } = useInView({
     ...SPY_CONFIG,
-    skip: !isDesktop, // Disable on mobile to save performance
+    skip: !isDesktop,
     onChange: (inView) => {
       if (inView && isDesktop) setSectionLabel("PROJECTS & STACK");
     },
   });
 
-  // --- MOBILE OBSERVERS (Granular Sections) ---
+  // --- MOBILE OBSERVERS ---
   const { ref: mobileProjectsRef } = useInView({
     ...SPY_CONFIG,
-    skip: isDesktop, // Disable on desktop
+    skip: isDesktop,
     onChange: (inView) => {
       if (inView && !isDesktop) setSectionLabel("MY PROJECTS");
     },
@@ -125,13 +127,11 @@ export default function DevView({ mode, onModeChange }: Props) {
     },
   });
 
-  // --- HERO OBSERVER (Resets label to Default) ---
+  // --- HERO OBSERVER ---
   const { ref: heroRef } = useInView({
     threshold: 0,
-    // Triggers when the TOP of the hero leaves the screen (scrolling down)
     rootMargin: "-10% 0px -90% 0px",
     onChange: (inView) => {
-      // If Hero is visible, clear the label to show default Navbar text
       if (inView) setSectionLabel(null);
     },
   });
@@ -159,89 +159,100 @@ export default function DevView({ mode, onModeChange }: Props) {
 
   return (
     <>
-      {/* 4. HERO SECTION (Ref attached to detect top of page) */}
-      <div ref={heroRef}>
-        <Hero
-          key={mode}
-          mode={mode}
-          /* --- NARRATIVE UPDATE: INTENTIONALITY --- */
-          availabilityLabel="OPEN FOR COLLABORATION"
-          headlineTop="Gbemi Daniel"
-          headlineBottom="Frontend Developer"
-          /* The 'Intent' Statement: Focus on friction reduction and clarity. */
-          subcopy="I’m a front-end developer building for the modern web and the decentralized future. I believe complex digital products can be simplified into clear, human experiences — without losing depth or intention."
-          modeToggleSlot={<ModeToggle mode={mode} onChange={onModeChange} />}
-        />
-      </div>
+      {/* 1. LOADING OVERLAY */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Preloader key="loader" onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
 
-      {/* 5. GRID SECTION WRAPPER */}
-      {/* On Desktop, this wrapper triggers "PROJECTS & STACK" */}
-      <div ref={isDesktop ? desktopGridRef : undefined}>
-        <ModuleGrid
-          // On Mobile, we attach refs to the inner children for granular tracking
-          left={
-            <div
-              ref={!isDesktop ? mobileProjectsRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <PreviewCarousel {...carouselProps} />
-            </div>
-          }
-          rightTop={
-            <div
-              ref={!isDesktop ? mobileSideQuestRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <SideQuestCard
-                title="Side Quests"
-                /* Narrative: Experimental nature */
-                subtitle="Experimental labs where I test new ideas."
-                icon={Rocket}
-                projects={sideProjects}
-              />
-            </div>
-          }
-          rightBottom={
-            <div
-              ref={!isDesktop ? mobileStackRef : undefined}
-              style={{ height: "100%" }}
-            >
-              <ModuleCard
-                title="Stack"
-                /* Narrative: Reliability and Structure */
-                subtitle="My Tech Stack"
-                icon={Layers2}
-                footer={
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {TECH_STACK.map((tech) => (
-                      <SkillBadge
-                        key={tech.name}
-                        name={tech.name}
-                        icon={tech.icon}
-                        color={tech.color}
-                      />
-                    ))}
-                  </div>
-                }
-              />
-            </div>
-          }
-        />
-      </div>
+      {/* 2. MAIN CONTENT */}
+      {!isLoading && (
+        <>
+          {/* 4. HERO SECTION */}
+          <div ref={heroRef}>
+            <Hero
+              key={mode}
+              mode={mode}
+              availabilityLabel="OPEN FOR COLLABORATION"
+              headlineTop="Gbemi Daniel"
+              headlineBottom="Frontend Developer"
+              subcopy="I’m a front-end developer building for the modern web and the decentralized future. I believe complex digital products can be simplified into clear, human experiences — without losing depth or intention."
+              modeToggleSlot={
+                <ModeToggle mode={mode} onChange={onModeChange} />
+              }
+            />
+          </div>
 
-      <PreviewDialog
-        open={openPreview}
-        title={active?.title ?? "Preview"}
-        imageSrc={active?.previewImage}
-        videoSrc={active?.previewVideo}
-        description={active?.descriptionLong ?? active?.subtitle}
-        meta={active?.meta}
-        primaryHref={active?.links?.primary?.href}
-        primaryLabel={active?.links?.primary?.label}
-        secondaryHref={active?.links?.secondary?.href}
-        secondaryLabel={active?.links?.secondary?.label}
-        onClose={() => setOpenPreview(false)}
-      />
+          {/* 5. GRID SECTION WRAPPER */}
+          <div ref={isDesktop ? desktopGridRef : undefined}>
+            <ModuleGrid
+              left={
+                <div
+                  ref={!isDesktop ? mobileProjectsRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <PreviewCarousel {...carouselProps} />
+                </div>
+              }
+              rightTop={
+                <div
+                  ref={!isDesktop ? mobileSideQuestRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <SideQuestCard
+                    title="Side Quests"
+                    subtitle="Experimental labs where I test new ideas."
+                    icon={Rocket}
+                    projects={sideProjects}
+                  />
+                </div>
+              }
+              rightBottom={
+                <div
+                  ref={!isDesktop ? mobileStackRef : undefined}
+                  style={{ height: "100%" }}
+                >
+                  <ModuleCard
+                    title="Stack"
+                    subtitle="My Tech Stack"
+                    icon={Layers2}
+                    footer={
+                      <div
+                        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+                      >
+                        {TECH_STACK.map((tech) => (
+                          <SkillBadge
+                            key={tech.name}
+                            name={tech.name}
+                            icon={tech.icon}
+                            color={tech.color}
+                          />
+                        ))}
+                      </div>
+                    }
+                  />
+                </div>
+              }
+            />
+          </div>
+
+          <PreviewDialog
+            open={openPreview}
+            title={active?.title ?? "Preview"}
+            imageSrc={active?.previewImage}
+            videoSrc={active?.previewVideo}
+            description={active?.descriptionLong ?? active?.subtitle}
+            meta={active?.meta}
+            primaryHref={active?.links?.primary?.href}
+            primaryLabel={active?.links?.primary?.label}
+            secondaryHref={active?.links?.secondary?.href}
+            secondaryLabel={active?.links?.secondary?.label}
+            onClose={() => setOpenPreview(false)}
+            mode={mode}
+          />
+        </>
+      )}
     </>
   );
 }

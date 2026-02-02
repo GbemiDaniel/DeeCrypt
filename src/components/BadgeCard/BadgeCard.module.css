@@ -10,19 +10,17 @@
   gap: 1.25rem;
   padding: 1.5rem 1.75rem;
 
-  /* --- CHASSIS --- */
-  border-radius: 20px;
+  /* --- CHASSIS (THEME AWARE) --- */
+  border-radius: var(--radius-lg, 20px);
 
-  /* Default State: Dormant Dark Glass */
-  background: color-mix(in srgb, var(--bg) 5%, #050505);
+  /* Use Global Token for background so it flips in Light Mode */
+  background: var(--card);
 
-  /* The "Galaxy Edge" Spines */
-  box-shadow:
-    0 10px 40px -10px rgba(0, 0, 0, 0.7),
-    inset 2px 0 0 0 rgba(255, 255, 255, 0.08); /* Left Highlight */
+  /* Use Global Token for Shadow */
+  box-shadow: var(--shadow-sm);
 
-  /* Subtle borders */
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  /* Use Global Token for Border */
+  border: 1px solid var(--border-soft);
   border-left: 0; /* Left is handled by the specular ridge */
 
   /* Interaction Props */
@@ -41,6 +39,7 @@
   bottom: 0;
   left: 0;
   width: 3px;
+  /* Gradient uses the accent color */
   background: linear-gradient(
     180deg,
     transparent,
@@ -48,21 +47,22 @@
     transparent
   );
   box-shadow: 0 0 15px 1px var(--badge-accent);
-  opacity: 0.6; /* Dimmer by default */
+  opacity: 0.6;
   z-index: 10;
   transition: opacity 0.5s ease;
 }
 
-/* --- VARIANTS --- */
+/* --- VARIANTS (Map to your Global Accents) --- */
 .cardDev {
-  --badge-accent: #06b6d4;
+  /* Use your defined cyan/sky accent */
+  --badge-accent: var(--accent, #06b6d4);
 }
 .cardWriter {
-  --badge-accent: #9333ea;
+  /* Use your defined purple/secondary accent */
+  --badge-accent: var(--accent2, #9333ea);
 }
 
 /* --- THE "PULSING HEART" (Right Side Illumination) --- */
-/* Dormant state: Hidden or very faint */
 .card::after {
   content: "";
   position: absolute;
@@ -77,7 +77,7 @@
     transparent 70%
   );
   filter: blur(25px);
-  opacity: 0; /* Hidden initially */
+  opacity: 0;
   z-index: 0;
   pointer-events: none;
   transition:
@@ -89,31 +89,26 @@
    INTERACTION STATES
    ========================================= */
 
-/* 1. HOVER (Preview) - Just a subtle lift */
+/* 1. HOVER */
 .card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--border); /* Brighten border slightly */
 }
 
-/* 2. ACTIVE (Woken Up) - The "SideQuest" Activation */
+/* 2. ACTIVE (Woken Up) */
 .card.active {
-  transform: scale(1.02); /* Pop out */
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bg) 5%, #000) 0%,
-    color-mix(in srgb, var(--card) 20%, #0a0a0a) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+  transform: scale(1.02);
+  /* Slightly darken/lighten bg on active based on theme */
+  background: color-mix(in srgb, var(--card) 95%, var(--badge-accent));
+  border-color: var(--badge-accent);
+  box-shadow: var(--shadow-md);
 }
 
-/* Activate the Pulsing Heart */
 .card.active::after {
   opacity: 0.6;
   animation: pulseGlow 4s ease-in-out infinite;
 }
 
-/* Brighten the Specular Ridge */
 .card.active::before {
   opacity: 1;
   box-shadow: 0 0 20px 2px var(--badge-accent);
@@ -142,11 +137,9 @@
   place-items: center;
   position: relative;
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.05),
-    transparent 60%
-  );
+  /* Subtle surface for the icon */
+  background: var(--secondary);
+  border: 1px solid var(--border-soft);
   transition: transform 0.5s ease;
 }
 
@@ -154,17 +147,17 @@
   width: 38px;
   height: 38px;
   object-fit: contain;
-  filter: drop-shadow(
-    0 0 5px color-mix(in srgb, var(--badge-accent) 40%, transparent)
-  );
+  /* Dynamic drop shadow using the accent */
+  filter: drop-shadow(0 0 2px var(--badge-accent));
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0.8;
+  opacity: 0.9;
+  /* Ensure icons are visible in light mode by using current text color */
+  color: var(--foreground);
 }
 
-/* Active State Icon Animation */
 .card.active .badgeImage {
   transform: scale(1.25) rotate(5deg);
-  filter: drop-shadow(0 0 15px var(--badge-accent));
+  filter: drop-shadow(0 0 10px var(--badge-accent));
   opacity: 1;
 }
 
@@ -185,10 +178,12 @@
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
+
 .date {
   font-family: var(--font-mono, monospace);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  /* Theme aware text color */
+  color: var(--muted-foreground);
   letter-spacing: 0.05em;
 }
 
@@ -201,45 +196,48 @@
   border-radius: 6px;
   white-space: nowrap;
 }
+
 .statusCompleted {
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
-  border: 1px solid rgba(74, 222, 128, 0.2);
-  box-shadow: 0 0 10px -2px rgba(74, 222, 128, 0.3);
+  color: #16a34a; /* Green-600 (Visible on Light & Dark) */
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid rgba(22, 163, 74, 0.2);
 }
+
 .statusOngoing {
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.2);
+  color: #d97706; /* Amber-600 (Visible on Light & Dark) */
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
 .title {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 700;
-  color: #fff;
+  /* THEME AWARE TEXT */
+  color: var(--foreground);
   line-height: 1.2;
   letter-spacing: -0.01em;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
 }
+
 .cardWriter .title {
   font-family: var(--font-serif);
 }
+
 .subtitle {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.7);
+  /* THEME AWARE TEXT */
+  color: var(--muted-foreground);
   line-height: 1.5;
   margin-top: 0.35rem;
   max-width: 95%;
 }
 
-/* --- LINK INDICATOR (THE PORTAL) --- */
+/* --- LINK INDICATOR --- */
 .linkWrapper {
   position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 10;
-  /* Crucial: Disable pointer events until active */
   pointer-events: none;
 }
 
@@ -254,17 +252,14 @@
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* When active, show the icon */
 .card.active .linkIcon {
-  opacity: 0.6;
+  opacity: 1;
   transform: translateX(0) scale(1);
 }
 
-/* When hovering specifically on the link icon (CTA) */
 .linkWrapper:hover .linkIcon {
-  opacity: 1;
   transform: scale(1.2);
-  filter: drop-shadow(0 0 8px var(--badge-accent));
+  filter: drop-shadow(0 0 5px var(--badge-accent));
 }
 
 /* --- MOBILE OPTIMIZATION --- */

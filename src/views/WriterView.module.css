@@ -1,5 +1,19 @@
 /* src/views/WriterView.module.css */
 
+/* === THEME OVERRIDE WRAPPER === */
+/* Wrap your entire WriterView TSX return in this class */
+.writerScope {
+  /* This is the key: We remap the generic accent to the writer accent (Purple) */
+  --accent: var(--accent2);
+
+  /* Ensure the wrapper doesn't break layout */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === PLATFORM BADGES (Your existing styles) === */
+
 /* Container for the badges (replaces the ticker container) */
 .platformContainer {
   display: flex;

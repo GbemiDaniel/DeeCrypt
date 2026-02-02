@@ -13,17 +13,15 @@
   margin: 0;
 }
 
-/* Fixed Background - NOW THEME AWARE */
 .fixedBackground {
   position: fixed;
   inset: 0;
   z-index: -1;
-  /* CHANGED: Use variable instead of #030303 */
   background-color: var(--bg);
   transition: background-color 0.3s ease;
 }
 
-/* Texture Grain */
+/* Texture Grain Overlay */
 .fixedBackground::before {
   content: "";
   position: absolute;
@@ -34,68 +32,111 @@
 }
 
 /* =========================================
-   2. LIQUID CHROME TYPOGRAPHY (Theme Aware)
+   2. TYPOGRAPHY & HERO TEXT
    ========================================= */
 
+/* Use for highlights if needed */
 .metalText {
-  /* Default (Dark Mode): Silver/White Chrome */
-  --metal-shine: #ffffff;
-  --metal-mid: #cbd5e1;
-  --metal-dark: #475569;
-
   background-image: linear-gradient(
-    180deg,
-    var(--metal-shine) 0%,
-    var(--metal-mid) 45%,
-    var(--metal-dark) 50%,
-    var(--metal-mid) 55%,
-    var(--metal-shine) 100%
+    135deg,
+    var(--foreground) 0%,
+    var(--muted-foreground) 50%,
+    var(--foreground) 100%
   );
-  background-size: 100% 120%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-weight: 800;
   letter-spacing: -0.02em;
-
-  /* Physical Shadow */
-  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.5));
 }
 
-/* LIGHT MODE OVERRIDE: Gunmetal / Dark Steel */
-/* This ensures the text is visible on a white background */
-:global(.light) .metalText,
-[data-theme="light"] .metalText {
-  --metal-shine: #1e293b; /* Dark Slate */
-  --metal-mid: #475569; /* Lighter Slate */
-  --metal-dark: #0f172a; /* Almost Black Ridge */
-
-  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.2));
+/* The Typewriter Font (Matches intro text color) */
+.codeFont {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: -0.04em;
+  color: var(--muted-foreground);
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  font-weight: 500;
+  min-height: 1.5em; /* Stops jumping when empty */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-/* GLOW VARIANTS */
+/* The Final Static Header */
+.finalHeader {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: var(--muted-foreground);
+  margin-left: 4px;
+}
+
+.arrowIcon {
+  color: var(--accent);
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: bounce 2s infinite;
+  opacity: 0.8;
+}
+
+.introText {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted-foreground);
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+@media (min-width: 768px) {
+  .introText {
+    font-size: 1.125rem;
+  }
+}
+.introText strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
 .glowDev {
-  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.6));
+  filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.4));
 }
 .glowWriter {
-  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
 }
 
 /* =========================================
-   3. HERO & LAYOUT
+   3. HERO SECTION STRUCTURE
    ========================================= */
 
 .heroScreen {
   min-height: 100vh;
-  min-height: 100svh;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0 1.5rem;
-  box-sizing: border-box;
-  padding-bottom: 8vh;
+  padding-bottom: 10vh;
+  perspective: 1000px;
 }
 
 .contentWrapper {
@@ -103,6 +144,87 @@
   max-width: 900px;
   margin: 0 auto;
 }
+
+.heroSection {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  min-height: 450px; /* Reserves vertical space so text changing doesn't shift page */
+}
+
+/* Holds the swapping text elements to prevent layout jumps */
+.textContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 5rem;
+}
+
+/* 3D Tilt Container */
+.tiltContainer {
+  --rX: 0deg;
+  --rY: 0deg;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rX)) rotateY(var(--rY));
+  transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
+  margin-bottom: 1rem;
+  cursor: grab;
+}
+
+.avatarWrapper {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: float 8s ease-in-out infinite;
+}
+
+.avatar {
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--border-soft);
+  box-shadow: var(--shadow-md);
+  transform: translateZ(20px);
+}
+@media (min-width: 768px) {
+  .avatar {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+
+.statusBadge {
+  position: absolute;
+  bottom: 0;
+  right: -0.625rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 0.25rem 0.625rem;
+  border-radius: 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  transform: translateZ(40px);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+.statusDot {
+  width: 0.375rem;
+  height: 0.375rem;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* =========================================
+   4. SECTIONS & LAYOUT (Standard)
+   ========================================= */
 
 .flowSection {
   width: 100%;
@@ -121,10 +243,6 @@
   }
 }
 
-/* =========================================
-   4. HEADERS & DIVIDERS
-   ========================================= */
-
 .sectionHeader {
   display: flex;
   align-items: center;
@@ -133,13 +251,10 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto 3rem auto;
-  opacity: 0.9;
 }
-
 .headerLine {
   flex: 1;
   height: 1px;
-  /* CHANGED: Dynamic border color */
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -148,7 +263,6 @@
   );
   opacity: 0.6;
 }
-
 .headerPill {
   display: flex;
   align-items: center;
@@ -158,16 +272,11 @@
   background: color-mix(in oklab, var(--glass-strong) 60%, transparent);
   border: 1px solid var(--border-soft);
   backdrop-filter: blur(8px);
-  box-shadow: var(--shadow-sm);
-
   font-family: var(--font-serif);
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--foreground);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
 }
-
 .headerIcon {
   color: var(--accent);
   opacity: 0.9;
@@ -184,95 +293,11 @@
   color: #22c55e;
 }
 
-/* =========================================
-   5. COMPONENT STYLES
-   ========================================= */
-
-.heroSection {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-/* AVATAR & BADGE (Preserved Layout) */
-.avatarWrapper {
-  position: relative;
-  margin-bottom: 0.5rem;
-}
-
-.avatar {
-  width: 6.25rem;
-  height: 6.25rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--border-soft);
-  box-shadow: var(--shadow-md);
-}
-@media (min-width: 768px) {
-  .avatar {
-    width: 7.5rem;
-    height: 7.5rem;
-  }
-}
-
-.statusBadge {
-  position: absolute;
-  bottom: 0;
-  right: -0.625rem;
-  background: var(--card); /* CHANGED: Dynamic Card BG */
-  border: 1px solid var(--border);
-  color: var(--foreground); /* CHANGED: Dynamic Text */
-  padding: 0.25rem 0.625rem;
-  border-radius: 1.25rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  box-shadow: var(--shadow-sm);
-  white-space: nowrap;
-}
-.statusDot {
-  width: 0.375rem;
-  height: 0.375rem;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.headline {
-  font-family: var(--font-serif, serif);
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--foreground);
-}
-
-.introText {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--muted-foreground);
-  max-width: 600px;
-}
-@media (min-width: 768px) {
-  .introText {
-    font-size: 1.125rem;
-    line-height: 1.7;
-  }
-}
-.introText strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
-/* Grid & Cards */
 .gridSection {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  width: 100%;
 }
 @media (min-width: 640px) {
   .gridSection {
@@ -287,22 +312,22 @@
   padding: 1.5rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
-  /* Theme aware glass */
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--glass-strong) 85%, transparent),
     color-mix(in oklab, var(--glass) 85%, transparent)
   );
-  box-shadow: var(--shadow-sm);
   backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 .skillCard:hover {
-  transform: translateY(-2px);
   border-color: var(--accent);
+  transform: translateY(-5px);
 }
 
 .iconBox {
@@ -338,11 +363,11 @@
   line-height: 1.6;
 }
 
-/* Utility */
 .certGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  width: 100%;
 }
 @media (min-width: 640px) {
   .certGrid {
@@ -350,30 +375,57 @@
     gap: 1.5rem;
   }
 }
+
 .ctaSection {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* FIX: Ensure no extra margin is crushing it on mobile */
   padding: 1rem 0;
 }
-
-/* Ensure contentWrapper allows full width on mobile */
 @media (max-width: 640px) {
   .contentWrapper {
-    padding: 0 1rem; /* Reduce global side padding on mobile */
+    padding: 0 1rem;
   }
-
   .ctaSection {
-    padding: 0; /* Let the card handle its own spacing */
+    padding: 0;
+  }
+}
+
+/* ANIMATIONS */
+@keyframes float {
+  0% {
+    transform: translateY(0px) translateZ(20px);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(20px);
+  }
+  100% {
+    transform: translateY(0px) translateZ(20px);
   }
 }
 @keyframes pulse {
   0%,
   100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
     opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
   }
 }
