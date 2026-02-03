@@ -1,7 +1,13 @@
 import { Github, Twitter, Linkedin, Mail } from "lucide-react";
 import styles from "./Footer.module.css";
+// Ensure you import the Mode type so TypeScript is happy
+import type { Mode } from "../../app/modes";
 
-export default function Footer() {
+interface FooterProps {
+  mode: Mode;
+}
+
+export default function Footer({ mode }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
@@ -19,8 +25,16 @@ export default function Footer() {
     { icon: Mail, href: "mailto:your@email.com", label: "Email" },
   ];
 
+  // Determine which class to apply based on mode
+  const modeClass =
+    mode === "writer"
+      ? styles.writerMode
+      : mode === "about"
+        ? styles.aboutMode
+        : "";
+
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${modeClass}`}>
       <div className={`container ${styles.inner}`}>
         {/* Left: Brand & Copy */}
         <div className={styles.left}>

@@ -250,6 +250,8 @@ export default function DevView({ mode, onModeChange }: Props) {
             secondaryLabel={active?.links?.secondary?.label}
             onClose={() => setOpenPreview(false)}
             mode={mode}
+            highlights={active?.highlights}
+            highlightsTitle={active?.highlightsTitle}
           />
         </>
       )}

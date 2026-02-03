@@ -5,6 +5,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  CheckCircle2, // New icon for bullet points
 } from "lucide-react";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -25,6 +26,12 @@ export type PreviewDialogProps = {
   gallery?: string[];
   videoSrc?: string;
   description?: string;
+
+  // --- NEW PROPS ---
+  highlights?: string[]; // Array of bullet points
+  highlightsTitle?: string; // Custom header (e.g. "Key Contributions")
+  // ----------------
+
   meta?: PreviewDialogMeta[];
   primaryHref?: string;
   primaryLabel?: string;
@@ -41,14 +48,20 @@ export default function PreviewDialog({
   gallery = [],
   videoSrc,
   description,
+
+  // Destructure new props with defaults
+  highlights,
+  highlightsTitle = "Key Highlights",
+
   meta,
   primaryHref,
   primaryLabel,
   secondaryHref,
   secondaryLabel,
   onClose,
-  mode = "dev", // We keep this prop but don't force theme logic with it
+  mode = "dev",
 }: PreviewDialogProps) {
+  // --- MEDIA LOGIC (Unchanged) ---
   const slides = useMemo(() => {
     const list = [];
     if (imageSrc) list.push({ type: "image", src: imageSrc });
@@ -79,7 +92,6 @@ export default function PreviewDialog({
   const nextSlide = () => goToSlide((activeIndex + 1) % slides.length);
   const prevSlide = () =>
     goToSlide((activeIndex - 1 + slides.length) % slides.length);
-
   const videoIndex = slides.findIndex((s) => s.type === "video");
 
   return (
@@ -91,8 +103,9 @@ export default function PreviewDialog({
         )}
       >
         <div className={styles.root}>
-          {/* === LEFT: MEDIA STAGE (Always Dark) === */}
+          {/* === LEFT COLUMN: MEDIA STAGE (Always Dark) === */}
           <div className="relative w-full h-[45vh] md:h-full md:w-[60%] bg-black group shrink-0">
+            {/* Mobile Close Button */}
             <button
               onClick={onClose}
               className="md:hidden absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white backdrop-blur-md border border-white/10 shadow-lg"
@@ -112,12 +125,14 @@ export default function PreviewDialog({
                 >
                   {slide.type === "image" ? (
                     <>
+                      {/* Blurred Background */}
                       <img
                         src={slide.src}
                         className={styles.backdropImg}
                         alt=""
                         aria-hidden="true"
                       />
+                      {/* Main Image */}
                       <img
                         src={slide.src}
                         alt={`Preview Slide ${idx + 1}`}
@@ -139,6 +154,7 @@ export default function PreviewDialog({
               ))}
             </div>
 
+            {/* Desktop Navigation Controls */}
             {slides.length > 1 && (
               <>
                 <button
@@ -166,6 +182,7 @@ export default function PreviewDialog({
                   <ChevronRight size={24} />
                 </button>
 
+                {/* Dots Indicator */}
                 <div className={styles.dotsContainer}>
                   {slides.map((_, idx) => (
                     <button
@@ -183,16 +200,14 @@ export default function PreviewDialog({
             )}
           </div>
 
-          {/* === RIGHT: CONTEXT PANEL (Themed) === */}
-          {/* We use var(--bg) here, so it turns white in Light Mode automatically */}
+          {/* === RIGHT COLUMN: CONTENT PANEL === */}
           <div className="flex-1 flex flex-col h-full overflow-hidden relative bg-[var(--bg)]">
+            {/* Header */}
             <div className="flex items-start justify-between p-5 pb-2 shrink-0">
               <div>
-                {/* Use var(--muted) for secondary text */}
                 <div className="text-[var(--muted)] text-[10px] uppercase tracking-widest font-semibold mb-1.5">
                   Project Detail
                 </div>
-                {/* Use var(--text) for primary text */}
                 <h2 className="text-xl md:text-2xl font-semibold text-[var(--text)] font-sans tracking-tight">
                   {title}
                 </h2>
@@ -200,25 +215,51 @@ export default function PreviewDialog({
 
               <button
                 onClick={onClose}
-                // Use var(--border) for hover states
                 className="hidden md:block p-2 rounded-full hover:bg-[var(--border)] text-[var(--muted)] transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
 
+            {/* Scrollable Content Area */}
             <div
               className={cn(
                 styles.scrollArea,
                 "flex-1 overflow-y-auto p-5 pt-2 space-y-6",
               )}
             >
+              {/* 1. Description */}
               {description && (
                 <p className="text-[var(--muted)] leading-relaxed text-sm">
                   {description}
                 </p>
               )}
 
+              {/* 2. NEW: Key Highlights Section */}
+              {highlights && highlights.length > 0 && (
+                <div className="bg-[var(--surface-1)]/50 rounded-xl p-4 border border-[var(--border-soft)]">
+                  <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--accent)] mb-3 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                    {highlightsTitle}
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {highlights.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm text-[var(--text)]/90"
+                      >
+                        <CheckCircle2
+                          size={15}
+                          className="shrink-0 mt-0.5 text-[var(--muted)] opacity-70"
+                        />
+                        <span className="leading-snug">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 3. Video Jump Button */}
               {videoSrc && videoIndex !== -1 && activeIndex !== videoIndex && (
                 <button
                   onClick={() => goToSlide(videoIndex)}
@@ -229,6 +270,7 @@ export default function PreviewDialog({
                 </button>
               )}
 
+              {/* 4. Meta Grid */}
               {meta && meta.length > 0 && (
                 <div className="grid grid-cols-2 gap-y-4 gap-x-2 pt-4 border-t border-[var(--border)]">
                   {meta.map((m) => (
@@ -252,6 +294,7 @@ export default function PreviewDialog({
               )}
             </div>
 
+            {/* Footer Buttons */}
             {(primaryHref || secondaryHref) && (
               <div className="p-5 pt-4 mt-auto border-t border-[var(--border)] bg-[var(--bg)]/50 shrink-0">
                 <div className="flex gap-3">

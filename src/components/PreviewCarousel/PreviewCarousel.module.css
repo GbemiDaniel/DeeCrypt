@@ -1,3 +1,5 @@
+/* src/components/PreviewCarousel/PreviewCarousel.module.css */
+
 .wrap {
   position: relative;
   height: 100%;
@@ -22,36 +24,26 @@
   display: none;
 }
 
-/*
-  This is the CarouselItem, the element that Embla animates.
-  It's kept lightweight with only layout and GPU hints.
-*/
+/* === ORIGINAL CONTAINER HEIGHT PRESERVED === */
 .slide {
   position: relative;
   scroll-snap-align: start;
   height: 100%;
   min-height: 100%;
-  /* GPU compositing hints for smooth animation */
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
 
-/*
-  This new inner wrapper contains all the heavy visual content.
-  It is NOT animated, so its paint/layout cost doesn't affect the animation.
-*/
 .slideInner {
   position: relative;
   width: 100%;
   height: 100%;
-  /* Styles moved from .slide to here */
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
   background: color-mix(in oklab, var(--glass-strong) 80%, transparent);
   box-shadow: var(--shadow-md), var(--shadow-inset);
   overflow: hidden;
-  /* Rendering containment hint */
   contain: layout paint;
 }
 
@@ -68,7 +60,6 @@
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  /* Add blur to soften the background image */
   filter: blur(8px);
   transform: scale(1.1);
 }
@@ -76,7 +67,8 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 25% 8%,
       rgba(56, 189, 248, 0.14),
       transparent 30%
@@ -91,11 +83,11 @@
   height: 100%;
   object-fit: cover;
   pointer-events: none;
-
-  /* hidden by default */
   opacity: 0;
   transform: scale(1.01);
-  transition: opacity 240ms ease, transform 240ms ease;
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease;
 }
 
 .previewVideoActive {
@@ -146,13 +138,15 @@
   justify-content: end;
 }
 
+/* Typography Scaling */
 .title {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 520;
   letter-spacing: -0.02em;
-  font-size: clamp(1.75rem, 2.2vw, 2.35rem);
   line-height: 1.05;
+  font-size: clamp(1.35rem, 5vw, 2.35rem);
+  overflow-wrap: break-word;
 }
 
 .subtitle {
@@ -160,6 +154,7 @@
   color: var(--muted);
   line-height: 1.6;
   max-width: 70ch;
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 /* Bottom row layout */
@@ -192,7 +187,10 @@
 
 .metaValue {
   margin-top: 6px;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .accent {
@@ -206,7 +204,6 @@
   justify-content: center;
 }
 
-/* Let shadcn Button control size; we only tune spacing */
 .navBtn {
   border-color: color-mix(in oklab, var(--border-soft) 90%, transparent);
   background: color-mix(in oklab, var(--glass) 88%, transparent);
@@ -221,27 +218,44 @@
   background: color-mix(in oklab, var(--glass) 88%, transparent);
 }
 
-/* Dots */
+/* === UPDATED DOTS PAGINATION === */
 .dots {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  opacity: 0.9;
+  gap: 12px; /* Increased gap for easier clicking */
+  padding-top: 8px; /* Slight padding from the card */
+  z-index: 10;
 }
 
 .dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
+
+  /* INACTIVE: Subtle border, semi-transparent background */
   border: 1px solid var(--border-soft);
-  background: color-mix(in oklab, var(--glass) 92%, transparent);
-  opacity: 0.55;
+  background: color-mix(in oklab, var(--text) 20%, transparent);
+
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effect for inactive dots */
+.dot:hover:not(.dotActive) {
+  background: color-mix(in oklab, var(--text) 40%, transparent);
+  transform: scale(1.1);
 }
 
 .dotActive {
-  opacity: 1;
-  border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 25%);
+  /* ACTIVE: Solid accent color + Glow + Scale */
+  background: var(--accent);
+  border-color: var(--accent);
+
+  /* Scale up significantly so it's obvious */
+  transform: scale(1.4);
+
+  /* Add a glow shadow */
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 /* Mobile arrows outside + pulse */
@@ -299,14 +313,14 @@
 }
 
 @media (max-width: 520px) {
-  .slide {
-    min-height: clamp(420px, 70vh, 560px);
-  }
-
   .content {
-    padding: clamp(14px, 4vw, 18px);
+    padding: 14px;
     padding-top: 56px;
     gap: 12px;
+  }
+
+  .meta {
+    gap: 10px;
   }
 
   .dots {

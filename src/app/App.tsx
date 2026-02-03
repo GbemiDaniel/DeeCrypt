@@ -60,7 +60,7 @@ export default function App() {
         {mode === "about" && <AboutView />}
       </main>
 
-      <Footer />
+      <Footer mode={mode} />
     </div>
   );
 }

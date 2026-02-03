@@ -1,3 +1,5 @@
+/* src/components/Layout/Footer.module.css */
+
 .footer {
   position: relative;
   margin-top: auto;
@@ -8,6 +10,24 @@
   background: color-mix(in srgb, var(--bg) 60%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+
+  /* === COLOR LOGIC === */
+  /* Default: Use the Dev Accent (Cyan) */
+  --footer-theme: var(--accent);
+
+  transition: --footer-theme 0.3s ease;
+}
+
+/* === MODE OVERRIDES === */
+
+/* Writer Mode: Switch to Purple */
+.writerMode {
+  --footer-theme: var(--accent2);
+}
+
+/* About Mode: Switch to Merged (Optional, for consistency) */
+.aboutMode {
+  --footer-theme: color-mix(in srgb, var(--accent), var(--accent2));
 }
 
 .inner {
@@ -15,8 +35,6 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 2.5rem 0;
-
-  /* FIX 1: CENTER EVERYTHING ON MOBILE */
   align-items: center;
   text-align: center;
 }
@@ -28,8 +46,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 3rem 0;
-
-    /* FIX 2: RESET ALIGNMENT ON DESKTOP */
     text-align: left;
   }
 }
@@ -39,16 +55,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-
-  /* FIX 3: CENTER THE TEXT STACK ON MOBILE */
-  /* This ensures the Brand and Copy align with each other */
   align-items: center;
 }
 
-/* FIX 4: DESKTOP OVERRIDE FOR TEXT STACK */
 @media (min-width: 768px) {
   .left {
-    /* Push brand/copy back to the left edge on big screens */
     align-items: flex-start;
   }
 }
@@ -87,12 +98,16 @@
 }
 
 .socialLink:hover {
-  /* This grabs whatever the CURRENT accent is (Cyan or Mint) */
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  /* USE THE DYNAMIC VARIABLE HERE */
+  color: var(--footer-theme);
+
+  /* Tint background with the dynamic color */
+  background: color-mix(in srgb, var(--footer-theme) 10%, transparent);
+  border-color: color-mix(in srgb, var(--footer-theme) 20%, transparent);
+
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 15%, transparent);
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--footer-theme) 15%, transparent);
 }
 
 /* --- DECORATIVE GLOW LINE --- */
@@ -102,11 +117,15 @@
   left: 0;
   right: 0;
   height: 1px;
+
+  /* USE THE DYNAMIC VARIABLE HERE */
   background: radial-gradient(
     circle at 50% 0%,
-    var(--accent) 0%,
+    var(--footer-theme) 0%,
     transparent 70%
   );
+
   opacity: 0.5;
   pointer-events: none;
+  transition: background 0.5s ease;
 }

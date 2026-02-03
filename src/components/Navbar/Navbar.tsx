@@ -38,9 +38,12 @@ function Navbar({
   const handleNav = (target: Mode) => {
     setIsOpen(false);
     setIsHovered(false);
+
+    // FORCE BLUR: Removes focus from the clicked link immediately
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
+
     window.scrollTo({ top: 0, behavior: "smooth" });
     onModeChange(target);
   };
@@ -49,20 +52,10 @@ function Navbar({
     setIsOpen((prev) => !prev);
   };
 
-  // --- THE FIX: STRICT VISIBILITY LOGIC ---
-
-  // 1. Are we scrolling?
+  // --- VISIBILITY LOGIC ---
   const isScrolling = !!sectionLabel;
-
-  // 2. Are we in the intro phase? (Only if NOT scrolling)
   const isIntroState = !isScrolling && showIntro;
-
-  // 3. Should the MENU be visible?
-  // YES if: Mobile Open OR Desktop Hover OR (Not Scrolling AND Not Intro)
   const shouldShowMenu = isOpen || isHovered || (!isScrolling && !showIntro);
-
-  // 4. Should the LABEL be visible?
-  // YES if: Scrolling AND Menu is NOT showing (Hover beats Scroll)
   const shouldShowLabel = isScrolling && !shouldShowMenu;
 
   return (
@@ -70,7 +63,9 @@ function Navbar({
       <div className={`container ${styles.inner}`}>
         <div className={styles.left}>
           <div
-            className={`${styles.brandWrap} ${shouldShowMenu ? styles.showMenu : ""}`}
+            className={`${styles.brandWrap} ${
+              shouldShowMenu ? styles.showMenu : ""
+            }`}
             onClick={handleToggle}
             onMouseEnter={() => {
               setIsHovered(true);
@@ -82,6 +77,15 @@ function Navbar({
               setHoverState(false);
             }}
             onTouchStart={() => setHoverState(true)}
+            // Accessibility: Allow opening menu via Enter key
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggle();
+              }
+            }}
           >
             <img
               src="/logos/Deecrypt logo.png"
@@ -97,8 +101,6 @@ function Navbar({
                 <div
                   className={styles.statusLabel}
                   style={{
-                    // FIX: Use 'shouldShowLabel' instead of just 'isScrolling'
-                    // This forces it to hide if the menu overrides it.
                     opacity: shouldShowLabel ? 1 : 0,
                     transform: shouldShowLabel
                       ? "translateY(0)"
@@ -112,7 +114,6 @@ function Navbar({
                 <div
                   className={styles.introLabel}
                   style={{
-                    // Hide if Menu is forced open
                     opacity: isIntroState && !shouldShowMenu ? 1 : 0,
                     transform:
                       isIntroState && !shouldShowMenu
@@ -124,8 +125,6 @@ function Navbar({
                 </div>
 
                 {/* 3. MENU */}
-                {/* We can rely on the class .showMenu from CSS, but keeping inline style
-                    logic here ensures double safety against overlap */}
                 <div
                   className={styles.navMenu}
                   style={{
@@ -141,7 +140,10 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("about");
                     }}
-                    className={`${styles.navLink} ${mode === "about" ? styles.navLinkActive : ""}`}
+                    // STORY: Merged Color + Pulse
+                    className={`${styles.navLink} ${
+                      mode === "about" ? styles.activeAbout : ""
+                    }`}
                   >
                     Story
                   </button>
@@ -151,7 +153,10 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("dev");
                     }}
-                    className={`${styles.navLink} ${mode === "dev" ? styles.navLinkActive : ""}`}
+                    // DEV: Standard Cyan
+                    className={`${styles.navLink} ${
+                      mode === "dev" ? styles.activeDev : ""
+                    }`}
                   >
                     Dev
                   </button>
@@ -161,7 +166,10 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("writer");
                     }}
-                    className={`${styles.navLink} ${mode === "writer" ? styles.navLinkActive : ""}`}
+                    // WRITER: Correct Purple Accent
+                    className={`${styles.navLink} ${
+                      mode === "writer" ? styles.activeWriter : ""
+                    }`}
                   >
                     Writer
                   </button>
@@ -175,6 +183,7 @@ function Navbar({
           <button
             className={styles.themeBtn}
             onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")}
+            aria-label="Toggle Theme"
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>

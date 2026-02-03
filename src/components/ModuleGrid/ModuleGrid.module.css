@@ -1,8 +1,15 @@
+/* src/components/ModuleGrid/ModuleGrid.module.css */
+
 .grid {
   margin-top: var(--space-6);
   display: grid;
   gap: var(--space-4);
   grid-template-columns: 1fr;
+
+  /* MOBILE FIX: 
+     We explicitly set the first row (Carousel) to be tall 
+     so it retains that "long glass" look on phones. */
+  grid-template-rows: minmax(520px, 65vh) auto;
 }
 
 .rightColumn {
@@ -10,22 +17,25 @@
   flex-direction: column;
   gap: var(--space-4);
   min-height: 0;
+  height: 100%; /* Ensures it fills the grid cell */
 }
 
-/* IMPORTANT: allow children to stretch properly */
+/* --- THE LEFT COLUMN (CAROUSEL) --- */
 .left {
   min-width: 0;
   min-height: 0;
+  /* On mobile, we let it fill the 'minmax' defined in .grid */
+  height: 100%;
 }
 
-/* Force the Top card to only take what it needs */
+/* Force the Top card (Side Quests) to only take what it needs */
 .rightTop {
   flex: 0 0 auto;
   width: 100%;
   min-width: 0;
 }
 
-/* Force the Bottom card to fill ALL remaining space */
+/* Force the Bottom card (Stack) to fill ALL remaining space */
 .rightBottom {
   flex: 1 1 auto;
   width: 100%;
@@ -33,18 +43,42 @@
   min-height: 0; /* Critical for scrolling internal content */
 }
 
-/* tablet */
+/* === TABLET (720px+) === */
 @media (min-width: 720px) {
   .grid {
     grid-template-columns: 1fr 1fr;
     align-items: stretch;
+
+    /* FIX 1: AUTO HEIGHT
+       We switch back to 'auto' so the grid grows to fit 
+       the Right Column (Side Quests + Stack) perfectly. 
+       This prevents the "cut off" bug. */
+    grid-template-rows: auto;
+  }
+
+  /* FIX 2: CAP THE CAROUSEL
+       We apply a max-height to the Left wrapper.
+       This tells the Grid: "Don't let the Left Column force 
+       the row to be 1200px tall."
+       
+       780px is tall enough to look good, but short enough 
+       to prevent empty space. */
+  .left {
+    max-height: 780px;
   }
 }
 
-/* desktop: left spans 2 rows (tall), right stacks */
+/* === DESKTOP (1024px+) === */
 @media (min-width: 1024px) {
   .grid {
+    /* Standard 2:1 layout */
     grid-template-columns: 2.1fr 1fr;
     align-items: stretch;
+    grid-template-rows: auto;
+  }
+
+  /* Keep the cap to prevent "exceedingly long" layout */
+  .left {
+    max-height: 780px;
   }
 }

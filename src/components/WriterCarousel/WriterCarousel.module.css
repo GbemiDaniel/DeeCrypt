@@ -6,6 +6,11 @@
   overflow: hidden;
   isolation: isolate;
 
+  /* NEW: Add background image */
+  background-image: url("/preview/WriterCarosuel%20bg%20image.png");
+  background-size: cover;
+  background-position: center;
+
   /* KEY: fill the ModuleGrid cell */
   height: 100%;
   min-height: 0;

@@ -1,27 +1,37 @@
-/* === Phase 4: Visual System Alignment === */
+/* src/components/SideQuest/SideQuestCard.module.css */
 
+/* === MAIN CARD CONTAINER (Matches ModuleCard) === */
 .card {
   --sidequest-accent: var(--accent, #c99cff);
   position: relative;
-  overflow: hidden;
-  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  /* MATCHED: ModuleCard Padding */
+  padding: 1.5rem;
+
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
+
+  /* PREMIUM GLASS BACKGROUND */
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--glass-strong) 85%, transparent),
     color-mix(in oklab, var(--glass) 85%, transparent)
   );
-  border-radius: var(--radius-lg);
+
   box-shadow: var(--shadow-md), var(--shadow-inset);
   backdrop-filter: blur(12px);
+  overflow: hidden;
+
+  /* HOVER TRANSITIONS */
+  transform: translateY(0);
   transition:
     transform 160ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
 }
 
 .card::before {
@@ -41,10 +51,11 @@
 .card:hover {
   transform: translateY(-2px);
   border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 18%);
+  box-shadow: var(--shadow-md), var(--shadow-inset);
 }
 
+/* === HEADER SECTION (Matches ModuleCard .head) === */
 .header {
-  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -58,12 +69,13 @@
   min-width: 0;
 }
 
+/* ICON WRAPPER (Matches ModuleCard .iconWrap) */
 .iconWrap {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   border: 1px solid var(--border-soft);
-  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  background: color-mix(in oklab, var(--glass-strong) 50%, transparent);
   box-shadow: var(--shadow-sm), var(--shadow-inset);
   display: grid;
   place-items: center;
@@ -72,25 +84,36 @@
 
 .icon {
   color: var(--accent);
+  opacity: 0.9;
+  /* Size controlled via Props, but ensuring color match */
 }
 
+/* TITLE BLOCK */
 .titleWrap {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
+  margin: 0;
   font-family: var(--font-serif);
-  font-weight: 520;
-  font-size: clamp(1.5rem, 1.8vw, 1.95rem);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-weight: 600;
+  /* MATCHED: ModuleCard Typography */
+  font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
 .subtitle {
-  margin-top: 0.45rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.925rem;
   line-height: 1.55;
+  font-weight: 400;
   color: var(--muted);
+  opacity: 0.9;
+  max-width: 65ch;
 }
 
 .topRight {
@@ -99,85 +122,78 @@
   color: var(--muted);
 }
 
-/* --- INCREASED SPACING HERE --- */
+/* === LIST & SCROLL (The Body) === */
 .projectList {
   position: relative;
-  margin-top: 1.5rem; /* More breathing room from header */
+  /* MATCHED: ModuleCard Body Margin */
+  margin-top: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Increased from 0.75rem to 1rem */
+  gap: 1rem;
   flex: 1;
   min-height: 0;
 }
 
 .border {
-  margin-top: 1.15rem;
-  border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
+  /* Subtle separator if needed, or rely on margin */
+  display: none;
 }
 
+/* Scroll Containers */
 .scrollMobile {
   overflow-y: auto;
   padding-right: 0.5rem;
-  max-height: 18em; /* Adjusted for larger spacing */
+  max-height: 18em;
 }
 
 @media (min-width: 1024px) {
   .scrollDesktop {
     overflow-y: auto;
     padding-right: 0.5rem;
-    max-height: 14em; /* Adjusted for larger spacing */
+    max-height: 14em;
   }
 }
 
+/* Scrollbar Styling */
 .projectList::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 .projectList::-webkit-scrollbar-track {
   background: transparent;
 }
 .projectList::-webkit-scrollbar-thumb {
   background: var(--border-soft);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 .projectList::-webkit-scrollbar-thumb:hover {
   background: var(--border);
 }
 
-/* --- PROJECT ITEMS --- */
-
+/* === PROJECT ITEMS (Internal Content) === */
 .projectItem {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem; /* Increased gap inside item */
+  gap: 1rem;
   border-radius: 0.75rem;
-  padding: 0.875rem; /* More internal padding */
+  padding: 0.75rem; /* Standardized internal padding */
   background: color-mix(in oklab, var(--glass) 50%, transparent);
   border: 1px solid transparent;
-  transition:
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    background 150ms ease,
-    border-color 150ms ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
 .projectItem:hover {
   background: color-mix(in oklab, var(--glass) 70%, transparent);
   border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+  transform: translateX(2px);
 }
 
-/* ACTIVE STATE (Pop-out) */
 .projectItemActive {
-  transform: scale(1.025); /* Slightly stronger pop */
   background: color-mix(in oklab, var(--glass) 80%, transparent);
   border-color: var(--accent);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-}
-
-.projectItemActive:hover {
-  transform: scale(1.025);
-  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
 }
 
 .projectInfo {
@@ -189,7 +205,9 @@
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-primary);
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .projectItemActive .projectName {
@@ -198,9 +216,9 @@
 }
 
 .projectDescription {
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
   font-size: 0.75rem;
-  line-height: 1.625;
+  line-height: 1.4;
   color: var(--muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -208,54 +226,34 @@
   overflow: hidden;
 }
 
-.projectItemActive .projectDescription {
-  color: var(--text-primary);
-}
-
-/* --- DYNAMIC LAYOUT (Progress + Hidden Icon) --- */
 .projectItemRight {
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Align to right */
-  gap: 0; /* Gap is handled by the animation margin */
+  justify-content: flex-end;
   flex-shrink: 0;
 }
 
-/* The Icon Wrapper (Hidden by default) */
 .externalLinkWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* Initial State: Collapsed */
   width: 0;
   opacity: 0;
   transform: scale(0.5);
   margin-left: 0;
   pointer-events: none;
-
-  /* Animation Settings */
-  transition:
-    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease,
-    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   color: var(--muted);
   height: 32px;
   border-radius: 50%;
-  overflow: hidden;
 }
 
-/* The Pop-Out Effect */
 .iconActive {
-  /* Final State: Expanded */
   width: 32px;
   opacity: 1;
   transform: scale(1);
-  margin-left: 0.75rem; /* Push Progress Bar to left */
+  margin-left: 0.5rem;
   pointer-events: auto;
-
   color: var(--accent);
   background: color-mix(in oklab, var(--accent) 15%, transparent);
 }
@@ -264,13 +262,27 @@
   background: var(--accent);
   color: var(--background);
   transform: scale(1.1);
-  box-shadow: 0 0 10px var(--accent);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .projectItem,
-  .externalLinkWrapper {
-    transition: none;
+/* === MOBILE OPTIMIZATION === */
+@media (max-width: 640px) {
+  .card {
+    /* Slightly reduce padding on very small screens if needed, 
+       but keeping 1.25rem+ is usually safer for touch */
+    padding: 1.25rem;
+  }
+
+  .header {
+    gap: 0.75rem;
+  }
+
+  /* Match icon size scaling if ModuleCard changes, but usually fixed is better */
+  .iconWrap {
+    width: 38px;
+    height: 38px;
+  }
+
+  .title {
+    font-size: 1.25rem;
   }
 }

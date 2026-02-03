@@ -49,8 +49,7 @@ export default function PreviewCarousel({
   onOpen,
 }: PreviewCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
-  // Use a ref to store the dot button DOM nodes. This allows us to manipulate them
-  // directly without causing React re-renders.
+  // Use a ref to store the dot button DOM nodes.
   const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const canLoop = items.length > 1;
@@ -58,7 +57,6 @@ export default function PreviewCarousel({
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  // Mobile breakpoint
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 720px)");
     const apply = () => setIsMobile(mq.matches);
@@ -67,17 +65,13 @@ export default function PreviewCarousel({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  // This effect sets up the imperative dot update logic.
-  // It runs only when the Embla API is ready.
+  // Update dots imperatively for performance
   useEffect(() => {
     if (!api) return;
 
-    // This callback will be used for both 'select' and 'reInit' events.
-    // It imperatively updates the dot classes, avoiding React state and re-renders.
     const updateDots = (emblaApi: CarouselApi) => {
       dotsRef.current.forEach((dotNode, index) => {
         if (!dotNode) return;
-        // Check if this dot's index matches the selected slide's index.
         if (index === emblaApi.selectedScrollSnap()) {
           dotNode.classList.add(styles.dotActive);
         } else {
@@ -86,23 +80,15 @@ export default function PreviewCarousel({
       });
     };
 
-    // 'select' fires on every slide change, including during drag.
-    // This provides immediate, frame-accurate feedback.
     api.on("select", updateDots);
-    // 'reInit' fires if the carousel is re-initialized, ensuring dots are correct.
     api.on("reInit", updateDots);
-
-    // Run the update once on initialization to set the initial active dot.
     updateDots(api);
 
     return () => {
       api.off("select", updateDots);
       api.off("reInit", updateDots);
     };
-    // The dependency array ensures this effect only re-runs if the api instance changes,
-    // or if the number of items changes (requiring a re-sync of the dots).
   }, [api, items]);
-
 
   const goTo = (i: number) => {
     api?.scrollTo(i);
@@ -153,16 +139,14 @@ export default function PreviewCarousel({
         </>
       ) : null}
 
-      <CarouselContent className={`h-full ml-0 gap-4`}>
+      {/* Container: Negative margin to offset item padding */}
+      <CarouselContent className="h-full -ml-4">
         {items.map((item) => {
           const meta = (item.meta ?? []).slice(0, 3);
 
           return (
-            <CarouselItem key={item.id} className={`${styles.slide} pl-0`}>
-              {/* This new inner div isolates the heavy content from the animated slide. */}
-              {/* The parent CarouselItem is now a lightweight, animatable shell. */}
+            <CarouselItem key={item.id} className={`${styles.slide} pl-4`}>
               <div className={styles.slideInner}>
-                {/* Visual-only background layers */}
                 <div
                   className={`${styles.preview} noPointer`}
                   aria-hidden="true"
@@ -181,7 +165,6 @@ export default function PreviewCarousel({
                   )}
                 </div>
 
-                {/* Top overlay: badge + icon */}
                 <div className={styles.overlayUi} aria-hidden="true">
                   {item.badge ? (
                     <div className={styles.badge}>{item.badge}</div>
@@ -206,7 +189,6 @@ export default function PreviewCarousel({
                     <p className={styles.subtitle}>{item.subtitle}</p>
                   </div>
 
-                  {/* Bottom row: META | ARROWS */}
                   <div className={styles.bottomRow}>
                     <div className={styles.meta}>
                       {meta.map((m) => (
@@ -257,12 +239,10 @@ export default function PreviewCarousel({
         })}
       </CarouselContent>
 
-      {/* Dots below */}
       <div className={styles.dots} aria-label="Carousel pagination">
         {items.map((_, i) => (
           <button
             key={i}
-            // Populate the ref array with the dot DOM nodes.
             ref={(el) => (dotsRef.current[i] = el)}
             type="button"
             className={styles.dot}
