@@ -5,8 +5,8 @@ import { useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
-import { AnimatePresence } from "framer-motion"; // <--- NEW IMPORT
-import { Preloader } from "@/components/Preloader/Preloader"; // <--- NEW IMPORT
+import { AnimatePresence } from "framer-motion";
+import { Preloader } from "@/components/Preloader/Preloader";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -18,6 +18,7 @@ import PreviewCarousel, {
   type PreviewCarouselProps,
 } from "../components/PreviewCarousel/PreviewCarousel";
 import PreviewDialog from "../components/PreviewDialog/PreviewDialog";
+import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA"; // <--- NEW IMPORT
 
 import { sideProjects } from "../data/sidequests";
 import { projects, type Project } from "../data/projects";
@@ -25,7 +26,9 @@ import {
   SideQuestCard,
   type SideProject,
 } from "@/components/SideQuest/SideQuestCard";
-import { Rocket, Layers2 } from "lucide-react";
+
+// Added Terminal, Mail, FileText for the CTA
+import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react"; 
 import {
   SiReact,
   SiTypescript,
@@ -63,7 +66,7 @@ function clamp(n: number, min: number, max: number) {
 
 export default function DevView({ mode, onModeChange }: Props) {
   // --- LOADING STATE ---
-  const [isLoading, setIsLoading] = useState(true); // <--- NEW STATE
+  const [isLoading, setIsLoading] = useState(true);
 
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
@@ -155,8 +158,7 @@ export default function DevView({ mode, onModeChange }: Props) {
               availabilityLabel="OPEN FOR COLLABORATION"
               headlineTop="Gbemi Daniel"
               headlineBottom="Frontend Developer"
-              subcopy="I bring ideas and visions to life through code. Working with React 
-and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
+              subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
               modeToggleSlot={
                 <ModeToggle mode={mode} onChange={onModeChange} />
               }
@@ -231,6 +233,24 @@ and TypeScript, I create web experiences that feel smooth, look great, and actua
             mode={mode}
             highlights={active?.highlights}
             highlightsTitle={active?.highlightsTitle}
+          />
+
+          {/* 6. MINIMAL CTA (System Style) */}
+          <MinimalCTA
+            icon={Terminal}
+            title="Ready to ship?"
+            description="I'm open to frontend roles, Web3 collaborations, and freelance projects. If you have an idea, let's build it."
+            primaryAction={{
+              label: "Email Me",
+              href: "mailto:adamsdaniel043@gmail.com",
+              icon: Mail,
+            }}
+            secondaryAction={{
+              label: "Resume",
+              href: "/resume.pdf",
+              icon: FileText,
+              download: true,
+            }}
           />
         </>
       )}

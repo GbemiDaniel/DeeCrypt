@@ -6,42 +6,43 @@ import {
   Code,
   CheckCircle2,
   Award,
+  Rocket,Tv, BookOpen, Footprints,
+  Globe,  
 } from "lucide-react";
 import type { TimelineType } from "@/components/Timeline";
 
-// --- JOURNEY DATA ---
 export const TIMELINE_DATA = [
   {
     year: "2026",
-    title: "Housing Agency Co-Founder",
+    title: "Building & Launching",
     description:
-      "Launched a student housing platform in Nsukka. Merging real-world logistics with a digital-first approach.",
-    icon: <Briefcase size={14} />,
+      "Actively shipping projects, seeking opportunities to collaborate and grow. Preparing to launch DeeCrypt and contribute to the blockchain community.",
+    icon: <Zap size={14} />,
     type: "dev" as TimelineType,
   },
   {
     year: "2025",
-    title: "DeeCrypt Hub & Web3",
+    title: "Self-Taught Frontend Developer",
     description:
-      "Founded a Web3 educational brand. Technical writing for projects like Ioxa and building community trust.",
-    icon: <Zap size={14} />,
-    type: "writer" as TimelineType,
+      "Went deep into modern frontend development—React, TypeScript, and the tools that turn ideas into reality. Built Skillz Bloom during a remote internship.",
+    icon: <Code size={14} />,
+    type: "dev" as TimelineType,
   },
   {
-    year: "2025",
-    title: "NYSC Mobilization",
+    year: "2024",
+    title: "From Student to Builder",
     description:
-      "Batch C Mobilization. Transitioning from academic life to national service while honing frontend craft.",
+      "Graduated with a CS degree, but the real learning started after. Discovered that I didn't just want to code—I wanted to create things that matter.",
     icon: <GraduationCap size={14} />,
     type: "dev" as TimelineType,
   },
   {
-    year: "2021",
-    title: "University of Nigeria",
+    year: "2024",
+    title: "The Web3 Awakening",
     description:
-      "The Foundation. Physics & Astronomy background that taught me the first principles of complex systems.",
-    icon: <PenTool size={14} />,
-    type: "dev" as TimelineType,
+      "Looked beyond the hype and saw blockchain as an opportunity to build trustless systems and be part of something transformative. The journey begins.",
+    icon: <Rocket size={14} />,
+    type: "writer" as TimelineType,
   },
 ];
 
@@ -99,4 +100,17 @@ export const BADGES_DATA = [
     link: "#",
     icon: <Code size={28} color="var(--accent)" />,
   },
+];
+
+
+export const LIFESTYLE_ITEMS = [
+  { label: "Series & Cinema", icon: <Tv size={14} /> },
+  { label: "Journaling", icon: <BookOpen size={14} /> },
+  { label: "Long Walks", icon: <Footprints size={14} /> },
+];
+
+export const FOCUS_AREAS = [
+  { label: "Frontend & Web3 Engineering", icon: <Globe size={16} /> },
+  { label: "Technical Writing & Docs", icon: <PenTool size={16} /> },
+  { label: "Mission-Driven Startups", icon: <CheckCircle2 size={16} /> },
 ];

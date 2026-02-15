@@ -21,6 +21,7 @@
     transparent 100%
   );
   opacity: 0.6;
+  min-width: 1rem; /* Ensure lines never fully disappear */
 }
 
 .headerPill {
@@ -39,6 +40,8 @@
   font-weight: 600;
   color: var(--foreground);
   transition: border-color 0.3s ease;
+  white-space: nowrap; /* Keeps the pill text on one line */
+  max-width: 90vw; /* Safety net for very small screens */
 }
 
 .headerIcon {
@@ -46,6 +49,7 @@
   opacity: 0.9;
   width: 1.125rem;
   height: 1.125rem;
+  flex-shrink: 0; /* Prevents icon from getting squashed */
 }
 
 /* === COLOR VARIANTS === */
@@ -59,4 +63,34 @@
 
 .contact .headerIcon {
   color: #22c55e; /* Green */
+}
+
+/* === MOBILE SCALING === */
+@media (max-width: 768px) {
+  .sectionHeader {
+    gap: 0.75rem; /* Tighter gap */
+    margin-bottom: 2rem;
+  }
+
+  .headerPill {
+    padding: 0.4rem 1rem; /* Slimmer pill */
+    font-size: 0.95rem;   /* Smaller text */
+    gap: 0.5rem;
+  }
+
+  .headerIcon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .sectionHeader {
+    gap: 0.5rem; /* Even tighter for small phones */
+  }
+  
+  .headerPill {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.85rem;
+  }
 }

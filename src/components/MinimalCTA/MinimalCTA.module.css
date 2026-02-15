@@ -1,0 +1,196 @@
+/* src/components/MinimalCTA/MinimalCTA.module.css */
+
+.wrapper {
+  width: 100%;
+  max-width: 1000px; /* Matches your grid max-width */
+  margin: 4rem auto 2rem auto; /* Spacing from the grid above */
+  padding: 0 1rem;
+}
+
+/* === THE CARD (Cloned from ModuleCard) === */
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+
+  /* PREMIUM GLASS BACKGROUND (Exact match) */
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--glass-strong) 85%, transparent),
+    color-mix(in oklab, var(--glass) 85%, transparent)
+  );
+
+  box-shadow: var(--shadow-md), var(--shadow-inset);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Inner Highlight (Premium Edge) */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 0%, /* Center top light source */
+    rgba(255, 255, 255, 0.08),
+    transparent 60%
+  );
+  opacity: 0.6;
+}
+
+/* Hover Effect */
+.card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--border) 55%, var(--accent) 18%);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15);
+}
+
+/* === CONTENT SECTION (Left) === */
+.content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+/* ICON WRAPPER (Cloned from ModuleCard) */
+.iconWrap {
+  width: 48px; /* Slightly larger for emphasis */
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in oklab, var(--glass-strong) 50%, transparent);
+  box-shadow: var(--shadow-sm), var(--shadow-inset);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  color: var(--accent);
+  opacity: 0.9;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .icon {
+  transform: scale(1.1); /* Subtle grow on hover */
+  color: var(--accent);
+}
+
+/* TEXT BLOCK */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.5;
+  max-width: 450px;
+}
+
+/* === ACTIONS SECTION (Right) === */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* SYSTEM BUTTONS */
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 10px; /* Matching icon radius roughly */
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+/* Primary: Tinted Glass */
+.primary {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent);
+}
+
+.primary:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Secondary: Ghost Border */
+.secondary {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--muted);
+}
+
+.secondary:hover {
+  border-color: var(--text);
+  color: var(--text);
+  background: color-mix(in srgb, var(--glass) 50%, transparent);
+}
+
+/* === MOBILE === */
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .content {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  /* Make icon smaller on mobile to fit flex-start alignment */
+  .iconWrap {
+    width: 42px; 
+    height: 42px;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column-reverse; /* Put primary on bottom for thumb reach */
+    gap: 0.75rem;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

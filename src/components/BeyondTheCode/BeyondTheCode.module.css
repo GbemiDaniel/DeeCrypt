@@ -1,0 +1,128 @@
+/* src/components/BeyondTheCode/BeyondTheCode.module.css */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* --- SHARED CARD STYLES --- */
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: 24px;
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.cardIcon {
+  color: var(--accent-color);
+}
+
+.text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  margin-bottom: 1.5rem;
+}
+
+/* --- CARD 1: RECHARGE (Calm/Purple Theme) --- */
+.rechargeCard {
+  background: color-mix(in oklab, var(--bg) 95%, var(--glass));
+  --accent-color: #a855f7; /* Purple */
+}
+.rechargeCard:hover {
+  box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.1);
+  border-color: var(--accent-color);
+  transform: translateY(-4px);
+}
+
+.hobbyGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: auto; /* Push to bottom */
+}
+
+.hobbyTag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--foreground);
+}
+
+/* --- CARD 2: LOOKING FOR (Active/Cyan Theme) --- */
+.workCard {
+  background: color-mix(in oklab, var(--bg) 95%, var(--glass));
+  --accent-color: #22d3ee; /* Cyan */
+}
+.workCard:hover {
+  box-shadow: 0 10px 40px -10px rgba(34, 211, 238, 0.1);
+  border-color: var(--accent-color);
+  transform: translateY(-4px);
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(34, 211, 238, 0.05);
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.checkItem:hover {
+  background: rgba(34, 211, 238, 0.1);
+  border-color: rgba(34, 211, 238, 0.3);
+}
+
+.checkIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-color);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .card { padding: 1.5rem; }
+}

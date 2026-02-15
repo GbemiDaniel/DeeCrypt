@@ -5,8 +5,8 @@ import { useMemo, useState, CSSProperties } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
-import { AnimatePresence } from "framer-motion"; // <--- NEW IMPORT
-import { Preloader } from "@/components/Preloader/Preloader"; // <--- NEW IMPORT
+import { AnimatePresence } from "framer-motion";
+import { Preloader } from "@/components/Preloader/Preloader";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -15,10 +15,13 @@ import ModuleCard from "../components/ModuleCard/ModuleCard";
 import Tag from "../components/Tag/Tag";
 import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
+import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA"; // <--- NEW IMPORT
+
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
 import heroStyles from "../components/Hero/Hero.module.css";
-import { BookOpen, Newspaper, X, Linkedin } from "lucide-react";
+// Added Sparkles, Twitter, Mail for the CTA
+import { BookOpen, Newspaper, X, Linkedin, Sparkles, Twitter, Mail } from "lucide-react"; 
 
 // 2. SPY CONFIGURATION
 const SPY_CONFIG = {
@@ -66,7 +69,7 @@ const PLATFORMS = [
 
 export default function WriterView({ mode, onModeChange }: Props) {
   // --- LOADING STATE ---
-  const [isLoading, setIsLoading] = useState(true); // <--- NEW STATE
+  const [isLoading, setIsLoading] = useState(true);
 
   const [activePostId, setActivePostId] = useState(posts[0]?.id);
   const [open, setOpen] = useState(false);
@@ -244,6 +247,23 @@ export default function WriterView({ mode, onModeChange }: Props) {
             open={open}
             post={activePost}
             onClose={() => setOpen(false)}
+          />
+
+          {/* 5. MINIMAL CTA (System Style) */}
+          <MinimalCTA
+            icon={Sparkles}
+            title="DeeCrypt / Q2 2026"
+            description="Simplifying blockchain tech through clarity. Follow the build process in public or get early updates."
+            primaryAction={{
+              label: "Follow Updates",
+              href: "https://twitter.com/deecrypthub",
+              icon: Twitter,
+            }}
+            secondaryAction={{
+              label: "Get Notified",
+              href: "mailto:adamsdaniel043@gmail.com",
+              icon: Mail,
+            }}
           />
         </>
       )}

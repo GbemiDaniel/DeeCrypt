@@ -4,6 +4,8 @@ import {
   Award,
   User,
   Mail,
+  Heart,
+  Smile,
 } from "lucide-react";
 import styles from "./AboutView.module.css";
 import { useState } from "react";
@@ -24,22 +26,27 @@ import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
 import { Preloader } from "@/components/Preloader/Preloader";
 import { SectionHeader } from "@/components/SectionHeader/SectionHeader";
 import { AboutHero } from "@/components/AboutHero/AboutHero";
-import { SkillCard } from "@/components/SkillCard/SkillCard"; // <--- NEW IMPORT
+import { SkillCard } from "@/components/SkillCard/SkillCard";
+import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
+import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
 
 // ==========================================
 // ANIMATION VARIANTS
 // ==========================================
 const contentContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { delayChildren: 0.3, staggerChildren: 0.12 } },
+  visible: { 
+    opacity: 1, 
+    transition: { delayChildren: 0.2, staggerChildren: 0.1 } 
+  },
 };
 
 const cardVariant: Variants = {
-  hidden: { y: 40, opacity: 0 },
+  hidden: { y: 30, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 70, damping: 15, mass: 1.2 },
+    transition: { type: "spring", stiffness: 60, damping: 15, mass: 1 },
   },
 };
 
@@ -52,14 +59,50 @@ export default function AboutView({ mode }: Props) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- SCROLL SPY ---
-  const { ref: heroSpy } = useInView({ threshold: 0, onChange: (v) => v && setSectionLabel(null) });
-  const { ref: arsenalSpy } = useInView({ threshold: 0.1, onChange: (v) => v && setSectionLabel("THE ARSENAL") });
-  const { ref: journeySpy } = useInView({ threshold: 0.1, onChange: (v) => v && setSectionLabel("THE JOURNEY") });
-  const { ref: badgesSpy } = useInView({ threshold: 0.1, onChange: (v) => v && setSectionLabel("MILESTONES") });
-  const { ref: contactSpy } = useInView({ threshold: 0.1, onChange: (v) => v && setSectionLabel("GET IN TOUCH") });
+  // --- SCROLL SPY CONFIG ---
+  const spyConfig = {
+    rootMargin: "-45% 0px -45% 0px",
+    triggerOnce: false,
+  };
 
-  const viewConfig = { once: false, amount: isMobile ? 0.2 : 0.3 };
+  // --- SCROLL SPIES ---
+  const { ref: heroSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel(null),
+  });
+
+  const { ref: arsenalSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("THE ARSENAL"),
+  });
+
+  const { ref: journeySpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("THE JOURNEY"),
+  });
+
+  const { ref: driveSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("VISION"),
+  });
+
+  const { ref: badgesSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("MILESTONES"),
+  });
+
+  const { ref: personalSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("PERSONAL"),
+  });
+
+  const { ref: contactSpy } = useInView({
+    ...spyConfig,
+    onChange: (v) => v && setSectionLabel("GET IN TOUCH"),
+  });
+
+  // Slightly earlier trigger for mobile so animations feel responsive
+  const viewConfig = { once: true, margin: isMobile ? "-50px" : "-100px" };
 
   return (
     <div className={styles.container} data-theme={mode}>
@@ -75,7 +118,7 @@ export default function AboutView({ mode }: Props) {
 
           {/* === HERO SECTION === */}
           <div ref={heroSpy}>
-             <AboutHero isLoading={isLoading} />
+            <AboutHero isLoading={isLoading} />
           </div>
 
           {/* === ARSENAL SECTION === */}
@@ -91,12 +134,11 @@ export default function AboutView({ mode }: Props) {
               >
                 {ARSENAL_DATA.map((item, index) => (
                   <motion.div key={index} variants={cardVariant}>
-                    {/* Replaced inline HTML with SkillCard */}
-                    <SkillCard 
-                      title={item.title} 
-                      description={item.description} 
-                      icon={item.icon} 
-                      type={item.type} 
+                    <SkillCard
+                      title={item.title}
+                      description={item.description}
+                      icon={item.icon}
+                      type={item.type}
                     />
                   </motion.div>
                 ))}
@@ -121,6 +163,25 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
+          {/* === WHAT DRIVES ME SECTION (FIXED ANIMATION) === */}
+          <section className={styles.flowSection} ref={driveSpy}>
+            <div className={styles.contentWrapper}>
+              <SectionHeader title="What Drives Me" icon={Heart} variant="default" />
+              
+              {/* Wrapped in motion.div to match other sections */}
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewConfig}
+                variants={contentContainer}
+              >
+                <motion.div variants={cardVariant}>
+                  <WhatDrivesMe />
+                </motion.div>
+              </motion.div>
+            </div>
+          </section>
+
           {/* === BADGES SECTION === */}
           <section className={styles.flowSection} ref={badgesSpy}>
             <div className={styles.contentWrapper}>
@@ -137,6 +198,25 @@ export default function AboutView({ mode }: Props) {
                     <BadgeCard {...badge} />
                   </motion.div>
                 ))}
+              </motion.div>
+            </div>
+          </section>
+
+          {/* === BEYOND THE CODE (FIXED ANIMATION) === */}
+          <section className={styles.flowSection} ref={personalSpy}>
+            <div className={styles.contentWrapper}>
+              <SectionHeader title="Beyond The Code" icon={Smile} variant="default" />
+              
+              {/* Wrapped in motion.div to match other sections */}
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewConfig}
+                variants={contentContainer}
+              >
+                <motion.div variants={cardVariant}>
+                  <BeyondTheCode />
+                </motion.div>
               </motion.div>
             </div>
           </section>
