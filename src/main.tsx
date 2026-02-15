@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./app/App";
 import "./styles/tokens.css";
 import "./styles/globals.css";
-import SideQuestDemo from "./components/SideQuest/SideQuest";
 
 const rootElement = document.getElementById("root");
 
