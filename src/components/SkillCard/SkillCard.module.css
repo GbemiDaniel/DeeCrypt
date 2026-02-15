@@ -1,0 +1,51 @@
+/* src/components/SkillCard/SkillCard.module.css */
+
+.skillCard {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--glass-strong) 85%, transparent),
+    color-mix(in oklab, var(--glass) 85%, transparent)
+  );
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.skillCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+}
+
+.iconBox {
+  width: 2.625rem;
+  height: 2.625rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
+  box-shadow: var(--shadow-inset);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+}
+/* Color Variants */
+.iconBox[data-type="dev"] { color: var(--accent); }
+.iconBox[data-type="web3"] { color: #f59e0b; }
+.iconBox[data-type="writer"] { color: var(--accent-writer, #00dc82); }
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+.description {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}

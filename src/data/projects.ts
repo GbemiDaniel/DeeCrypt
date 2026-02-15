@@ -17,9 +17,9 @@ export type Project = PreviewItem & {
 
 export const projects: Project[] = [
   {
-    id: "etherscout",
+    id: "collaborated",
     title: "Skillz Bloom",
-    subtitle: "Empowering Students to Grow Skills Daily",
+    subtitle: "Helping Stud ents Build Skills, One Day at a Time",
     badge: "Live Project",
     previewImage: "/preview/SkillzBloom.png",
     previewVideo: "/previews/sample.mp4",
@@ -34,9 +34,10 @@ export const projects: Project[] = [
     // --- NEW: Collaboration Highlights ---
     highlightsTitle: "My Contributions",
     highlights: [
-      "Developed the interactive daily task tracking UI using React state management.",
-      "Integrated the AI study support API endpoints for real-time feedback.",
-      "Optimized mobile responsiveness for the student dashboard view.",
+      "Skills dashboard with real-time stats (daily practice, total skills, proficiency tracking)",
+      "Manual skill addition system with evidence upload for accountability.",
+      "Progress tracking interface showing acquired skills vs. skills in development.",
+      "Clean, intuitive UI that makes tracking growth feel motivating, not overwhelming",
     ],
     // -------------------------------------
 
@@ -54,7 +55,7 @@ export const projects: Project[] = [
   {
     id: "Worldwise",
     title: "Worldwise",
-    subtitle: "Keep track of your adventures",
+    subtitle: "Keep Track of Your Adventures",
     badge: "WEB2",
     previewImage: "/preview/Worldview.png",
     previewVideo: "/previews/sample.mp4",
@@ -64,14 +65,15 @@ export const projects: Project[] = [
       { label: "YEAR", value: "2025" },
     ],
     descriptionLong:
-      "A Web App that helps you keep track of your adventures as you travel. It uses an interactive map to log your visits and generate a personal travel history.",
+      "A travel tracking web app I built while learning advanced React patterns and  working with map libraries. Users can log cities they've visited on an iteractive map and build a personal travel history",
 
     // --- NEW: Personal Project Highlights ---
-    highlightsTitle: "Key Features",
+    highlightsTitle: "WHAT I BUILT",
     highlights: [
-      "Implemented Leaflet.js for interactive map geolocation and tracking.",
-      "Designed a persistent local storage system to save user trips without a backend.",
-      "Created a custom form validation hook for adding new cities.",
+      "Interactive map with geolocation using Leaflet.js to pinpoint and track visits.",
+      "Persistent local storage system—your travel history saves without needing a backend.",
+      "Custom form validation for adding new cities with dates and personal notes.",
+      "Clean, travel-focused UI that makes journaling your trips feel effortless.",
     ],
     // ----------------------------------------
 
@@ -84,27 +86,29 @@ export const projects: Project[] = [
     },
   },
   {
-    id: "web2-dashboard",
-    title: "Web2 Analytics Dashboard",
-    subtitle:
-      "A performance-first dashboard layout for real products: charts, tables, filters—without visual clutter.",
+    id: "Portfolio",
+    title: "Portfolio Website",
+    subtitle: "Designed and Built from Scratch",
     badge: "WEB2",
     previewImage: "/previews/sample.jpg",
     previewVideo: "/previews/sample.mp4",
     meta: [
       { label: "ROLE", value: "Frontend", accent: true },
-      { label: "TYPE", value: "Web App" },
-      { label: "FOCUS", value: "Performance" },
+      { label: "TYPE", value: "Personal Project" },
+      { label: "YEAR", value: "2026" },
     ],
     descriptionLong:
-      "A practical dashboard design that scales from laptop to mobile. Built around fast navigation, sensible spacing, and readable data presentation.",
+      "The website you're looking at right now. I designed and built this portfolio over two months to showcase my work and prove I can take projects from concept to deployment—no templates, just intentional design and problem-solving.",
 
     // --- NEW: Design/Tech Focus ---
-    highlightsTitle: "Technical Approach",
+    highlightsTitle: "KEY FEATURES:",
     highlights: [
-      "Built a composable layout engine using CSS Grid and Flexbox.",
-      "Implemented light/dark mode theming using CSS variables.",
-      "Ensured 100% accessibility compliance for data tables and charts.",
+      "Three-view system (Dev, Writer, About) with seamless mode switching",
+      "Custom-designed card components tailored for different content types.",
+      "Interactive project preview carousel built without external libraries",
+
+      "Performance-optimized architecture for fast load times",
+      "Unified theme system merging multiple visual identities",
     ],
     // ------------------------------
 

@@ -19,6 +19,7 @@ import PreviewCarousel, {
 } from "../components/PreviewCarousel/PreviewCarousel";
 import PreviewDialog from "../components/PreviewDialog/PreviewDialog";
 
+import { sideProjects } from "../data/sidequests";
 import { projects, type Project } from "../data/projects";
 import {
   SideQuestCard,
@@ -41,29 +42,6 @@ const TECH_STACK = [
   { name: "Tailwind", color: "#06B6D4", icon: SiTailwindcss },
   { name: "Supabase", color: "#3ECF8E", icon: SiSupabase },
   { name: "Framer", color: "#0055FF", icon: SiFramer },
-];
-
-const sideProjects: SideProject[] = [
-  {
-    name: "CLI Task Manager",
-    description:
-      "A minimal terminal-based task manager with vim-like keybindings",
-    progress: 75,
-    url: "https://github.com/",
-  },
-  {
-    name: "Pixel Art Generator",
-    description:
-      "AI-powered tool that converts images into retro pixel art styles",
-    progress: 40,
-    url: "https://github.com/",
-  },
-  {
-    name: "Portfolio V3",
-    description: "Complete redesign with dark mode and interactive components",
-    progress: 90,
-    url: "https://github.com/",
-  },
 ];
 
 // --- 2. OBSERVER CONFIGURATION ---
@@ -177,7 +155,8 @@ export default function DevView({ mode, onModeChange }: Props) {
               availabilityLabel="OPEN FOR COLLABORATION"
               headlineTop="Gbemi Daniel"
               headlineBottom="Frontend Developer"
-              subcopy="I’m a front-end developer building for the modern web and the decentralized future. I believe complex digital products can be simplified into clear, human experiences — without losing depth or intention."
+              subcopy="I bring ideas and visions to life through code. Working with React 
+and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
               modeToggleSlot={
                 <ModeToggle mode={mode} onChange={onModeChange} />
               }

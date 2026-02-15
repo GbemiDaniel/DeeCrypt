@@ -33,7 +33,7 @@
 /* Default Top Line Style */
 .top {
   display: block;
-  padding: 0.5rem 0;
+  padding: 0;
   /* Removed specific font-size so it obeys the clamp above */
 }
 

@@ -1,0 +1,62 @@
+/* src/components/SectionHeader/SectionHeader.module.css */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+  /* Default spacing, can be overridden by className prop */
+  margin: 0 auto 3rem auto;
+}
+
+.headerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-soft) 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.headerPill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--glass-strong) 60%, transparent);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(8px);
+  
+  /* Typography */
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  transition: border-color 0.3s ease;
+}
+
+.headerIcon {
+  color: var(--accent); /* Default (Dev/Blue) */
+  opacity: 0.9;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* === COLOR VARIANTS === */
+.writer .headerIcon {
+  color: #a855f7; /* Purple */
+}
+
+.trophy .headerIcon {
+  color: #f59e0b; /* Amber */
+}
+
+.contact .headerIcon {
+  color: #22c55e; /* Green */
+}

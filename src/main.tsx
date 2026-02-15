@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./app/App";
 import "./styles/tokens.css";
 import "./styles/globals.css";
-import SideQuestDemo from "./components/SideQuest/SideQuestDemo";
+import SideQuestDemo from "./components/SideQuest/SideQuest";
 
 const rootElement = document.getElementById("root");
 
@@ -11,6 +11,6 @@ if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }

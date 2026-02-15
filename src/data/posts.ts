@@ -45,7 +45,7 @@ export const posts: WriterPost[] = [
       "Good interfaces reduce the number of thoughts a user must hold at once.",
       "The real magic is invisible: defaults, sequencing, and calm feedback.",
     ],
-    previewImage: "/previews/sample.jpg",
+    previewImage: "/preview/WriterCarosuel bg image.png",
     href: "https://mirror.xyz/",
   },
   {

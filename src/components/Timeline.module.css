@@ -39,9 +39,7 @@
   width: 50%; /* Desktop: Each row is half screen */
   box-sizing: border-box;
   position: relative;
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 /* RIGHT SIDE (Odd) - Standard Flow */
@@ -72,7 +70,6 @@
   flex-shrink: 0;
   z-index: 10;
   position: relative;
-
   /* Shift to cover the spine exactly */
   transform: translateX(50%);
 }
@@ -93,7 +90,7 @@
   background: linear-gradient(-90deg, var(--accent-color), transparent);
 }
 
-/* --- THEMES & CARD VISUALS (Restored) --- */
+/* --- THEMES & CARD VISUALS --- */
 
 /* Base Card */
 .card {
@@ -122,9 +119,7 @@
 }
 
 /* THEME: DEV (Cyan Glass) */
-.themeDev {
-  --accent-color: #22d3ee;
-}
+.themeDev { --accent-color: #22d3ee; }
 .themeDev .card {
   background: color-mix(in oklab, var(--glass-strong) 80%, transparent);
   border-color: var(--border-soft);
@@ -136,9 +131,7 @@
 }
 
 /* THEME: WRITER (Purple/Mint + Gradient Overlay) */
-.themeWriter {
-  --accent-color: #a855f7;
-}
+.themeWriter { --accent-color: #a855f7; }
 .themeWriter .card {
   background: color-mix(in oklab, var(--bg) 92%, var(--glass));
   border-color: var(--border-soft);
@@ -148,11 +141,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(
-    circle at 90% 10%,
-    rgba(168, 85, 247, 0.08),
-    transparent 60%
-  );
+  background: radial-gradient(circle at 90% 10%, rgba(168, 85, 247, 0.08), transparent 60%);
 }
 .themeWriter .card:hover {
   border-color: #a855f7;
@@ -165,15 +154,9 @@
 }
 
 /* THEME: BUSINESS (Amber) */
-.themeBiz {
-  --accent-color: #f59e0b;
-}
+.themeBiz { --accent-color: #f59e0b; }
 .themeBiz .card {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--card) 40%, transparent),
-    color-mix(in srgb, var(--bg) 60%, transparent)
-  );
+  background: linear-gradient(135deg, color-mix(in srgb, var(--card) 40%, transparent), color-mix(in srgb, var(--bg) 60%, transparent));
   border-color: var(--border-soft);
 }
 .themeBiz .card:hover {
@@ -220,104 +203,92 @@
 }
 
 /* --- ANIMATION --- */
-.hidden {
-  opacity: 0;
-  transform: translateY(2rem);
-}
-.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.hidden { opacity: 0; transform: translateY(2rem); }
+.visible { opacity: 1; transform: translateY(0); }
+
 
 /* =========================================
-   MOBILE FIX: THE "SNAKE" GRID
+   MOBILE: THE "SNAKE" CONNECTION
    ========================================= */
 @media (max-width: 768px) {
-  /* 1. Hide Desktop Spine */
-  .desktopSpine {
-    display: none;
-  }
+  .desktopSpine { display: none; }
 
-  /* 2. Convert Row to Grid (Full Width) */
+  .container { gap: 3rem; }
+
+  /* 1. GRID LAYOUT (Unchanged from your code) */
   .row {
     width: 100%;
     padding: 0 1rem;
     display: grid;
-    gap: 0;
+    position: relative;
     align-self: center;
+    /* IMPORTANT: Allow pseudo-elements to overflow for the connections */
+    overflow: visible; 
   }
 
-  /* 3. ROW RIGHT CONFIG (Spine Left -> Card Right) */
   .rowRight {
-    grid-template-columns: 2rem 1fr; /* 10% Spine, 90% Card */
-    grid-template-areas: "node card";
+    grid-template-columns: 2rem 2.5rem 1fr;
+    grid-template-areas: "node connector card";
     text-align: left;
   }
-  .rowRight .node {
-    grid-area: node;
-    margin: 0 auto;
-    transform: none;
-  }
-  .rowRight .card {
-    grid-area: card;
-  }
-  /* Vertical Line Down */
-  .rowRight .node::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 2px;
-    height: 5rem;
-    background: var(--border-soft);
-    transform: translateX(-50%);
-    z-index: -1;
-  }
 
-  /* 4. ROW LEFT CONFIG (Card Left <- Spine Right) */
   .rowLeft {
-    grid-template-columns: 1fr 2rem; /* 90% Card, 10% Spine */
-    grid-template-areas: "card node";
-    text-align: left; /* Reset text align for readability */
-    flex-direction: row; /* Reset flex direction */
-  }
-  .rowLeft .node {
-    grid-area: node;
-    margin: 0 auto;
-    transform: none;
-  }
-  .rowLeft .card {
-    grid-area: card;
-  }
-  /* Vertical Line Down */
-  .rowLeft .node::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 2px;
-    height: 5rem;
-    background: var(--border-soft);
-    transform: translateX(-50%);
-    z-index: -1;
-  }
-
-  /* Reset Card Internals for Mobile */
-  .rowLeft .header {
+    grid-template-columns: 1fr 2.5rem 2rem;
+    grid-template-areas: "card connector node";
+    text-align: left;
     flex-direction: row;
   }
-  .rowLeft .yearBadge {
-    margin-left: 0;
-    margin-right: 0.5rem;
+
+  /* Grid Area Assignments */
+  .rowRight .node, .rowLeft .node { grid-area: node; margin: 0 auto; transform: none; position: relative; z-index: 10; }
+  .rowRight .connector, .rowLeft .connector { grid-area: connector; align-self: center; width: 100%; height: 2px; opacity: 0.6; }
+  .rowRight .card, .rowLeft .card { grid-area: card; max-width: 100%; }
+
+  .connector { display: block; }
+
+  /* 2. THE VERTICAL LINE (Spine Side) */
+  /* We extend this 'bottom: -1.5rem' to reach halfway into the gap */
+  .row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: -1.5rem; /* Extends down into the gap */
+    width: 2px;
+    background: var(--border-soft);
+    z-index: 0;
   }
 
-  /* 5. Hide Horizontal Beam on Mobile */
-  .connector {
+  .rowRight::before { left: 2rem; /* Center of the 2rem node column */ transform: translateX(-50%); }
+  .rowLeft::before { right: 2rem; /* Center of the 2rem node column */ transform: translateX(50%); }
+
+  /* 3. THE HORIZONTAL BRIDGE (The "Snake" part) */
+  /* This line draws ACROSS the screen to connect the left spine to the right spine */
+  .row::after {
+    content: "";
+    position: absolute;
+    bottom: -1.5rem; /* Sit exactly in the middle of the gap */
+    height: 2px;
+    background: var(--border-soft);
+    z-index: 0;
+    
+    /* Calculate width: 100% minus the side margins (2rem on each side) */
+    left: 2rem;
+    right: 2rem;
+  }
+
+  /* 4. CLEANUP FOR FIRST & LAST ITEMS */
+  
+  /* Stop the vertical line on the last item */
+  .row:last-child::before {
+    bottom: 50%; /* Only go down to the dot, don't continue */
+  }
+  
+  /* Remove the horizontal bridge on the last item */
+  .row:last-child::after {
     display: none;
   }
-
-  /* 6. Maximize Card Width */
-  .card {
-    max-width: 100%;
-  }
+  
+  /* Reset Header Internal Layouts */
+  .rowLeft .header { flex-direction: row; }
+  .rowLeft .yearBadge { margin-left: 0; margin-right: 0.5rem; }
 }

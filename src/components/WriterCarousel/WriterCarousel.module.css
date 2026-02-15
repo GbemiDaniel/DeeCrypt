@@ -1,3 +1,5 @@
+/* src/components/WriterCarousel/WriterCarousel.module.css */
+
 .card {
   position: relative;
   border-radius: var(--radius-3xl);
@@ -6,17 +8,19 @@
   overflow: hidden;
   isolation: isolate;
 
-  /* NEW: Add background image */
+  /* Background Image */
   background-image: url("/preview/WriterCarosuel%20bg%20image.png");
   background-size: cover;
   background-position: center;
 
-  /* KEY: fill the ModuleGrid cell */
+  /* FIX: Ensure it fills the grid cell but doesn't force overflow */
   height: 100%;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Visual-only layers must never intercept clicks */
+/* Visual-only layers */
 .preview {
   position: absolute;
   inset: 0;
@@ -27,7 +31,8 @@
 .previewTint {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 30% 20%,
       rgba(56, 189, 248, 0.16),
       transparent 55%
@@ -49,13 +54,14 @@
   opacity: 0.18;
 }
 
-/* Body is full-height flex so the bottom row pins nicely */
+/* Body Content */
 .body {
   position: relative;
   z-index: 2;
   padding: var(--space-6);
 
-  height: 100%;
+  /* FIX: Flex column to manage internal spacing efficiently */
+  flex: 1;
   min-height: 0;
 
   display: flex;
@@ -90,6 +96,7 @@
 
 .title {
   font-family: var(--font-serif);
+  /* Desktop Title Size */
   font-size: clamp(1.75rem, 3.3vw, 2.75rem);
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -101,13 +108,13 @@
   line-height: 1.75;
 }
 
-/* Pushes controls to bottom */
+/* Spacer keeps bottom controls pinned cleanly */
 .spacer {
   flex: 1;
   min-height: 0;
 }
 
-/* Bottom row: META | ARROWS | EYE */
+/* Bottom Row */
 .bottomRow {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -133,8 +140,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-
-  /* IMPORTANT: ensure visible on desktop */
   opacity: 1;
   visibility: visible;
 }
@@ -156,7 +161,9 @@
   display: inline-grid;
   place-items: center;
   cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease,
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
     background 120ms ease;
 }
 
@@ -197,7 +204,7 @@
   border-color: color-mix(in oklab, var(--border) 60%, var(--accent));
 }
 
-/* Mobile arrows outside + subtle pulse */
+/* Mobile arrows */
 .mobileArrows {
   position: absolute;
   inset: auto 16px 16px 16px;
@@ -239,34 +246,40 @@
   }
 }
 
+/* === MOBILE FIXES (< 720px) === */
 @media (max-width: 720px) {
-  .card {
-    min-height: clamp(460px, 72vh, 560px);
-  }
+  /* FIX 1: REMOVED the hard min-height clamp here.
+     This allows the card to fit whatever height the parent Grid gives it. */
 
   .body {
-    padding: clamp(18px, 5vw, 28px);
-    padding-bottom: clamp(70px, 18vw, 96px);
+    /* FIX 2: Relaxed padding */
+    /* Reduced minimum horizontal padding (14px) and bottom padding (50px) */
+    padding: clamp(14px, 5vw, 28px);
+    padding-bottom: clamp(50px, 15vw, 96px);
     gap: var(--space-3);
   }
 
   .title {
-    font-size: clamp(1.375rem, 6vw, 2rem);
+    /* FIX 3: Smaller minimum font size to prevent blowout on small phones */
+    font-size: clamp(1.4rem, 5vw, 2rem);
   }
 
   .hook {
-    line-height: 1.65;
+    line-height: 1.55;
+    /* FIX 4: Aggressively limit text lines to prevent overflow */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .bottomRow {
-    grid-template-columns: 1fr auto; /* meta + eye */
+    grid-template-columns: 1fr auto;
   }
 
-  /* Desktop arrows are hidden on mobile */
   .arrows {
     display: none;
   }
-
   .mobileArrows {
     display: flex;
   }

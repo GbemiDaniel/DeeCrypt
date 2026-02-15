@@ -3,7 +3,6 @@
 /* =========================================
    1. GLOBAL LAYOUT & BACKGROUND
    ========================================= */
-
 .container {
   width: 100%;
   position: relative;
@@ -12,7 +11,6 @@
   padding: 0;
   margin: 0;
 }
-
 .fixedBackground {
   position: fixed;
   inset: 0;
@@ -20,8 +18,6 @@
   background-color: var(--bg);
   transition: background-color 0.3s ease;
 }
-
-/* Texture Grain Overlay */
 .fixedBackground::before {
   content: "";
   position: absolute;
@@ -32,200 +28,13 @@
 }
 
 /* =========================================
-   2. TYPOGRAPHY & HERO TEXT
+   2. SECTIONS & LAYOUT
    ========================================= */
-
-/* Use for highlights if needed */
-.metalText {
-  background-image: linear-gradient(
-    135deg,
-    var(--foreground) 0%,
-    var(--muted-foreground) 50%,
-    var(--foreground) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-/* The Typewriter Font (Matches intro text color) */
-.codeFont {
-  font-family: var(--font-mono, monospace);
-  letter-spacing: -0.04em;
-  color: var(--muted-foreground);
-  font-size: clamp(1.25rem, 4vw, 2rem);
-  font-weight: 500;
-  min-height: 1.5em; /* Stops jumping when empty */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* The Final Static Header */
-.finalHeader {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: 700;
-  color: var(--foreground);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1.2em;
-  background-color: var(--muted-foreground);
-  margin-left: 4px;
-}
-
-.arrowIcon {
-  color: var(--accent);
-  width: 1.5rem;
-  height: 1.5rem;
-  animation: bounce 2s infinite;
-  opacity: 0.8;
-}
-
-.introText {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-@media (min-width: 768px) {
-  .introText {
-    font-size: 1.125rem;
-  }
-}
-.introText strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
-.glowDev {
-  filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.4));
-}
-.glowWriter {
-  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
-}
-
-/* =========================================
-   3. HERO SECTION STRUCTURE
-   ========================================= */
-
-.heroScreen {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 1.5rem;
-  padding-bottom: 10vh;
-  perspective: 1000px;
-}
-
 .contentWrapper {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
 }
-
-.heroSection {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  min-height: 450px; /* Reserves vertical space so text changing doesn't shift page */
-}
-
-/* Holds the swapping text elements to prevent layout jumps */
-.textContainer {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 5rem;
-}
-
-/* 3D Tilt Container */
-.tiltContainer {
-  --rX: 0deg;
-  --rY: 0deg;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--rX)) rotateY(var(--rY));
-  transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
-  margin-bottom: 1rem;
-  cursor: grab;
-}
-
-.avatarWrapper {
-  position: relative;
-  transform-style: preserve-3d;
-  animation: float 8s ease-in-out infinite;
-}
-
-.avatar {
-  width: 6.25rem;
-  height: 6.25rem;
-  border-radius: 50%;
-  border: 2px solid var(--border-soft);
-  box-shadow: var(--shadow-md);
-  transform: translateZ(20px);
-}
-@media (min-width: 768px) {
-  .avatar {
-    width: 7.5rem;
-    height: 7.5rem;
-  }
-}
-
-.statusBadge {
-  position: absolute;
-  bottom: 0;
-  right: -0.625rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--foreground);
-  padding: 0.25rem 0.625rem;
-  border-radius: 1.25rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  transform: translateZ(40px);
-  box-shadow: var(--shadow-sm);
-  white-space: nowrap;
-}
-.statusDot {
-  width: 0.375rem;
-  height: 0.375rem;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-/* =========================================
-   4. SECTIONS & LAYOUT (Standard)
-   ========================================= */
-
 .flowSection {
   width: 100%;
   padding: 6rem 1.5rem;
@@ -234,66 +43,10 @@
   align-items: center;
 }
 @media (max-width: 640px) {
-  .heroScreen {
-    padding: 0 1rem;
-    padding-bottom: 5vh;
-  }
-  .flowSection {
-    padding: 4rem 1rem;
-  }
+  .flowSection { padding: 4rem 1rem; }
 }
 
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto 3rem auto;
-}
-.headerLine {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--border-soft) 50%,
-    transparent 100%
-  );
-  opacity: 0.6;
-}
-.headerPill {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 1.25rem;
-  border-radius: 99px;
-  background: color-mix(in oklab, var(--glass-strong) 60%, transparent);
-  border: 1px solid var(--border-soft);
-  backdrop-filter: blur(8px);
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--foreground);
-}
-.headerIcon {
-  color: var(--accent);
-  opacity: 0.9;
-  width: 1.125rem;
-  height: 1.125rem;
-}
-.headerPillWriter .headerIcon {
-  color: #a855f7;
-}
-.headerPillTrophy .headerIcon {
-  color: #f59e0b;
-}
-.headerPillContact .headerIcon {
-  color: #22c55e;
-}
-
-/* --- UPDATED GRID (Stabilized) --- */
+/* --- GRID LAYOUTS --- */
 .gridSection {
   display: grid;
   grid-template-columns: 1fr;
@@ -302,71 +55,11 @@
 }
 @media (min-width: 640px) {
   .gridSection {
-    /* Auto-fit stretches cards to fill row evenly */
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     align-items: stretch;
   }
 }
-
-.skillCard {
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-soft);
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 85%, transparent),
-    color-mix(in oklab, var(--glass) 85%, transparent)
-  );
-  backdrop-filter: blur(12px);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-.skillCard:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
-}
-
-.iconBox {
-  width: 2.625rem;
-  height: 2.625rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border-soft);
-  background: color-mix(in oklab, var(--glass-strong) 85%, transparent);
-  box-shadow: var(--shadow-inset);
-  display: grid;
-  place-items: center;
-  margin-bottom: 1rem;
-}
-.iconBox[data-type="dev"] {
-  color: var(--accent);
-}
-.iconBox[data-type="web3"] {
-  color: #f59e0b;
-}
-.iconBox[data-type="writer"] {
-  color: var(--accent-writer, #00dc82);
-}
-
-.skillCard h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--foreground);
-}
-.skillCard p {
-  font-size: 0.875rem;
-  color: var(--muted-foreground);
-  line-height: 1.6;
-}
-
-/* --- UPDATED BADGES GRID (Stabilized) --- */
 .certGrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -375,13 +68,11 @@
 }
 @media (min-width: 640px) {
   .certGrid {
-    /* Ensures all badge cards are equal width and height */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
     align-items: stretch;
   }
 }
-
 .ctaSection {
   width: 100%;
   display: flex;
@@ -389,49 +80,6 @@
   padding: 1rem 0;
 }
 @media (max-width: 640px) {
-  .contentWrapper {
-    padding: 0 1rem;
-  }
-  .ctaSection {
-    padding: 0;
-  }
-}
-
-/* ANIMATIONS */
-@keyframes float {
-  0% {
-    transform: translateY(0px) translateZ(20px);
-  }
-  50% {
-    transform: translateY(-10px) translateZ(20px);
-  }
-  100% {
-    transform: translateY(0px) translateZ(20px);
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.8);
-  }
-}
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
+  .contentWrapper { padding: 0 1rem; }
+  .ctaSection { padding: 0; }
 }
