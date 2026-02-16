@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type TouchEvent } from "react";
+import { useEffect, useMemo, useState, type TouchEvent, type SyntheticEvent } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./WriterCarousel.module.css";
 import type { WriterPost } from "../../data/posts";
@@ -26,8 +26,11 @@ export default function WriterCarousel({
   }, [safeItems, activeId]);
 
   const [index, setIndex] = useState(initialIndex);
+  
+  // === NEW STATE ===
+  // We track if the current slide's image has successfully loaded.
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  // Swipe gesture state
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
@@ -35,6 +38,11 @@ export default function WriterCarousel({
 
   const item = safeItems[index];
   const canGo = safeItems.length > 1;
+
+  // Reset the "Loaded" state whenever the slide changes
+  useEffect(() => {
+    setIsImageLoaded(false);
+  }, [item?.id]);
 
   function go(delta: number) {
     if (!canGo) return;
@@ -48,10 +56,10 @@ export default function WriterCarousel({
     onOpen?.(item);
   }
 
-  // Swipe gesture handlers
+  // Swipe handlers
   const minSwipeDistance = 50;
   function onTouchStart(e: TouchEvent) {
-    setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
+    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   }
   function onTouchMove(e: TouchEvent) {
@@ -68,22 +76,44 @@ export default function WriterCarousel({
     setTouchEnd(null);
   }
 
+  const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.style.display = "none";
+    // If error, we ensure isImageLoaded stays false so background remains
+    setIsImageLoaded(false); 
+  };
+
+  const handleImageLoad = () => {
+    // Success! Now we can safely hide the default background
+    setIsImageLoaded(true);
+  };
+
   return (
     <div
       className={styles.card}
+      /* === THE LOGIC FIX === */
+      /* Only remove the default background if the new image exists AND has loaded. */
+      style={{
+        backgroundImage: (item?.previewImage && isImageLoaded) ? "none" : undefined
+      }}
+      /* ==================== */
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Visual-only layers */}
       <div className={styles.preview} aria-hidden="true">
         <div className={styles.previewTint} />
         {item?.previewImage ? (
-          <img className={styles.previewImg} src={item.previewImage} alt="" />
+          <img 
+            key={item.id} 
+            className={styles.previewImg} 
+            src={item.previewImage} 
+            alt="" 
+            onError={handleImageError}
+            onLoad={handleImageLoad} // <--- Trigger the swap here
+          />
         ) : null}
       </div>
 
-      {/* Content */}
       <div className={styles.body}>
         <div className={styles.kickerRow}>
           <div className={styles.kicker}>Latest essay</div>
@@ -96,10 +126,8 @@ export default function WriterCarousel({
 
         <div className={styles.hook}>{item?.hook ?? ""}</div>
 
-        {/* Spacer keeps bottom controls pinned cleanly */}
         <div className={styles.spacer} />
 
-        {/* Bottom row: META | ARROWS | EYE (desktop) */}
         <div className={styles.bottomRow}>
           <div className={styles.meta}>
             <span>{item?.date ?? ""}</span>
@@ -114,7 +142,6 @@ export default function WriterCarousel({
               onClick={() => go(-1)}
               disabled={!canGo}
               aria-label="Previous post"
-              title="Previous"
             >
               <ChevronLeft size={16} />
             </button>
@@ -125,7 +152,6 @@ export default function WriterCarousel({
               onClick={() => go(1)}
               disabled={!canGo}
               aria-label="Next post"
-              title="Next"
             >
               <ChevronRight size={16} />
             </button>
@@ -137,14 +163,12 @@ export default function WriterCarousel({
               className={styles.eyeBtn}
               onClick={open}
               aria-label="Open preview"
-              title="Quick look"
             >
               <Eye size={16} />
             </button>
           </div>
         </div>
 
-        {/* Pagination dots */}
         <div className={styles.dots} aria-hidden="true">
           {safeItems.map((x, i) => (
             <span
@@ -158,7 +182,6 @@ export default function WriterCarousel({
         </div>
       </div>
 
-      {/* Mobile arrows live OUTSIDE and pulse subtly */}
       <div className={styles.mobileArrows} aria-hidden="false">
         <button
           type="button"

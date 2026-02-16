@@ -28,21 +28,24 @@ export default function Hero({
 
       <h1 className={styles.headline}>
         <span className={styles.top}>
-          <TextReveal variant={mode} split="words">
+          {/* LINE 1: FALLS FROM TOP */}
+          <TextReveal 
+            variant={mode} 
+            split="words" 
+            direction="top"  // <--- NEW
+            delay={0.1}      // Starts almost immediately
+          >
             {headlineTop}
           </TextReveal>
         </span>
 
-        {/*
-          FIX: The gradient effect requires the text not to be split into multiple
-          elements. We pass the style class directly to TextReveal and disable
-          the word-splitting animation only for the 'dev' mode.
-        */}
+        {/* LINE 2: RISES FROM BOTTOM */}
         <TextReveal
           className={styles.bottom}
           variant={mode}
           split={mode === "dev" ? "none" : "words"}
-          delay={0.2}
+          direction="bottom" // <--- NEW
+          delay={0.3}        // Slight delay for impact
         >
           {headlineBottom}
         </TextReveal>
@@ -51,7 +54,13 @@ export default function Hero({
       <div className={styles.bottomRow}>
         <div className={styles.subcopy}>
           {subcopy && (
-            <TextReveal variant={mode} split="words" delay={0.5}>
+            // LINE 3: RISES FROM BOTTOM (Anchors the layout)
+            <TextReveal 
+              variant={mode} 
+              split="words" 
+              direction="bottom" 
+              delay={0.5} 
+            >
               {subcopy}
             </TextReveal>
           )}

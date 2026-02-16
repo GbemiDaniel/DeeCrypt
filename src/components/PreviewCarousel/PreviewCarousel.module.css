@@ -139,6 +139,8 @@
 }
 
 /* Typography Scaling */
+/* ... previous styles ... */
+
 .title {
   margin: 0;
   font-family: var(--font-serif);
@@ -147,7 +149,16 @@
   line-height: 1.05;
   font-size: clamp(1.35rem, 5vw, 2.35rem);
   overflow-wrap: break-word;
+
+  /* This creates a soft, dark "cloud" behind the text letters only.
+     It lifts the text off the image without adding a box or gradient. */
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+  
+  /* Optional: Ensures the text layer sits clearly on top */
+  position: relative;
+  z-index: 10;
 }
+
 
 .subtitle {
   margin: 0.7rem 0 0;

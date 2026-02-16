@@ -1,7 +1,7 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState } from "react";
 
-// --- 1. IMPORTS FOR SCROLL SPY & PRELOADER ---
+// --- 1. IMPORTS ---
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
@@ -24,10 +24,8 @@ import { sideProjects } from "../data/sidequests";
 import { projects, type Project } from "../data/projects";
 import {
   SideQuestCard,
-  type SideProject,
 } from "@/components/SideQuest/SideQuestCard";
-
-// Added Terminal, Mail, FileText for the CTA
+// Icons for the CTA
 import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react"; 
 import {
   SiReact,
@@ -48,9 +46,10 @@ const TECH_STACK = [
 ];
 
 // --- 2. OBSERVER CONFIGURATION ---
+// We use the same config for everything to ensure consistent Navbar updates
 const SPY_CONFIG = {
   threshold: 0,
-  rootMargin: "-45% 0px -45% 0px",
+  rootMargin: "-45% 0px -45% 0px", // The Center Line Tripwire
   triggerOnce: false,
   delay: 100,
 };
@@ -65,56 +64,47 @@ function clamp(n: number, min: number, max: number) {
 }
 
 export default function DevView({ mode, onModeChange }: Props) {
-  // --- LOADING STATE ---
   const [isLoading, setIsLoading] = useState(true);
-
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
 
   // 3. DETECT LAYOUT
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // --- DESKTOP OBSERVER ---
+  // --- OBSERVERS ---
+  const { ref: heroRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => inView && setSectionLabel(null),
+  });
+
   const { ref: desktopGridRef } = useInView({
     ...SPY_CONFIG,
     skip: !isDesktop,
-    onChange: (inView) => {
-      if (inView && isDesktop) setSectionLabel("PROJECTS & STACK");
-    },
+    onChange: (inView) => inView && isDesktop && setSectionLabel("PROJECTS & STACK"),
   });
 
-  // --- MOBILE OBSERVERS ---
   const { ref: mobileProjectsRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("MY PROJECTS");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("MY PROJECTS"),
   });
 
   const { ref: mobileSideQuestRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("SIDE QUESTS");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("SIDE QUESTS"),
   });
 
   const { ref: mobileStackRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("TECH STACK");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("TECH STACK"),
   });
 
-  // --- HERO OBSERVER ---
-  const { ref: heroRef } = useInView({
-    threshold: 0,
-    rootMargin: "-10% 0px -90% 0px",
-    onChange: (inView) => {
-      if (inView) setSectionLabel(null);
-    },
+  // --- CTA OBSERVER (Fixes Navbar Lag) ---
+  const { ref: ctaSpy } = useInView({
+    ...SPY_CONFIG, 
+    onChange: (inView) => inView && setSectionLabel("GET IN TOUCH"),
   });
 
   const active: Project | undefined = useMemo(() => {
@@ -140,17 +130,14 @@ export default function DevView({ mode, onModeChange }: Props) {
 
   return (
     <>
-      {/* 1. LOADING OVERLAY */}
       <AnimatePresence mode="wait">
         {isLoading && (
           <Preloader key="loader" onComplete={() => setIsLoading(false)} />
         )}
       </AnimatePresence>
 
-      {/* 2. MAIN CONTENT */}
       {!isLoading && (
         <>
-          {/* 4. HERO SECTION */}
           <div ref={heroRef}>
             <Hero
               key={mode}
@@ -165,7 +152,6 @@ export default function DevView({ mode, onModeChange }: Props) {
             />
           </div>
 
-          {/* 5. GRID SECTION WRAPPER */}
           <div ref={isDesktop ? desktopGridRef : undefined}>
             <ModuleGrid
               left={
@@ -235,23 +221,26 @@ export default function DevView({ mode, onModeChange }: Props) {
             highlightsTitle={active?.highlightsTitle}
           />
 
-          {/* 6. MINIMAL CTA (System Style) */}
-          <MinimalCTA
-            icon={Terminal}
-            title="Ready to ship?"
-            description="I'm open to frontend roles, Web3 collaborations, and freelance projects. If you have an idea, let's build it."
-            primaryAction={{
-              label: "Email Me",
-              href: "mailto:adamsdaniel043@gmail.com",
-              icon: Mail,
-            }}
-            secondaryAction={{
-              label: "Resume",
-              href: "/resume.pdf",
-              icon: FileText,
-              download: true,
-            }}
-          />
+          {/* === MINIMAL CTA === */}
+          {/* Wrapped for accurate Scroll Spy tracking */}
+          <div ref={ctaSpy}>
+            <MinimalCTA
+              icon={Terminal}
+              title="Ready to ship?"
+              description="Open to frontend roles, Web3 collaborations, and freelance projects."
+              primaryAction={{
+                label: "Email Me",
+                href: "mailto:adamsdaniel043@gmail.com",
+                icon: Mail,
+              }}
+              secondaryAction={{
+                label: "Resume",
+                href: "/resume.pdf",
+                icon: FileText,
+                download: true,
+              }}
+            />
+          </div>
         </>
       )}
     </>

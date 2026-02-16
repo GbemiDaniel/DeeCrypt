@@ -1,7 +1,7 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState, CSSProperties } from "react";
 
-// 1. IMPORTS FOR SCROLL SPY & PRELOADER
+// 1. IMPORTS
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
@@ -20,13 +20,13 @@ import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA"; // <--- NEW IMP
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
 import heroStyles from "../components/Hero/Hero.module.css";
-// Added Sparkles, Twitter, Mail for the CTA
-import { BookOpen, Newspaper, X, Linkedin, Sparkles, Twitter, Mail } from "lucide-react"; 
+// Added PenTool (fountain pen icon), Twitter, Mail
+import { BookOpen, Newspaper, X, Linkedin, PenTool, Twitter, Mail } from "lucide-react"; 
 
 // 2. SPY CONFIGURATION
 const SPY_CONFIG = {
   threshold: 0,
-  rootMargin: "-45% 0px -45% 0px",
+  rootMargin: "-45% 0px -45% 0px", // The Center Line Tripwire
   triggerOnce: false,
   delay: 100,
 };
@@ -77,47 +77,41 @@ export default function WriterView({ mode, onModeChange }: Props) {
   // 3. DETECT LAYOUT
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // --- DESKTOP OBSERVER ---
+  // --- OBSERVERS ---
+  const { ref: heroRef } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => inView && setSectionLabel(null),
+  });
+
   const { ref: desktopGridRef } = useInView({
     ...SPY_CONFIG,
     skip: !isDesktop,
-    onChange: (inView) => {
-      if (inView && isDesktop) setSectionLabel("NOTES & TOPICS");
-    },
+    onChange: (inView) => inView && isDesktop && setSectionLabel("NOTES & TOPICS"),
   });
 
-  // --- MOBILE OBSERVERS ---
   const { ref: mobileNotesRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("LATEST NOTES");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("LATEST NOTES"),
   });
 
   const { ref: mobileTopicsRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("TOPICS");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("TOPICS"),
   });
 
   const { ref: mobilePlatformRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => {
-      if (inView && !isDesktop) setSectionLabel("PLATFORMS");
-    },
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("PLATFORMS"),
   });
 
-  // --- HERO OBSERVER ---
-  const { ref: heroRef } = useInView({
-    threshold: 0,
-    rootMargin: "-10% 0px -90% 0px",
-    onChange: (inView) => {
-      if (inView) setSectionLabel(null); // Reset to "Dev | Writer"
-    },
+  // --- CTA OBSERVER ---
+  // Uses same SPY_CONFIG to prevent skipping/lag
+  const { ref: ctaSpy } = useInView({
+    ...SPY_CONFIG,
+    onChange: (inView) => inView && setSectionLabel("CONNECT"),
   });
 
   const activePost = useMemo(
@@ -214,7 +208,7 @@ export default function WriterView({ mode, onModeChange }: Props) {
                 >
                   <ModuleCard
                     title="Platforms"
-                    subtitle="Where I publish and share."
+                    subtitle="Where I publish."
                     icon={Newspaper}
                     footer={
                       <div className={styles.platformContainer}>
@@ -249,22 +243,24 @@ export default function WriterView({ mode, onModeChange }: Props) {
             onClose={() => setOpen(false)}
           />
 
-          {/* 5. MINIMAL CTA (System Style) */}
-          <MinimalCTA
-            icon={Sparkles}
-            title="DeeCrypt / Q2 2026"
-            description="Simplifying blockchain tech through clarity. Follow the build process in public or get early updates."
-            primaryAction={{
-              label: "Follow Updates",
-              href: "https://twitter.com/deecrypthub",
-              icon: Twitter,
-            }}
-            secondaryAction={{
-              label: "Get Notified",
-              href: "mailto:adamsdaniel043@gmail.com",
-              icon: Mail,
-            }}
-          />
+          {/* 5. MINIMAL CTA */}
+          <div ref={ctaSpy}>
+            <MinimalCTA
+              icon={PenTool}
+              title="DeeCrypt / Q2 2026"
+              description="Simplifying blockchain tech through clarity."
+              primaryAction={{
+                label: "Follow Updates",
+                href: "https://twitter.com/deecrypthub",
+                icon: Twitter,
+              }}
+              secondaryAction={{
+                label: "Get Notified",
+                href: "mailto:adamsdaniel043@gmail.com",
+                icon: Mail,
+              }}
+            />
+          </div>
         </>
       )}
     </div>

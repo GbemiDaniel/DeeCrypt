@@ -30,69 +30,74 @@
   transform: translateX(-50%);
   z-index: 0;
   display: block;
+
+  /* Added subtle glow for depth (non-invasive) */
+  box-shadow: 0 0 20px color-mix(in srgb, var(--border-soft) 40%, transparent);
 }
 
 /* --- ROW ARCHITECTURE --- */
 .row {
   display: flex;
   align-items: center;
-  width: 50%; /* Desktop: Each row is half screen */
+  width: 50%;
   box-sizing: border-box;
   position: relative;
   transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: transform, opacity;
 }
 
-/* RIGHT SIDE (Odd) - Standard Flow */
 .rowRight {
   align-self: flex-end;
   justify-content: flex-start;
   text-align: left;
 }
 
-/* LEFT SIDE (Even) - Reverse Flow */
 .rowLeft {
   align-self: flex-start;
-  justify-content: flex-start; /* Start from spine */
-  flex-direction: row-reverse; /* Flip visual order: [Card] [Line] [Node] */
+  justify-content: flex-start;
+  flex-direction: row-reverse;
   text-align: right;
 }
 
 /* --- THE CONNECTOR SYSTEM --- */
 
-/* 1. THE NODE (Anchor Dot) */
+/* NODE */
 .node {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: var(--bg);
   border: 2px solid var(--accent-color);
-  box-shadow: 0 0 15px color-mix(in srgb, var(--accent-color) 40%, transparent);
+  box-shadow:
+    0 0 15px color-mix(in srgb, var(--accent-color) 40%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--accent-color) 10%, transparent);
   flex-shrink: 0;
   z-index: 10;
   position: relative;
-  /* Shift to cover the spine exactly */
   transform: translateX(50%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-/* Fix offset for right side */
+
 .rowRight .node {
   transform: translateX(-50%);
 }
 
-/* 2. THE BEAM (Horizontal Line) */
+/* BEAM */
 .connector {
-  width: 3rem; /* Fixed Arm Length */
+  width: 3rem;
   height: 2px;
   background: linear-gradient(90deg, var(--accent-color), transparent);
   opacity: 0.5;
   flex-shrink: 0;
+  transition: opacity 0.3s ease;
 }
+
 .rowLeft .connector {
   background: linear-gradient(-90deg, var(--accent-color), transparent);
 }
 
 /* --- THEMES & CARD VISUALS --- */
 
-/* Base Card */
 .card {
   flex: 1;
   max-width: 420px;
@@ -100,69 +105,101 @@
   padding: 1.5rem;
   backdrop-filter: blur(12px);
   border: 1px solid transparent;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: 
+    transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.35s ease;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Fix Header for Left Cards */
+/* Slightly elevate node + connector on hover (subtle polish) */
+.row:hover .connector {
+  opacity: 0.8;
+}
+
+.row:hover .node {
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--accent-color) 60%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--accent-color) 12%, transparent);
+}
+
+/* Header alignment fixes */
 .rowLeft .header {
   flex-direction: row-reverse;
 }
+
 .rowLeft .yearBadge {
   margin-left: 0.5rem;
   margin-right: 0;
 }
+
 .rowRight .yearBadge {
   margin-right: 0.5rem;
 }
 
-/* THEME: DEV (Cyan Glass) */
+/* THEME: DEV */
 .themeDev { --accent-color: #22d3ee; }
+
 .themeDev .card {
   background: color-mix(in oklab, var(--glass-strong) 80%, transparent);
   border-color: var(--border-soft);
 }
+
 .themeDev .card:hover {
   border-color: #22d3ee;
-  box-shadow: 0 12px 40px -10px rgba(34, 211, 238, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 16px 50px -12px rgba(34, 211, 238, 0.18);
+  transform: translateY(-4px);
 }
 
-/* THEME: WRITER (Purple/Mint + Gradient Overlay) */
+/* THEME: WRITER */
 .themeWriter { --accent-color: #a855f7; }
+
 .themeWriter .card {
   background: color-mix(in oklab, var(--bg) 92%, var(--glass));
   border-color: var(--border-soft);
 }
+
 .themeWriter .card::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 90% 10%, rgba(168, 85, 247, 0.08), transparent 60%);
+  background: radial-gradient(
+    circle at 90% 10%,
+    rgba(168, 85, 247, 0.08),
+    transparent 60%
+  );
 }
+
 .themeWriter .card:hover {
   border-color: #a855f7;
-  box-shadow: 0 12px 40px -10px rgba(168, 85, 247, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 16px 50px -12px rgba(168, 85, 247, 0.18);
+  transform: translateY(-4px);
 }
+
 .themeWriter .title {
   font-family: var(--font-serif);
   letter-spacing: -0.01em;
 }
 
-/* THEME: BUSINESS (Amber) */
+/* THEME: BUSINESS */
 .themeBiz { --accent-color: #f59e0b; }
+
 .themeBiz .card {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--card) 40%, transparent), color-mix(in srgb, var(--bg) 60%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--card) 40%, transparent),
+    color-mix(in srgb, var(--bg) 60%, transparent)
+  );
   border-color: var(--border-soft);
 }
+
 .themeBiz .card:hover {
   border-color: #f59e0b;
-  box-shadow: 0 12px 40px -10px rgba(245, 158, 11, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 16px 50px -12px rgba(245, 158, 11, 0.18);
+  transform: translateY(-4px);
 }
 
 /* --- TYPOGRAPHY --- */
@@ -172,6 +209,7 @@
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
+
 .yearBadge {
   font-family: var(--font-mono, monospace);
   font-size: 0.7rem;
@@ -182,13 +220,16 @@
   background: color-mix(in srgb, var(--accent-color) 8%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-color) 15%, transparent);
 }
+
 .icon {
   color: var(--muted-foreground);
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
+
 .card:hover .icon {
   color: var(--accent-color);
 }
+
 .title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -196,6 +237,7 @@
   margin-bottom: 0.5rem;
   line-height: 1.2;
 }
+
 .description {
   font-size: 0.9rem;
   color: var(--muted-foreground);
@@ -203,92 +245,216 @@
 }
 
 /* --- ANIMATION --- */
-.hidden { opacity: 0; transform: translateY(2rem); }
-.visible { opacity: 1; transform: translateY(0); }
+.hidden { 
+  opacity: 0; 
+  transform: translateY(2rem); 
+}
 
+.visible { 
+  opacity: 1; 
+  transform: translateY(0); 
+}
 
 /* =========================================
    MOBILE: THE "SNAKE" CONNECTION
    ========================================= */
 @media (max-width: 768px) {
+
   .desktopSpine { display: none; }
 
-  .container { gap: 3rem; }
+  .container { 
+    gap: clamp(2rem, 6vw, 3rem);
+  }
 
-  /* 1. GRID LAYOUT (Unchanged from your code) */
   .row {
     width: 100%;
-    padding: 0 1rem;
+    padding: 0 clamp(0.75rem, 4vw, 1rem);
     display: grid;
     position: relative;
     align-self: center;
-    /* IMPORTANT: Allow pseudo-elements to overflow for the connections */
-    overflow: visible; 
+    overflow: visible;
   }
 
+
+  /* Shrink connector columns proportionally */
   .rowRight {
-    grid-template-columns: 2rem 2.5rem 1fr;
+    grid-template-columns: clamp(1.2rem, 4vw, 2rem)
+                           clamp(1.5rem, 5vw, 2.5rem)
+                           1fr;
     grid-template-areas: "node connector card";
     text-align: left;
   }
 
   .rowLeft {
-    grid-template-columns: 1fr 2.5rem 2rem;
+    grid-template-columns: 1fr
+                           clamp(1.5rem, 5vw, 2.5rem)
+                           clamp(1.2rem, 4vw, 2rem);
     grid-template-areas: "card connector node";
     text-align: left;
     flex-direction: row;
   }
 
-  /* Grid Area Assignments */
-  .rowRight .node, .rowLeft .node { grid-area: node; margin: 0 auto; transform: none; position: relative; z-index: 10; }
-  .rowRight .connector, .rowLeft .connector { grid-area: connector; align-self: center; width: 100%; height: 2px; opacity: 0.6; }
-  .rowRight .card, .rowLeft .card { grid-area: card; max-width: 100%; }
+  .rowRight .node,
+  .rowLeft .node {
+    grid-area: node;
+    margin: 0 auto;
+    transform: none;
+    position: relative;
+    z-index: 10;
+  }
+
+  .rowRight .connector,
+  .rowLeft .connector {
+    grid-area: connector;
+    align-self: center;
+    width: 100%;
+    height: 2px;
+    opacity: 0.6;
+  }
+
+  /* 🔥 Key Fix — Let card truly expand */
+  .rowRight .card,
+  .rowLeft .card {
+    grid-area: card;
+    max-width: none;
+    width: 100%;
+  }
+
+  /* Scale padding for small devices */
+  .card {
+    padding: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* Slight responsive typography scaling */
+  .title {
+    font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+  }
+
+  .description {
+    font-size: clamp(0.85rem, 3.5vw, 0.9rem);
+  }
+
+  .yearBadge {
+    font-size: clamp(0.65rem, 3vw, 0.7rem);
+  }
 
   .connector { display: block; }
 
-  /* 2. THE VERTICAL LINE (Spine Side) */
-  /* We extend this 'bottom: -1.5rem' to reach halfway into the gap */
+  /* Vertical snake spine */
   .row::before {
     content: "";
     position: absolute;
     top: 0;
-    bottom: -1.5rem; /* Extends down into the gap */
+    bottom: -1.5rem;
     width: 2px;
     background: var(--border-soft);
     z-index: 0;
   }
 
-  .rowRight::before { left: 2rem; /* Center of the 2rem node column */ transform: translateX(-50%); }
-  .rowLeft::before { right: 2rem; /* Center of the 2rem node column */ transform: translateX(50%); }
+  .rowRight::before {
+    left: clamp(1.2rem, 4vw, 2rem);
+    transform: translateX(-50%);
+  }
 
-  /* 3. THE HORIZONTAL BRIDGE (The "Snake" part) */
-  /* This line draws ACROSS the screen to connect the left spine to the right spine */
+  .rowLeft::before {
+    right: clamp(1.2rem, 4vw, 2rem);
+    transform: translateX(50%);
+  }
+
+  /* Horizontal snake connector */
   .row::after {
     content: "";
     position: absolute;
-    bottom: -1.5rem; /* Sit exactly in the middle of the gap */
+    bottom: -1.5rem;
     height: 2px;
     background: var(--border-soft);
     z-index: 0;
-    
-    /* Calculate width: 100% minus the side margins (2rem on each side) */
-    left: 2rem;
-    right: 2rem;
+    left: clamp(1.2rem, 4vw, 2rem);
+    right: clamp(1.2rem, 4vw, 2rem);
   }
 
-  /* 4. CLEANUP FOR FIRST & LAST ITEMS */
-  
-  /* Stop the vertical line on the last item */
   .row:last-child::before {
-    bottom: 50%; /* Only go down to the dot, don't continue */
+    bottom: 50%;
   }
-  
-  /* Remove the horizontal bridge on the last item */
+
   .row:last-child::after {
     display: none;
   }
-  
-  /* Reset Header Internal Layouts */
-  .rowLeft .header { flex-direction: row; }
-  .rowLeft .yearBadge { margin-left: 0; margin-right: 0.5rem; }
+
+  .rowLeft .header { 
+    flex-direction: row; 
+  }
+
+  .rowLeft .yearBadge {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+  /* Remove ALL connector extensions from first row */
+.row:first-child::before {
+  top: 50%;
 }
+
+.row:first-child::after {
+  display: none;
+}
+
+}
+
+/* =========================================
+   ULTRA SMALL DEVICES (360px and below)
+   ========================================= */
+@media (max-width: 360px) {
+
+  .container {
+    gap: 1.75rem;
+  }
+
+  .row {
+    padding: 0 0.75rem;
+  }
+
+  /* Even tighter connector columns */
+  .rowRight {
+    grid-template-columns: 1rem 1.25rem 1fr;
+  }
+
+  .rowLeft {
+    grid-template-columns: 1fr 1.25rem 1rem;
+  }
+
+  .rowRight::before {
+    left: 1rem;
+  }
+
+  .rowLeft::before {
+    right: 1rem;
+  }
+
+  .row::after {
+    left: 1rem;
+    right: 1rem;
+  }
+
+  /* Tighter card */
+  .card {
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  /* Typography scaling */
+  .title {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .yearBadge {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.55rem;
+  }
+}
+
+
