@@ -145,21 +145,23 @@
 }
 
 /* === MOBILE OPTIMIZATION === */
+
+
+/* === MOBILE OPTIMIZATION === */
 @media (max-width: 768px) {
   .wrapper {
     padding: 0 1rem;
     margin-top: 1rem;
-    margin-bottom: 5rem; /* Space for mobile nav */
+    margin-bottom: 5rem;
   }
 
   .card {
-    flex-direction: column; /* Stack Content above Actions */
+    flex-direction: column;
     align-items: stretch;
     padding: 1.25rem;
     gap: 1.25rem;
   }
 
-  /* CRITICAL CHANGE: Keep Icon & Text side-by-side on mobile */
   .content {
     flex-direction: row; 
     align-items: center;
@@ -167,16 +169,30 @@
   }
 
   .description {
-    -webkit-line-clamp: 3; /* Allow more lines on mobile since width is small */
+    -webkit-line-clamp: 3;
   }
 
+  /* === THE FIX === */
   .actions {
     width: 100%;
-    flex-direction: row; /* Keep buttons side-by-side if possible */
+    display: flex;
+    /* 1. Allow buttons to wrap to the next line if they run out of space */
+    flex-wrap: wrap; 
+    gap: 0.75rem;
   }
 
   .button {
-    flex: 1; /* Equal width buttons */
-    padding: 0.75rem;
+    /* 2. 'flex-grow: 1' makes them fill the space. 
+          'flex-basis: auto' lets them size by content initially. */
+    flex: 1 0 auto;
+    
+    /* 3. The Safety Switch:
+       If the screen is so small that a button is squeezed below 140px,
+       the flex-wrap kicks in and stacks them vertically (full width).
+    */
+    min-width: 140px; 
+    
+    justify-content: center;
+    padding: 0.75rem 1rem;
   }
 }

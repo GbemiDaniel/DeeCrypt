@@ -214,3 +214,11 @@ button {
     @apply bg-background text-foreground;
   }
 }
+
+/* TEMPORARY DEBUGGING CODE */
+* {
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
