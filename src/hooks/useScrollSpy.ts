@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
 
+// === SINGLE SOURCE OF TRUTH ===
+// We export this so every View (Dev, Writer, About) uses the EXACT same settings.
+export const SPY_CONFIG = {
+  threshold: 0,
+  // The "Tripwire": -45% means the trigger line is in the middle of the screen
+  rootMargin: "-45% 0px -45% 0px",
+  triggerOnce: false,
+  // PERFORMANCE FIX: 250ms delay stops the Navbar from re-rendering 60fps
+  delay: 250,
+};
+
 const navEvents = new EventTarget();
 
 export function setSectionLabel(label: string | null) {
@@ -33,7 +44,6 @@ export function useNavState() {
     return () => navEvents.removeEventListener("nav-update", handler);
   }, []);
 
-  // Priority: Hover > Section > Default
   const showDefault = isHovering || !section;
 
   return { showDefault, sectionLabel: section, isHovering };

@@ -4,7 +4,8 @@ import { useMemo, useState, CSSProperties } from "react";
 // 1. IMPORTS
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-import { setSectionLabel } from "../hooks/useScrollSpy";
+// === FIX: Import the shared config here ===
+import { setSectionLabel, SPY_CONFIG } from "../hooks/useScrollSpy";
 import { AnimatePresence } from "framer-motion";
 import { Preloader } from "@/components/Preloader/Preloader";
 
@@ -15,21 +16,22 @@ import ModuleCard from "../components/ModuleCard/ModuleCard";
 import Tag from "../components/Tag/Tag";
 import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
-import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA"; // <--- NEW IMPORT
+import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA";
 
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
 import heroStyles from "../components/Hero/Hero.module.css";
-// Added PenTool (fountain pen icon), Twitter, Mail
-import { BookOpen, Newspaper, X, Linkedin, PenTool, Twitter, Mail } from "lucide-react"; 
+import {
+  BookOpen,
+  Newspaper,
+  X,
+  Linkedin,
+  PenTool,
+  Twitter,
+  Mail,
+} from "lucide-react";
 
-// 2. SPY CONFIGURATION
-const SPY_CONFIG = {
-  threshold: 0,
-  rootMargin: "-45% 0px -45% 0px", // The Center Line Tripwire
-  triggerOnce: false,
-  delay: 100,
-};
+// === DELETED: Local SPY_CONFIG (Now using the shared one) ===
 
 type Props = {
   mode: Mode;
@@ -78,6 +80,7 @@ export default function WriterView({ mode, onModeChange }: Props) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   // --- OBSERVERS ---
+  // All hooks now use the imported SPY_CONFIG (250ms delay)
   const { ref: heroRef } = useInView({
     ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel(null),
@@ -86,13 +89,15 @@ export default function WriterView({ mode, onModeChange }: Props) {
   const { ref: desktopGridRef } = useInView({
     ...SPY_CONFIG,
     skip: !isDesktop,
-    onChange: (inView) => inView && isDesktop && setSectionLabel("NOTES & TOPICS"),
+    onChange: (inView) =>
+      inView && isDesktop && setSectionLabel("NOTES & TOPICS"),
   });
 
   const { ref: mobileNotesRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => inView && !isDesktop && setSectionLabel("LATEST NOTES"),
+    onChange: (inView) =>
+      inView && !isDesktop && setSectionLabel("LATEST NOTES"),
   });
 
   const { ref: mobileTopicsRef } = useInView({
@@ -108,7 +113,6 @@ export default function WriterView({ mode, onModeChange }: Props) {
   });
 
   // --- CTA OBSERVER ---
-  // Uses same SPY_CONFIG to prevent skipping/lag
   const { ref: ctaSpy } = useInView({
     ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel("CONNECT"),

@@ -1,25 +1,13 @@
 import type { Mode } from "../app/modes";
-import {
-  Code,
-  Award,
-  User,
-  Mail,
-  Heart,
-  Smile,
-} from "lucide-react";
+import { Code, Award, User, Mail, Heart, Smile } from "lucide-react";
 import styles from "./AboutView.module.css";
 import { useState } from "react";
-
-// --- LIBRARIES ---
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
-// --- DATA & HOOKS ---
 import { TIMELINE_DATA, ARSENAL_DATA, BADGES_DATA } from "@/data/about";
-
-// --- COMPONENTS ---
 import { Timeline } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
@@ -30,14 +18,11 @@ import { SkillCard } from "@/components/SkillCard/SkillCard";
 import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
 import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
 
-// ==========================================
-// ANIMATION VARIANTS
-// ==========================================
 const contentContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1, 
-    transition: { delayChildren: 0.2, staggerChildren: 0.1 } 
+  visible: {
+    opacity: 1,
+    transition: { delayChildren: 0.2, staggerChildren: 0.1 },
   },
 };
 
@@ -59,13 +44,13 @@ export default function AboutView({ mode }: Props) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- SCROLL SPY CONFIG ---
+  // === PERFORMANCE FIX: INCREASED DELAY ===
   const spyConfig = {
     rootMargin: "-45% 0px -45% 0px",
     triggerOnce: false,
+    delay: 250, // Waits 250ms before updating Navbar text
   };
 
-  // --- SCROLL SPIES ---
   const { ref: heroSpy } = useInView({
     ...spyConfig,
     onChange: (v) => v && setSectionLabel(null),
@@ -101,7 +86,6 @@ export default function AboutView({ mode }: Props) {
     onChange: (v) => v && setSectionLabel("GET IN TOUCH"),
   });
 
-  // Slightly earlier trigger for mobile so animations feel responsive
   const viewConfig = { once: true, margin: isMobile ? "-50px" : "-100px" };
 
   return (
@@ -114,17 +98,20 @@ export default function AboutView({ mode }: Props) {
 
       {!isLoading && (
         <>
-          <div className={styles.fixedBackground} />
+          {/* Note: Global FixedBackground in App.tsx handles the BG now */}
+          {/* <div className={styles.fixedBackground} /> <- REMOVED to avoid double background */}
 
-          {/* === HERO SECTION === */}
           <div ref={heroSpy}>
             <AboutHero isLoading={isLoading} />
           </div>
 
-          {/* === ARSENAL SECTION === */}
           <section className={styles.flowSection} ref={arsenalSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader title="The Arsenal" icon={Code} variant="default" />
+              <SectionHeader
+                title="The Arsenal"
+                icon={Code}
+                variant="default"
+              />
               <motion.div
                 className={styles.gridSection}
                 initial="hidden"
@@ -146,7 +133,6 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          {/* === JOURNEY SECTION === */}
           <section className={styles.flowSection} ref={journeySpy}>
             <div className={styles.contentWrapper}>
               <SectionHeader title="The Journey" icon={User} variant="writer" />
@@ -163,12 +149,13 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          {/* === WHAT DRIVES ME SECTION (FIXED ANIMATION) === */}
           <section className={styles.flowSection} ref={driveSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader title="What Drives Me" icon={Heart} variant="default" />
-              
-              {/* Wrapped in motion.div to match other sections */}
+              <SectionHeader
+                title="What Drives Me"
+                icon={Heart}
+                variant="default"
+              />
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -182,10 +169,13 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          {/* === BADGES SECTION === */}
           <section className={styles.flowSection} ref={badgesSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader title="Badges & Milestones" icon={Award} variant="trophy" />
+              <SectionHeader
+                title="Badges & Milestones"
+                icon={Award}
+                variant="trophy"
+              />
               <motion.div
                 className={styles.certGrid}
                 initial="hidden"
@@ -202,12 +192,13 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          {/* === BEYOND THE CODE (FIXED ANIMATION) === */}
           <section className={styles.flowSection} ref={personalSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader title="Beyond The Code" icon={Smile} variant="default" />
-              
-              {/* Wrapped in motion.div to match other sections */}
+              <SectionHeader
+                title="Beyond The Code"
+                icon={Smile}
+                variant="default"
+              />
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -221,10 +212,13 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          {/* === CONTACT SECTION === */}
           <section className={styles.flowSection} ref={contactSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader title="Get In Touch" icon={Mail} variant="contact" />
+              <SectionHeader
+                title="Get In Touch"
+                icon={Mail}
+                variant="contact"
+              />
               <motion.div
                 className={styles.ctaSection}
                 initial="hidden"

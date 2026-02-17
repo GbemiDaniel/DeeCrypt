@@ -16,6 +16,8 @@ body {
   font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
+  /* Ensure scroll behavior is standard (let the Fixed Layer handle the background) */
+  background-attachment: scroll;
 }
 
 a {
@@ -35,31 +37,14 @@ button {
   margin: 0 auto;
 }
 
-/* subtle web3 grid (cheap CSS, no images) */
-.bg-grid {
-  position: relative;
-  isolation: isolate;
-}
-.bg-grid::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  opacity: var(--grid-opacity);
+/* --- DELETED .bg-grid CLASS (Moved to Component) --- */
 
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-
-  mask-image: radial-gradient(circle at 30% 10%, black 18%, transparent 60%);
-  pointer-events: none;
-}
 /* Visual-only layers must never intercept clicks */
 .noPointer {
   pointer-events: none !important;
 }
 
+/* ... (Keep your @theme configuration exactly as is) ... */
 @theme inline {
   --radius-sm: calc(var(--radius) - 0.25rem);
   --radius-md: calc(var(--radius) - 0.125rem);
@@ -68,142 +53,32 @@ button {
   --radius-2xl: calc(var(--radius) + 0.5rem);
   --radius-3xl: calc(var(--radius) + 0.75rem);
   --radius-4xl: calc(var(--radius) + 1rem);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  /* ... rest of your theme vars ... */
 }
 
+/* ... (Keep your :root variables exactly as is) ... */
 :root {
   --radius: 0.625rem;
-
-  /* Bridge shadcn semantic tokens -> DeeCrypt tokens (tokens.css is source of truth) */
-
-  /* surfaces */
-  --background: var(--bg);
-  --foreground: var(--text);
-
-  --card: color-mix(in oklab, var(--bg) 92%, var(--glass));
-  --card-foreground: var(--text);
-
-  --popover: color-mix(in oklab, var(--bg) 92%, var(--glass-strong));
-  --popover-foreground: var(--text);
-
-  /* brand */
-  --primary: var(--accent);
-  --primary-foreground: var(--bg);
-  --accent-foreground: var(--bg);
-
-  /* neutrals (avoid self-references) */
-  --secondary: var(--glass-strong);
-  --secondary-foreground: var(--text);
-  --muted-foreground: var(--muted);
-
-  /* borders / inputs */
-  --input: var(--border);
-
-  /* ring */
-  --ring: var(--accent);
-
-  /* destructive is fine as a literal */
-  --destructive: #ef4444;
-
-  /* sidebar (optional shadcn vars) */
-  --sidebar: var(--card);
-  --sidebar-foreground: var(--text);
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--bg);
-  --sidebar-accent: var(--glass);
-  --sidebar-accent-foreground: var(--text);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--accent);
-
-  -sidequest-bg: 220 20% 8%;
-  --sidequest-card: 220 18% 12%;
-  --sidequest-glass: 220 16% 16%;
-  --sidequest-border: 220 14% 24%;
-  --sidequest-border-soft: 220 14% 20%;
-
-  --sidequest-text: 220 15% 92%;
-  --sidequest-text-muted: 220 10% 65%;
-
-  --sidequest-accent: 270 85% 65%;
-  --sidequest-accent-glow: 270 85% 65%;
-
-  --sidequest-progress-track: 220 12% 28%;
-
-  /* --- 1. THE ENERGY SOURCES (Glow Colors) --- */
-  --energy-dev: #22d3ee; /* Electric Cyan (Tailwind cyan-400) */
-  --energy-writer: #34d399; /* Neon Mint (Tailwind emerald-400) */
-
-  /* --- 2. THE CHROME GRADIENT (The "D" Texture) --- */
-  /* This creates a "Horizon Line" at 50% to simulate a 3D bevel */
-  --metal-gradient: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    /* Top Shine */ #e2e8f0 35%,
-    /* Upper Highlight (Cool Grey) */ #64748b 50%,
-    /* THE RIDGE: Dark Slate (Horizon Line) */ #94a3b8 51%,
-    /* THE BOUNCE: Lighter Slate (Sharp Cut) */ #f8fafc 80%,
-    /* Lower Highlight */ #ffffff 100% /* Bottom Shine */
-  );
+  /* ... rest of your root vars ... */
 }
 
-/* --- 3. THE UTILITY CLASS --- */
+/* ... (Keep your utility classes .text-metal, etc.) ... */
 .text-metal {
-  /* Apply the texture */
   background-image: var(--metal-gradient);
-  background-size: 100% 110%; /* Stretch slightly to fit text height */
-
-  /* Clip it to the text */
+  background-size: 100% 110%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-
-  /* Typography weights */
   font-weight: 800;
   letter-spacing: -0.02em;
-
-  /* CRITICAL: A dark drop-shadow creates the "Physical Object" illusion */
   filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.6));
 }
 
-/* --- 4. ENERGY VARIANTS (The Outer Glow) --- */
-/* Usage: className="text-metal metal-dev" */
 .metal-dev {
-  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5)); /* Cyan Haze */
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5));
 }
-
-/* Usage: className="text-metal metal-writer" */
 .metal-writer {
-  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5)); /* Mint Haze */
+  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5));
 }
 
 @layer base {
@@ -215,18 +90,27 @@ button {
   }
 }
 
-/* TEMPORARY DEBUGGING CODE */
-* {
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-  filter: none !important;
-}
+/* === MOBILE PERFORMANCE FIXES === */
+@media (max-width: 768px) {
+  /* Disable expensive filters globally on mobile */
+  * {
+    backdrop-filter: none !important;
+    /* Remove heavy box-shadows if they cause lag, optional: */
+    /* box-shadow: none !important; */
+  }
 
-/* TEMPORARY TEST: Disable fixed background */
-body,
-html,
-#root,
-[class*="App"] {
-  background-attachment: scroll !important;
+  /* Fallback: Give cards a solid background since blur is gone */
+  .card,
+  [class*="ModuleCard"],
+  [class*="Navbar_header"] {
+    /* Use a very dark, slightly transparent color instead of glass */
+    background-color: color-mix(in srgb, var(--bg) 95%, transparent) !important;
+    border: 1px solid var(--border-soft);
+  }
+
+  /* Ensure Navbar is readable without blur */
+  header {
+    background-color: var(--bg) !important;
+    border-bottom: 1px solid var(--border-soft);
+  }
 }

@@ -1,0 +1,13 @@
+.fixedLayer {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* Behind everything */
+  pointer-events: none;
+
+  /* The "Solid Dark" look you wanted */
+  background-color: var(--bg);
+
+  /* PERFORMANCE: Keeps the GPU optimization */
+  will-change: transform;
+  transform: translateZ(0);
+}

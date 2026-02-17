@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
-// Ensure your modes.ts includes 'ABOUT' or just use string literals like below
 import { MODES, Mode, Theme, isValidMode } from "./modes";
 import Navbar from "../components/Navbar/Navbar";
 import DevView from "../views/DevView";
@@ -9,11 +8,13 @@ import AboutView from "../views/AboutView";
 import Footer from "@/components/Footer/Footer";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 
+// NEW IMPORT
+import Background from "../components/Background/Background";
+
 const LS_MODE = "deecrypt:mode";
 const LS_THEME = "deecrypt:theme";
 
 export default function App() {
-  // Ensure your modes.ts defines MODES.DEV, etc.
   const [mode, setMode] = useState<Mode>(MODES.DEV);
   const [theme, setTheme] = useState<Theme>("dark");
 
@@ -32,7 +33,6 @@ export default function App() {
   useEffect(() => {
     // Scroll to top whenever the View changes
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    // This wipes the "stale" text from the previous page
     setSectionLabel(null);
   }, [mode]);
 
@@ -42,7 +42,11 @@ export default function App() {
   }, [theme]);
 
   return (
-    <div className={`bg-grid ${styles.app}`}>
+    // Removed 'bg-grid' class from here
+    <div className={styles.app}>
+      {/* 1. BACKGROUND LAYER (Rendered once, stays fixed) */}
+      <Background />
+
       <Navbar
         theme={theme}
         onThemeChange={setTheme}
@@ -51,13 +55,9 @@ export default function App() {
       />
 
       <main className={`container ${styles.main}`}>
-        {/* LOGIC UPDATE: Handle all 3 views explicitly */}
-
         {mode === "dev" && <DevView mode={mode} onModeChange={setMode} />}
-
         {mode === "writer" && <WriterView mode={mode} onModeChange={setMode} />}
-
-        {mode === "about" && <AboutView />}
+        {mode === "about" && <AboutView mode={mode} onModeChange={setMode} />}
       </main>
 
       <Footer mode={mode} />

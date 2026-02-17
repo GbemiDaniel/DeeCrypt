@@ -24,22 +24,41 @@ function Navbar({
   const [isHovered, setIsHovered] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
 
+  // 1. INTRO TIMER
   useEffect(() => {
     const timer = setTimeout(() => setShowIntro(false), 3500);
     return () => clearTimeout(timer);
   }, []);
 
+  // 2. RESET ON MODE CHANGE
   useEffect(() => {
     setIsOpen(false);
     setIsHovered(false);
     setHoverState(false);
   }, [mode]);
 
+  // 3. === THE FIX: CLOSE ON ANY SCROLL ===
+  // If the menu is manually open, listen for ANY scroll movement.
+  // The moment the user scrolls, close the menu so the Label returns.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const closeMenu = () => {
+      setIsOpen(false);
+    };
+
+    // Add passive listener (performant)
+    window.addEventListener("scroll", closeMenu, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", closeMenu);
+    };
+  }, [isOpen]);
+
   const handleNav = (target: Mode) => {
     setIsOpen(false);
     setIsHovered(false);
 
-    // FORCE BLUR: Removes focus from the clicked link immediately
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
@@ -54,8 +73,16 @@ function Navbar({
 
   // --- VISIBILITY LOGIC ---
   const isScrolling = !!sectionLabel;
+  // Intro state only matters if we are NOT scrolling
   const isIntroState = !isScrolling && showIntro;
-  const shouldShowMenu = isOpen || isHovered || (!isScrolling && !showIntro);
+
+  // Show Menu if:
+  // 1. Manually Open
+  // 2. Mouse Hover
+  // 3. We are at the top (not scrolling) AND the intro is still playing or finished (default state)
+  const shouldShowMenu = isOpen || isHovered || !isScrolling;
+
+  // Show Label if: We ARE scrolling AND menu is NOT forced open
   const shouldShowLabel = isScrolling && !shouldShowMenu;
 
   return (
@@ -77,7 +104,6 @@ function Navbar({
               setHoverState(false);
             }}
             onTouchStart={() => setHoverState(true)}
-            // Accessibility: Allow opening menu via Enter key
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -110,7 +136,7 @@ function Navbar({
                   {sectionLabel}
                 </div>
 
-                {/* 2. INTRO LABEL */}
+                {/* 2. INTRO LABEL (Only at top of page) */}
                 <div
                   className={styles.introLabel}
                   style={{
@@ -140,7 +166,6 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("about");
                     }}
-                    // STORY: Merged Color + Pulse
                     className={`${styles.navLink} ${
                       mode === "about" ? styles.activeAbout : ""
                     }`}
@@ -153,7 +178,6 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("dev");
                     }}
-                    // DEV: Standard Cyan
                     className={`${styles.navLink} ${
                       mode === "dev" ? styles.activeDev : ""
                     }`}
@@ -166,7 +190,6 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("writer");
                     }}
-                    // WRITER: Correct Purple Accent
                     className={`${styles.navLink} ${
                       mode === "writer" ? styles.activeWriter : ""
                     }`}
@@ -185,7 +208,9 @@ function Navbar({
             onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle Theme"
           >
-            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            <div className={styles.themeIcon}>
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </div>
           </button>
         </div>
       </div>

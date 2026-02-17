@@ -1,7 +1,5 @@
 import type { Mode } from "../app/modes";
 import { useMemo, useState } from "react";
-
-// --- 1. IMPORTS ---
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
@@ -18,15 +16,11 @@ import PreviewCarousel, {
   type PreviewCarouselProps,
 } from "../components/PreviewCarousel/PreviewCarousel";
 import PreviewDialog from "../components/PreviewDialog/PreviewDialog";
-import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA"; // <--- NEW IMPORT
-
+import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA";
 import { sideProjects } from "../data/sidequests";
 import { projects, type Project } from "../data/projects";
-import {
-  SideQuestCard,
-} from "@/components/SideQuest/SideQuestCard";
-// Icons for the CTA
-import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react"; 
+import { SideQuestCard } from "@/components/SideQuest/SideQuestCard";
+import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react";
 import {
   SiReact,
   SiTypescript,
@@ -45,13 +39,14 @@ const TECH_STACK = [
   { name: "Framer", color: "#0055FF", icon: SiFramer },
 ];
 
-// --- 2. OBSERVER CONFIGURATION ---
-// We use the same config for everything to ensure consistent Navbar updates
+// === PERFORMANCE FIX: INCREASED DELAY ===
 const SPY_CONFIG = {
   threshold: 0,
-  rootMargin: "-45% 0px -45% 0px", // The Center Line Tripwire
+  rootMargin: "-45% 0px -45% 0px",
   triggerOnce: false,
-  delay: 100,
+  // 250ms delay means the Navbar only updates AFTER you stop scrolling vigorously.
+  // This saves the CPU from re-rendering the header 60 times a second.
+  delay: 250,
 };
 
 type Props = {
@@ -67,11 +62,8 @@ export default function DevView({ mode, onModeChange }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
-
-  // 3. DETECT LAYOUT
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // --- OBSERVERS ---
   const { ref: heroRef } = useInView({
     ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel(null),
@@ -80,19 +72,22 @@ export default function DevView({ mode, onModeChange }: Props) {
   const { ref: desktopGridRef } = useInView({
     ...SPY_CONFIG,
     skip: !isDesktop,
-    onChange: (inView) => inView && isDesktop && setSectionLabel("PROJECTS & STACK"),
+    onChange: (inView) =>
+      inView && isDesktop && setSectionLabel("PROJECTS & STACK"),
   });
 
   const { ref: mobileProjectsRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => inView && !isDesktop && setSectionLabel("MY PROJECTS"),
+    onChange: (inView) =>
+      inView && !isDesktop && setSectionLabel("MY PROJECTS"),
   });
 
   const { ref: mobileSideQuestRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => inView && !isDesktop && setSectionLabel("SIDE QUESTS"),
+    onChange: (inView) =>
+      inView && !isDesktop && setSectionLabel("SIDE QUESTS"),
   });
 
   const { ref: mobileStackRef } = useInView({
@@ -101,9 +96,8 @@ export default function DevView({ mode, onModeChange }: Props) {
     onChange: (inView) => inView && !isDesktop && setSectionLabel("TECH STACK"),
   });
 
-  // --- CTA OBSERVER (Fixes Navbar Lag) ---
   const { ref: ctaSpy } = useInView({
-    ...SPY_CONFIG, 
+    ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel("GET IN TOUCH"),
   });
 
@@ -221,8 +215,6 @@ export default function DevView({ mode, onModeChange }: Props) {
             highlightsTitle={active?.highlightsTitle}
           />
 
-          {/* === MINIMAL CTA === */}
-          {/* Wrapped for accurate Scroll Spy tracking */}
           <div ref={ctaSpy}>
             <MinimalCTA
               icon={Terminal}
