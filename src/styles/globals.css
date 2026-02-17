@@ -222,3 +222,11 @@ button {
   text-shadow: none !important;
   filter: none !important;
 }
+
+/* TEMPORARY TEST: Disable fixed background */
+body,
+html,
+#root,
+[class*="App"] {
+  background-attachment: scroll !important;
+}
