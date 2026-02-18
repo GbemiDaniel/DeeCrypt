@@ -1,50 +1,11 @@
 ﻿@import "tailwindcss";
-@import "./tokens.css";
+/* Make sure this path is correct! If tokens.css is in the same folder, use ./ */
+@import "./tokens.css"; 
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-* {
-  box-sizing: border-box;
-}
-html,
-body {
-  height: 100%;
-}
 
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
-  /* Ensure scroll behavior is standard (let the Fixed Layer handle the background) */
-  background-attachment: scroll;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-button {
-  font: inherit;
-}
-
-::selection {
-  background: rgba(56, 189, 248, 0.25);
-}
-
-.container {
-  width: min(1100px, calc(100% - 2rem));
-  margin: 0 auto;
-}
-
-/* --- DELETED .bg-grid CLASS (Moved to Component) --- */
-
-/* Visual-only layers must never intercept clicks */
-.noPointer {
-  pointer-events: none !important;
-}
-
-/* ... (Keep your @theme configuration exactly as is) ... */
+/* === 1. THEME CONFIGURATION (CRITICAL FOR BUILD) === */
 @theme inline {
   --radius-sm: calc(var(--radius) - 0.25rem);
   --radius-md: calc(var(--radius) - 0.125rem);
@@ -53,16 +14,101 @@ button {
   --radius-2xl: calc(var(--radius) + 0.5rem);
   --radius-3xl: calc(var(--radius) + 0.75rem);
   --radius-4xl: calc(var(--radius) + 1rem);
-  /* ... rest of your theme vars ... */
+
+  /* COLORS */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  /* FIXED: Defined border color */
+  --color-border: var(--border);
+  
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ... (Keep your :root variables exactly as is) ... */
+/* === 2. BASE STYLES === */
 :root {
   --radius: 0.625rem;
-  /* ... rest of your root vars ... */
+  
+  /* --- CHROME TEXTURE VARS --- */
+  --metal-gradient: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e2e8f0 35%,
+    #64748b 50%,
+    #94a3b8 51%,
+    #f8fafc 80%,
+    #ffffff 100%
+  );
 }
 
-/* ... (Keep your utility classes .text-metal, etc.) ... */
+@layer base {
+  * {
+    box-sizing: border-box;
+    @apply border-border outline-ring/50;
+  }
+  html, body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    @apply bg-background text-foreground;
+    background-attachment: scroll; 
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    font: inherit;
+  }
+  ::selection {
+    background: rgba(56, 189, 248, 0.25);
+  }
+}
+
+.container {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+/* --- 3. UTILITY CLASSES --- */
 .text-metal {
   background-image: var(--metal-gradient);
   background-size: 100% 110%;
@@ -81,36 +127,24 @@ button {
   filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5));
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+.noPointer {
+  pointer-events: none !important;
 }
 
-/* === MOBILE PERFORMANCE FIXES === */
+/* === 4. MOBILE OPTIMIZATIONS (Hybrid Approach) === */
 @media (max-width: 768px) {
-  /* Disable expensive filters globally on mobile */
-  * {
+  /* 1. Disable blur on everything EXCEPT the Header and its children */
+  /* This allows the navbar to have the glass effect while keeping the rest fast */
+  *:not(header):not(header *) {
     backdrop-filter: none !important;
-    /* Remove heavy box-shadows if they cause lag, optional: */
-    /* box-shadow: none !important; */
   }
-
-  /* Fallback: Give cards a solid background since blur is gone */
-  .card,
-  [class*="ModuleCard"],
-  [class*="Navbar_header"] {
-    /* Use a very dark, slightly transparent color instead of glass */
-    background-color: color-mix(in srgb, var(--bg) 95%, transparent) !important;
-    border: 1px solid var(--border-soft);
+  
+  /* 2. Fallback for Glass Cards (Non-Header) */
+  .card, 
+  [class*="ModuleCard"] {
+    background-color: var(--bg); 
+    border: 1px solid var(--border);
   }
-
-  /* Ensure Navbar is readable without blur */
-  header {
-    background-color: var(--bg) !important;
-    border-bottom: 1px solid var(--border-soft);
-  }
+  
+  /* NOTE: Header background is handled in Navbar.module.css */
 }

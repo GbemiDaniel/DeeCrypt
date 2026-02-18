@@ -19,17 +19,11 @@ function Navbar({
   mode,
   onModeChange,
 }: NavbarProps) {
+  // 1. Performance: Listen for scroll section updates
   const { sectionLabel } = useNavState();
-
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
-
-  // 1. INTRO TIMER
-  useEffect(() => {
-    const timer = setTimeout(() => setShowIntro(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // 2. RESET ON MODE CHANGE
   useEffect(() => {
@@ -38,17 +32,15 @@ function Navbar({
     setHoverState(false);
   }, [mode]);
 
-  // 3. === THE MOBILE FIX ===
-  // We listen for BOTH 'scroll' and 'touchmove'.
-  // 'touchmove' fires immediately when you drag your finger, making it snappier on mobile.
+  // 3. MOBILE FIX: Close menu instantly when dragging/scrolling
+  // This prevents the menu from getting "stuck" open
   useEffect(() => {
-    // We only care if the menu is visible (open or "hovered")
     if (!isOpen && !isHovered) return;
 
     const closeAll = () => {
       setIsOpen(false);
       setIsHovered(false);
-      setHoverState(false); // Force-kill the global hover state
+      setHoverState(false);
     };
 
     window.addEventListener("scroll", closeAll, { passive: true });
@@ -72,13 +64,21 @@ function Navbar({
     onModeChange(target);
   };
 
-  const handleToggle = () => {
-    setIsOpen((prev) => !prev);
-  };
+  const handleToggle = () => setIsOpen((prev) => !prev);
 
+  // --- VISIBILITY LOGIC ---
+  
+  // 1. Are we currently scrolling through a section?
   const isScrolling = !!sectionLabel;
-  const isIntroState = !isScrolling && showIntro;
-  const shouldShowMenu = isOpen || isHovered || (!isScrolling && showIntro);
+
+  // 2. Should we show the Menu (Story • Dev • Writer)?
+  // Show if: 
+  // - Manually Open OR Hovered
+  // - OR We are at the top of the page (NOT scrolling)
+  const shouldShowMenu = isOpen || isHovered || !isScrolling;
+
+  // 3. Should we show the Label (e.g. "PROJECTS")?
+  // Show if: We ARE scrolling AND the menu is hidden
   const shouldShowLabel = isScrolling && !shouldShowMenu;
 
   return (
@@ -99,9 +99,7 @@ function Navbar({
               setIsOpen(false);
               setHoverState(false);
             }}
-            // REMOVED: onTouchStart={() => setHoverState(true)}
-            // This was the cause of the bug. No hover on touch!
-
+            // Note: No onTouchStart to prevent "sticky hover" bugs on mobile
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -121,7 +119,7 @@ function Navbar({
               <div className={styles.brandName}>{brand}</div>
 
               <div className={styles.brandVer}>
-                {/* 1. SCROLL LABEL */}
+                {/* 1. SCROLL LABEL (Visible only when scrolling) */}
                 <div
                   className={styles.statusLabel}
                   style={{
@@ -134,21 +132,7 @@ function Navbar({
                   {sectionLabel}
                 </div>
 
-                {/* 2. INTRO LABEL */}
-                <div
-                  className={styles.introLabel}
-                  style={{
-                    opacity: isIntroState && !shouldShowMenu ? 1 : 0,
-                    transform:
-                      isIntroState && !shouldShowMenu
-                        ? "translateY(0)"
-                        : "translateY(-5px)",
-                  }}
-                >
-                  {mode === "about" ? "THE STORY" : "DEV | WRITER"}
-                </div>
-
-                {/* 3. MENU */}
+                {/* 2. MENU LINKS (Default view & Hover view) */}
                 <div
                   className={styles.navMenu}
                   style={{
