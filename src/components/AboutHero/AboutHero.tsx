@@ -5,7 +5,7 @@ import styles from "./AboutHero.module.css";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useCinematicIntro } from "@/hooks/useCinematicIntro";
 
-// --- VARIANTS (Moved from View) ---
+// --- VARIANTS ---
 const avatarPop: Variants = {
   hidden: { scale: 0, opacity: 0, rotate: -10 },
   visible: {
@@ -18,12 +18,15 @@ const avatarPop: Variants = {
 
 const introContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.3, delayChildren: 0.2 } },
+  visible: { 
+    opacity: 1, 
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 } 
+  },
 };
 
 const introLine: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  hidden: { y: 10, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 type Props = {
@@ -32,13 +35,10 @@ type Props = {
 
 export function AboutHero({ isLoading }: Props) {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  
-  // Hook usage moved here!
   const { text, showCursor, sequencePhase } = useCinematicIntro(isLoading);
-
-  // Tilt Logic moved here!
   const avatarRef = useRef<HTMLDivElement>(null);
-  
+
+  // --- TILT LOGIC ---
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (isMobile || !avatarRef.current) return;
     const rect = avatarRef.current.getBoundingClientRect();
@@ -91,7 +91,7 @@ export function AboutHero({ isLoading }: Props) {
             </div>
           </motion.div>
 
-          {/* TEXT SEQUENCE */}
+          {/* TYPEWRITER SEQUENCE */}
           <div className={styles.textContainer}>
             <AnimatePresence mode="wait">
               {sequencePhase !== "final" && (
@@ -112,6 +112,7 @@ export function AboutHero({ isLoading }: Props) {
                 </motion.div>
               )}
 
+              {/* FINAL HEADER */}
               {sequencePhase === "final" && (
                 <motion.h1
                   key="finalHeader"
@@ -120,14 +121,14 @@ export function AboutHero({ isLoading }: Props) {
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  Here&apos;s my story.
-                  <ArrowDown className={styles.arrowIcon} />
+                  I&apos;m Gbemi Daniel
+                  <span className={styles.akaBadge}>(aka Deecrypt)</span>
                 </motion.h1>
               )}
             </AnimatePresence>
           </div>
 
-          {/* STATIC INTRO TEXT */}
+          {/* FINAL BIO CONTENT (Updated Shorter Version) */}
           {sequencePhase === "final" && (
             <motion.div
               className={styles.introText}
@@ -135,14 +136,16 @@ export function AboutHero({ isLoading }: Props) {
               initial="hidden"
               animate="visible"
             >
-              <motion.div variants={introLine}>
-                I’m <strong className="text-foreground">Gbemi Daniel</strong> (aka <em>Deecrypt</em>).
-              </motion.div>
-              <motion.div variants={introLine}>
-                I sit at the intersection of <strong>Frontend Engineering</strong>
-              </motion.div>
-              <motion.div variants={introLine}>
-                and <strong>Web3 Storytelling</strong>.
+              <motion.p variants={introLine} className={styles.paragraph}>
+                I build web applications, test digital products, and write about what keeps me curious—
+                <strong className="text-foreground"> frontend development</strong>,{" "}
+                <span className="text-accent">emerging AI</span>, and the evolving{" "}
+                <span className="text-accent">Web3 space</span>.
+              </motion.p>
+
+              <motion.div variants={introLine} className={styles.summaryBox}>
+                Want to know how I got here and where I&apos;m heading? Scroll down.
+                <ArrowDown className={styles.arrowIcon} />
               </motion.div>
             </motion.div>
           )}

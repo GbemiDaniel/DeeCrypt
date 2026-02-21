@@ -3,14 +3,16 @@ import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import styles from "./BadgeCard.module.css";
 
-export type BadgeType = "dev" | "writer";
+// 1. Expanded to include "test"
+export type BadgeType = "dev" | "writer" | "test";
 
 interface BadgeCardProps {
   type: BadgeType;
   title: string;
   subtitle: string;
   date: string;
-  status: "Completed" | "In Progress";
+  // 2. Expanded to include your new dynamic vocabulary
+  status: "Completed" | "In Progress" | "Live" | "Active" | "Learning" | "Building" | string;
   link: string;
   image?: string;
   icon?: React.ReactNode;
@@ -29,7 +31,14 @@ export function BadgeCard({
   const [isActive, setIsActive] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const isWriter = type === "writer";
+  // Grouped positive/finished states for the green pill, otherwise use the orange pill
+  const isFinishedState = ["Completed", "Live", "Active"].includes(status);
+
+  // Determine the exact theme class
+  const themeClass = 
+    type === "writer" ? styles.cardWriter : 
+    type === "test" ? styles.cardTest : 
+    styles.cardDev;
 
   // "Click Outside" logic
   useEffect(() => {
@@ -49,7 +58,7 @@ export function BadgeCard({
       ref={cardRef}
       className={cn(
         styles.card,
-        isWriter ? styles.cardWriter : styles.cardDev,
+        themeClass, // 3. Applies the dynamic theme
         isActive && styles.active,
       )}
       onClick={() => setIsActive(true)}
@@ -75,9 +84,8 @@ export function BadgeCard({
           <span
             className={cn(
               styles.statusPill,
-              status === "Completed"
-                ? styles.statusCompleted
-                : styles.statusOngoing,
+              // 4. Automatically assigns green or orange based on the word
+              isFinishedState ? styles.statusCompleted : styles.statusOngoing,
             )}
           >
             {status}

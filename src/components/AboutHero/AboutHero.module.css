@@ -8,13 +8,13 @@
   justify-content: center;
   align-items: center;
   padding: 0 1.5rem;
-  padding-bottom: 10vh;
+  padding-bottom: 5vh;
   perspective: 1000px;
 }
 
 .contentWrapper {
   width: 100%;
-  max-width: 900px;
+  max-width: 800px; /* Reduced slightly for better readability of text */
   margin: 0 auto;
 }
 
@@ -23,18 +23,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   min-height: 450px;
 }
 
-/* --- AVATAR & TILT --- */
+/* --- AVATAR --- */
 .tiltContainer {
   --rX: 0deg;
   --rY: 0deg;
   transform-style: preserve-3d;
   transform: rotateX(var(--rX)) rotateY(var(--rY));
   transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   cursor: grab;
 }
 
@@ -82,14 +82,14 @@
   animation: pulse 2s infinite;
 }
 
-/* --- TYPEWRITER & TEXT --- */
+/* --- TEXT ELEMENTS --- */
 .textContainer {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 5rem;
+  min-height: 4rem;
 }
 
 .codeFont {
@@ -98,16 +98,11 @@
   color: var(--muted-foreground);
   font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 500;
-  min-height: 1.5em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
 .finalHeader {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
   color: var(--foreground);
   letter-spacing: -0.02em;
@@ -115,7 +110,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+}
+
+.akaBadge {
+  font-size: 0.5em; /* relative to header */
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.9;
 }
 
 .cursor {
@@ -126,34 +130,50 @@
   margin-left: 4px;
 }
 
+/* --- BIO PARAGRAPHS --- */
+.introText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.paragraph {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  max-width: 640px;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .paragraph { font-size: 1.125rem; }
+}
+
+.summaryBox {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--foreground);
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .arrowIcon {
   color: var(--accent);
   width: 1.5rem;
   height: 1.5rem;
   animation: bounce 2s infinite;
   opacity: 0.8;
+  margin-top: 0.5rem;
 }
 
-.introText {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-@media (min-width: 768px) {
-  .introText { font-size: 1.125rem; }
-}
-.introText strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
+/* --- ANIMATIONS --- */
 @keyframes float {
   0% { transform: translateY(0px) translateZ(20px); }
   50% { transform: translateY(-10px) translateZ(20px); }

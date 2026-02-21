@@ -18,6 +18,27 @@ import { SkillCard } from "@/components/SkillCard/SkillCard";
 import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
 import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
 
+
+//Badges Animation Variants
+const gridOrchestrator = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.1,
+      staggerChildren: 0.15, // This handles the cascade perfectly
+    },
+  },
+};
+
+const cardAnimation = {
+  hidden: { y: 40, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 60, damping: 15, mass: 1 },
+  },
+};
 const contentContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -87,7 +108,6 @@ export default function AboutView({ mode }: Props) {
   });
 
   const viewConfig = { once: true, margin: isMobile ? "-50px" : "-100px" };
-
   return (
     <div className={styles.container} data-theme={mode}>
       <AnimatePresence mode="wait">
@@ -126,6 +146,7 @@ export default function AboutView({ mode }: Props) {
                       description={item.description}
                       icon={item.icon}
                       type={item.type}
+                      tech={item.tech}
                     />
                   </motion.div>
                 ))}
@@ -180,7 +201,10 @@ export default function AboutView({ mode }: Props) {
                 className={styles.certGrid}
                 initial="hidden"
                 whileInView="visible"
-                viewport={viewConfig}
+                // We spread your existing viewConfig but add amount: 0.1
+                // This forces Framer Motion to wait until 10% of the grid is visible 
+                // before firing the stagger, completely fixing the "hidden bottom row" bug.
+                viewport={{ ...viewConfig, amount: 0.1 }}
                 variants={contentContainer}
               >
                 {BADGES_DATA.map((badge, i) => (
@@ -191,7 +215,6 @@ export default function AboutView({ mode }: Props) {
               </motion.div>
             </div>
           </section>
-
           <section className={styles.flowSection} ref={personalSpy}>
             <div className={styles.contentWrapper}>
               <SectionHeader

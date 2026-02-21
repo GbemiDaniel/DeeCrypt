@@ -1,58 +1,142 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Code2, Bug, PenTool, RefreshCw } from "lucide-react";
 import styles from "./WhatDrivesMe.module.css";
+import { cn } from "@/lib/utils";
+
+type Phase = "build" | "test" | "write" | "hidden";
 
 export function WhatDrivesMe() {
-  // Animation Variants for the Card Content
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-    },
-  };
+  const [activePhase, setActivePhase] = useState<Phase>("build");
 
   return (
-    <motion.div
-      className={styles.card}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      variants={containerVariants}
-    >
-      <div className={styles.textWrapper}>
-        <motion.p variants={itemVariants} className={styles.lead}>
-          I build because of the ideas that <span className={styles.highlight}>keep me awake at night.</span>
-        </motion.p>
-
-        <motion.p variants={itemVariants}>
-          Not the next trend or bubble—I'm interested in solving problems that
-          matter. Digital solutions that make life better for people, systems
-          that work more fairly, products that actually help.
-        </motion.p>
-
-        <motion.p variants={itemVariants}>
-          The trust-based systems we operate on are falling apart like Rome
-          did—gradually, then suddenly. It's a good thing that trustless
-          systems are being built. I want to be part of that transformation.
-        </motion.p>
-
-        <motion.p variants={itemVariants} className={styles.vision}>
-          <strong className={styles.highlight}>In 1-3 years,</strong> I see myself
-          as part of the blockchain community—not just as a builder, but as
-          someone who inspires others to join, regardless of their field. If I
-          can do it, so can you.
-        </motion.p>
+    <section className={styles.section}>
+      
+      {/* 1. ATMOSPHERIC BACKGROUND (GPU-Optimized Crossfade) */}
+      <div className={styles.ambientWrapper}>
+        <div className={cn(styles.ambientLayer, styles.layerBuild)} style={{ opacity: activePhase === "build" ? 0.15 : 0 }} />
+        <div className={cn(styles.ambientLayer, styles.layerTest)} style={{ opacity: activePhase === "test" ? 0.15 : 0 }} />
+        <div className={cn(styles.ambientLayer, styles.layerWrite)} style={{ opacity: activePhase === "write" ? 0.15 : 0 }} />
       </div>
-    </motion.div>
+
+      <div className={styles.content}>
+
+        {/* 2. THE STICKY SUB-NAV */}
+        <motion.div 
+          className={styles.stickyTracker}
+          animate={{ 
+            opacity: activePhase === "hidden" ? 0 : 1,
+            y: activePhase === "hidden" ? -20 : 0
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className={styles.navPill}>
+            {/* BUILD */}
+            <div className={cn(styles.navItem, activePhase === "build" && styles.activeBuild)}>
+              <Code2 className={styles.navIcon} />
+              <span>Build.</span>
+            </div>
+            <div className={styles.navSeparator} />
+            {/* TEST */}
+            <div className={cn(styles.navItem, activePhase === "test" && styles.activeTest)}>
+              <Bug className={styles.navIcon} />
+              <span>Test.</span>
+            </div>
+            <div className={styles.navSeparator} />
+            {/* WRITE */}
+            <div className={cn(styles.navItem, activePhase === "write" && styles.activeWrite)}>
+              <PenTool className={styles.navIcon} />
+              <span>Write.</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* 3. THE SPOTLIGHT STORY */}
+        <div className={styles.storyScroller}>
+          
+          <motion.p
+            className={styles.paragraph}
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            onViewportEnter={() => setActivePhase("build")}
+            viewport={{ margin: "-45% 0px -45% 0px" }}
+            transition={{ duration: 0.4 }}
+          >
+            I stay up at night because I see a future that doesn't exist yet.{" "}
+            <span className={cn(styles.shimmer, styles.shimmerBuild)}>Ideas that need building.</span>{" "}
+            The only way forward? Push through the skills gap.
+          </motion.p>
+
+          <motion.p
+            className={styles.paragraph}
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            onViewportEnter={() => setActivePhase("build")}
+            viewport={{ margin: "-45% 0px -45% 0px" }}
+            transition={{ duration: 0.4 }}
+          >
+            The entire creation process excites me—from idea to design,{" "}
+            <span className={cn(styles.shimmer, styles.shimmerBuild)}>debugging to refinement</span>,{" "}
+            and finally, writing about what I learned. Coding is the tool. Creating is the goal.
+          </motion.p>
+
+          <motion.p
+            className={styles.paragraph}
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            onViewportEnter={() => setActivePhase("test")}
+            viewport={{ margin: "-45% 0px -45% 0px" }}
+            transition={{ duration: 0.4 }}
+          >
+            I care about UX because creators have a responsibility to simplify.{" "}
+            <span className={cn(styles.shimmer, styles.shimmerTest)}>Testing showed me how one bug ruins even the best idea.</span>{" "}
+            Now I build with users in mind from day one.
+          </motion.p>
+
+          <motion.p
+            className={styles.paragraph}
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            onViewportEnter={() => setActivePhase("write")}
+            viewport={{ margin: "-45% 0px -45% 0px" }}
+            transition={{ duration: 0.4 }}
+          >
+            I'm drawn to blockchain because it's an{" "}
+            <span className={cn(styles.shimmer, styles.shimmerWrite)}>empty canvas</span>—a solution to our trust crisis. Precise, unbiased, trustless.
+          </motion.p>
+
+          <motion.p
+            className={styles.paragraph}
+            initial={{ opacity: 0.2 }}
+            whileInView={{ opacity: 1 }}
+            onViewportEnter={() => setActivePhase("write")}
+            viewport={{ margin: "-45% 0px -45% 0px" }}
+            transition={{ duration: 0.4 }}
+          >
+            That's why I'm building DeeCrypt. To journal the journey into Web3, explore{" "}
+            <span className={cn(styles.shimmer, styles.shimmerWrite)}>emerging tech</span>, and break down complex concepts for anyone curious enough to dive in.
+          </motion.p>
+        </div>
+
+        {/* 4. THE CLIMAX */}
+        <motion.div 
+          className={styles.footer}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          onViewportEnter={() => setActivePhase("hidden")}
+          viewport={{ margin: "-20% 0px -20% 0px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <h3 className={styles.climax}>
+            <span className={styles.climaxBuild}>Build.</span>{" "}
+            <span className={styles.climaxTest}>Test.</span>{" "}
+            <span className={styles.climaxWrite}>Write.</span>
+          </h3>
+          <RefreshCw className={styles.repeatIcon} />
+        </motion.div>
+      </div>
+    </section>
   );
 }
