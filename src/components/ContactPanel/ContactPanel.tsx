@@ -1,5 +1,7 @@
-import React from "react";
-import { Mail, Download, Github, Twitter, Linkedin, Copy } from "lucide-react";
+"use client";
+
+import React, { useState } from "react";
+import { Mail, Download, Github, Twitter, Linkedin, Copy, CheckCircle2 } from "lucide-react";
 import styles from "./ContactPanel.module.css";
 import { cn } from "@/lib/utils";
 
@@ -14,27 +16,37 @@ interface ContactPanelProps {
 }
 
 export function ContactPanel({ email, resumeUrl, socials }: ContactPanelProps) {
-  // Optional: Copy email to clipboard feature
+  const [copied, setCopied] = useState(false);
+
   const handleCopyEmail = (e: React.MouseEvent) => {
     e.preventDefault();
     navigator.clipboard.writeText(email);
-    // You could add a toast notification here "Email Copied!"
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); 
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.panel}>
-        {/* HEADER */}
+        
+        {/* --- HEADER ZONE (Badge + Title + Subtitle tightly grouped) --- */}
         <div className={styles.header}>
+          
+          {/* THE ENGRAVED BADGE */}
+          <div className={styles.contactBadge}>
+            <span>Get In Touch</span>
+          </div>
+
           <h2 className={styles.title}>Ready to build something legendary?</h2>
+          
           <p className={styles.subtitle}>
             Whether you need a <strong>Frontend Architect</strong> for your next
-            SaaS or a<strong>Technical Writer</strong> to give your Web3 project
+            SaaS or a <strong>Technical Writer</strong> to give your Web3 project
             a voice, I'm just one click away.
           </p>
         </div>
 
-        {/* BUTTONS */}
+        {/* --- ACTION BUTTONS --- */}
         <div className={styles.actions}>
           <a href={`mailto:${email}`} className={styles.primaryBtn}>
             <Mail size={18} />
@@ -47,49 +59,31 @@ export function ContactPanel({ email, resumeUrl, socials }: ContactPanelProps) {
           </a>
         </div>
 
-        {/* SOCIALS */}
+        {/* --- SOCIAL LINKS --- */}
         <div className={styles.socials}>
           {socials.github && (
-            <a
-              href={socials.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialLink}
-              aria-label="GitHub"
-            >
-              <Github size={24} />
+            <a href={socials.github} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="GitHub">
+              <Github size={22} />
             </a>
           )}
           {socials.twitter && (
-            <a
-              href={socials.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialLink}
-              aria-label="Twitter"
-            >
-              <Twitter size={24} />
+            <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Twitter">
+              <Twitter size={22} />
             </a>
           )}
           {socials.linkedin && (
-            <a
-              href={socials.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialLink}
-              aria-label="LinkedIn"
-            >
-              <Linkedin size={24} />
+            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="LinkedIn">
+              <Linkedin size={22} />
             </a>
           )}
 
-          {/* Email Copy Icon */}
           <button
             onClick={handleCopyEmail}
-            className={styles.socialLink}
+            className={cn(styles.socialLink, copied && styles.socialLinkSuccess)}
             aria-label="Copy Email"
+            title={copied ? "Email Copied!" : "Copy Email to Clipboard"}
           >
-            <Copy size={24} />
+            {copied ? <CheckCircle2 size={22} /> : <Copy size={22} />}
           </button>
         </div>
       </div>
