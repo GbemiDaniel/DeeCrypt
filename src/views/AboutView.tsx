@@ -237,11 +237,11 @@ export default function AboutView({ mode }: Props) {
 
           <section className={styles.flowSection} ref={contactSpy}>
             <div className={styles.contentWrapper}>
-              <SectionHeader
+              {/* <SectionHeader
                 title="Get In Touch"
                 icon={Mail}
                 variant="contact"
-              />
+              /> */}
               <motion.div
                 className={styles.ctaSection}
                 initial="hidden"
