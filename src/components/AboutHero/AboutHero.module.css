@@ -12,179 +12,316 @@
   perspective: 1000px;
 }
 
-.contentWrapper {
-  width: 100%;
-  max-width: 800px; /* Reduced slightly for better readability of text */
-  margin: 0 auto;
+.contentWrapper { 
+  width: 100%; 
+  max-width: 800px; 
+  margin: 0 auto; 
 }
 
-.heroSection {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  min-height: 450px;
+.heroSection { 
+  text-align: center; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 1.5rem; 
+  min-height: 450px; 
 }
 
 /* --- AVATAR --- */
-.tiltContainer {
-  --rX: 0deg;
-  --rY: 0deg;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--rX)) rotateY(var(--rY));
-  transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
-  margin-bottom: 0.5rem;
-  cursor: grab;
+.tiltContainer { 
+  --rX: 0deg; 
+  --rY: 0deg; 
+  transform-style: preserve-3d; 
+  transform: rotateX(var(--rX)) rotateY(var(--rY)); 
+  transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1); 
+  margin-bottom: 0.5rem; 
+  cursor: grab; 
 }
 
-.avatarWrapper {
-  position: relative;
-  transform-style: preserve-3d;
-  animation: float 8s ease-in-out infinite;
+.avatarWrapper { 
+  position: relative; 
+  transform-style: preserve-3d; 
+  animation: float 8s ease-in-out infinite; 
 }
 
-.avatar {
-  width: 6.25rem;
-  height: 6.25rem;
-  border-radius: 50%;
-  border: 2px solid var(--border-soft);
-  box-shadow: var(--shadow-md);
-  transform: translateZ(20px);
-}
-@media (min-width: 768px) {
-  .avatar { width: 7.5rem; height: 7.5rem; }
+.avatar { 
+  width: 6.25rem; 
+  height: 6.25rem; 
+  border-radius: 50%; 
+  border: 2px solid var(--border-soft); 
+  box-shadow: var(--shadow-md); 
+  transform: translateZ(20px); 
 }
 
-.statusBadge {
-  position: absolute;
-  bottom: 0;
-  right: -0.625rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--foreground);
-  padding: 0.25rem 0.625rem;
-  border-radius: 1.25rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  transform: translateZ(40px);
-  box-shadow: var(--shadow-sm);
-  white-space: nowrap;
-}
-.statusDot {
-  width: 0.375rem;
-  height: 0.375rem;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
+@media (min-width: 768px) { 
+  .avatar { width: 7.5rem; height: 7.5rem; } 
 }
 
-/* --- TEXT ELEMENTS --- */
-.textContainer {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 4rem;
+.statusBadge { 
+  position: absolute; 
+  bottom: 0; 
+  right: -0.625rem; 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  color: var(--foreground); 
+  padding: 0.25rem 0.625rem; 
+  border-radius: 1.25rem; 
+  font-size: 0.7rem; 
+  font-weight: 600; 
+  display: flex; 
+  align-items: center; 
+  gap: 0.375rem; 
+  transform: translateZ(40px); 
+  box-shadow: var(--shadow-sm); 
+  white-space: nowrap; 
 }
 
-.codeFont {
-  font-family: var(--font-mono, monospace);
-  letter-spacing: -0.04em;
-  color: var(--muted-foreground);
-  font-size: clamp(1.25rem, 4vw, 2rem);
-  font-weight: 500;
+.statusDot { 
+  width: 0.375rem; 
+  height: 0.375rem; 
+  background: #22c55e; 
+  border-radius: 50%; 
+  animation: pulse 2s infinite; 
 }
 
-.finalHeader {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 5vw, 3rem);
+/* --- TEXT ELEMENTS (ASH-GREEN CRT GLOW) --- */
+.textContainer { 
+  position: relative; 
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 4rem; 
+}
+
+.codeFont { 
+  font-family: var(--font-mono, monospace); 
+  letter-spacing: -0.04em; 
+  font-size: clamp(1.25rem, 4vw, 2rem); 
+  font-weight: 500; 
+  color: #82a88e; /* Muted Ash Metallic Green */
+  text-shadow: 0 0 8px rgba(130, 168, 142, 0.4); 
+}
+
+.cursor { 
+  display: inline-block; 
   font-weight: 700;
-  color: var(--foreground);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  color: inherit; 
+  margin-left: 4px; 
+}
+
+/* --- THE HARDWARE DASHBOARD STYLES --- */
+.finalHeaderWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  position: relative;
 }
 
-.akaBadge {
-  font-size: 0.5em; /* relative to header */
-  font-weight: 400;
-  color: var(--accent);
-  letter-spacing: 0.05em;
+/* --- THE HARDWARE DASHBOARD STYLES --- */
+.finalHeaderWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* LIGHT MODE: Static Premium Dark Slate (No Train Animation) */
+.metallicHeader {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0;
+  z-index: 2; 
+  
+  /* Static, deep metallic cut */
+  background: linear-gradient(135deg, #475569 0%, #1e293b 50%, #0f172a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Soft, clean emboss */
+  filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.8)) drop-shadow(0px 2px 4px rgba(0,0,0,0.1));
+}
+
+/* DARK MODE: Static Polished Silver (No Train Animation) */
+:global(.dark) .metallicHeader,
+:global([data-theme="dark"]) .metallicHeader {
+  /* Static, bright metallic cut */
+  background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 40%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Heavy dark mode drop shadow */
+  filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.1)) drop-shadow(0px 8px 15px rgba(0,0,0,0.6));
+}
+
+/* --- ADD THIS KEYFRAME AT THE BOTTOM OF YOUR FILE --- */
+@keyframes metallicShine {
+  to { background-position: 200% center; }
+}
+/* --- THE MECHANICAL CHAINS --- */
+.chainContainer {
+  position: relative;
+  width: 130px; /* Precise width to hook specific letters to the plaque */
+  height: 1.5rem; 
+  display: flex;
+  justify-content: space-between;
+  margin-top: -0.2rem;
+  margin-bottom: -0.2rem;
+  z-index: 1; /* Sits behind the text and the glass */
+}
+
+.chainLeft, .chainRight {
+  position: relative;
+  width: 6px;
+  height: 100%;
+  /* Creates the mechanical timing-belt look */
+  background: repeating-linear-gradient(to bottom, #94a3b8 0, #94a3b8 4px, #1e293b 4px, #1e293b 8px);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.8), 
+    inset 1px 0 1px rgba(255,255,255,0.3),
+    inset -1px 0 2px rgba(0,0,0,0.6);
+  border-radius: 1px;
+}
+
+/* The physical bolts mounting the chain to the glass */
+.chainLeft::after, .chainRight::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #475569;
+  box-shadow: inset 0 2px 2px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.8);
+  z-index: 3; 
+}
+
+/* --- THE ENGRAVED TEXT EFFECTS --- */
+
+.engravedBase {
+  font-weight: 800;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; 
+  will-change: filter;
+}
+
+/* Deecrypt Crown Jewel (The Theme Looper) */
+.deecryptPlaque { 
+  z-index: 2; 
+}
+
+.pulseDeecrypt {
+  composes: engravedBase;
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 4vw, 2.2rem); 
   text-transform: uppercase;
-  opacity: 0.9;
+  letter-spacing: 0.15em;
+  
+  /* A massive gradient track containing all 3 theme colors + a return to Cyan to loop */
+  background-image: linear-gradient(
+    to right, 
+    #22d3ee 0%,   /* Cyan (Build) */
+    #f59e0b 33%,  /* Amber (AI) */
+    #a855f7 66%,  /* Purple (Web3) */
+    #22d3ee 100%  /* Cyan (Loop) */
+  );
+  
+  /* Stretches the background to 300% width so we only see one color at a time */
+  background-size: 300% 100%;
+  
+  /* Runs two synchronized 9-second hardware-accelerated animations */
+  animation: 
+    panThemeGradient 9s linear infinite,
+    engravePulseThemeLoop 9s ease-in-out infinite;
 }
 
-.cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1.2em;
-  background-color: var(--muted-foreground);
-  margin-left: 4px;
+/* Inline Badges */
+.pulseFrontend {
+  composes: engravedBase;
+  background-image: linear-gradient(180deg, #67e8f9 0%, #06b6d4 100%);
+  animation: engravePulseCyan 3s ease-in-out infinite;
+}
+
+.pulseAI {
+  composes: engravedBase;
+  background-image: linear-gradient(180deg, #fcd34d 0%, #f59e0b 100%); 
+  animation: engravePulseAmber 3.2s ease-in-out infinite;
+}
+
+.pulseWeb3 {
+  composes: engravedBase;
+  background-image: linear-gradient(180deg, #d8b4fe 0%, #a855f7 100%);
+  animation: engravePulsePurple 3.5s ease-in-out infinite reverse;
 }
 
 /* --- BIO PARAGRAPHS --- */
-.introText {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  text-align: center;
-  margin-top: 0.5rem;
+.introText { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; margin-top: 1.5rem; }
+.paragraph { font-size: 1rem; line-height: 2.2; color: var(--muted-foreground); max-width: 720px; margin: 0; }
+@media (min-width: 768px) { .paragraph { font-size: 1.125rem; } }
+
+/* --- ACTUATOR BUTTON --- */
+.summaryBox { margin-top: 1.5rem; font-size: 0.95rem; font-weight: 500; color: var(--foreground); max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+.arrowPlaqueWrapper { margin-top: 0.5rem; cursor: pointer; }
+.pulseArrow { width: 1.8rem; height: 1.8rem; color: #22c55e; animation: neonPulseGreen 2s ease-in-out infinite; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.8)); }
+
+/* --- THE CARVED ILLUMINATION KEYFRAMES --- */
+
+/* Smoothly pans the background image to reveal the colors */
+@keyframes panThemeGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
-.paragraph {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--muted-foreground);
-  max-width: 640px;
-  margin: 0;
+/* Synchronizes the physical neon glow to match the color sliding underneath it */
+@keyframes engravePulseThemeLoop {
+  /* Cyan Pulse (Build) */
+  0% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 5px rgba(34, 211, 238, 0.2)); }
+  16.6% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 15px rgba(34, 211, 238, 0.8)); }
+  
+  /* Amber Pulse (AI) */
+  33.3% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 5px rgba(245, 158, 11, 0.2)); }
+  50% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 15px rgba(245, 158, 11, 0.8)); }
+  
+  /* Purple Pulse (Web3) */
+  66.6% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 5px rgba(168, 85, 247, 0.2)); }
+  83.3% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 15px rgba(168, 85, 247, 0.8)); }
+  
+  /* Loop back to Cyan */
+  100% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 5px rgba(34, 211, 238, 0.2)); }
 }
 
-@media (min-width: 768px) {
-  .paragraph { font-size: 1.125rem; }
+@keyframes engravePulsePurple {
+  0%, 100% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 5px rgba(168, 85, 247, 0.2)); }
+  50% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 15px rgba(168, 85, 247, 0.8)); }
 }
 
-.summaryBox {
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--foreground);
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+@keyframes engravePulseCyan {
+  0%, 100% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 4px rgba(6, 182, 212, 0.2)); }
+  50% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 12px rgba(6, 182, 212, 0.8)); }
 }
 
-.arrowIcon {
-  color: var(--accent);
-  width: 1.5rem;
-  height: 1.5rem;
-  animation: bounce 2s infinite;
-  opacity: 0.8;
-  margin-top: 0.5rem;
+@keyframes engravePulseAmber {
+  0%, 100% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 4px rgba(245, 158, 11, 0.2)); }
+  50% { filter: drop-shadow(0px -1px 1px rgba(0,0,0,0.8)) drop-shadow(0px 1px 1px rgba(255,255,255,0.2)) drop-shadow(0 0 12px rgba(245, 158, 11, 0.8)); }
 }
 
-/* --- ANIMATIONS --- */
-@keyframes float {
-  0% { transform: translateY(0px) translateZ(20px); }
-  50% { transform: translateY(-10px) translateZ(20px); }
-  100% { transform: translateY(0px) translateZ(20px); }
+@keyframes neonPulseGreen {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.3)); transform: translateY(0); }
+  50% { filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.8)); transform: translateY(3px); } 
 }
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
+
+/* Old Animations */
+@keyframes float { 
+  0% { transform: translateY(0px) translateZ(20px); } 
+  50% { transform: translateY(-10px) translateZ(20px); } 
+  100% { transform: translateY(0px) translateZ(20px); } 
 }
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
+@keyframes pulse { 
+  0%, 100% { opacity: 1; transform: scale(1); } 
+  50% { opacity: 0.5; transform: scale(0.8); } 
 }
