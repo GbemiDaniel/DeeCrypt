@@ -1,0 +1,221 @@
+/* src/components/PersonaCard/PersonaCard.module.css */
+
+/*
+ * PERSONA CARD — Heavy Mechanical Flip
+ *
+ * THE FIX: .faceA and .faceB use position:absolute;inset:0 to EXIT
+ * the flex-child flow of .face. This is essential because:
+ *   - .face uses align-items:center (not stretch)
+ *   - flex children with align-items:center cannot resolve height:100%
+ *   - so .badgeWell height:100% → 0px → .brandLogo disappears
+ * By making .faceA/.faceB absolutely positioned, their children
+ * resolve percentages against a concrete parent box.
+ *
+ * SIZE STRATEGY: width anchored to vh — the card can never dominate vertically.
+ * aspect-ratio: 3/4 derives height automatically.
+ */
+
+/* ── 1. PERSPECTIVE WRAPPER ── */
+.wrapper {
+    width: clamp(140px, 20vh, 220px);
+    aspect-ratio: 3 / 4;
+    perspective: 1200px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+/* ── 2. ROTATING CHASSIS ── */
+.chassis {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5rem;
+    transform-style: preserve-3d;
+    /* NO will-change: transform — it flattens preserve-3d context in WebKit/Chromium */
+}
+
+/* ── 3. SHARED FACE BASE ── */
+.face {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+/* ── 4. SIDE A — DORMANT OBSIDIAN CHASSIS ── */
+.faceA {
+    /*
+   * CRITICAL: position:absolute;inset:0 exits the flex-child flow of .face.
+   * This gives .faceA a concrete box so its children can resolve height:100%.
+   */
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+
+    background: linear-gradient(160deg,
+            rgba(255, 255, 255, 0.07) 0%,
+            rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+
+    border: 1px solid transparent;
+    border-top-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+        inset 0 4px 16px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.09),
+        0 28px 56px -12px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dual synthesis refraction overlay */
+.faceA::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+            rgba(34, 211, 238, 0.06) 0%,
+            rgba(168, 85, 247, 0.06) 100%);
+    pointer-events: none;
+}
+
+:root[data-theme="light"] .faceA {
+    background: linear-gradient(160deg,
+            rgba(255, 255, 255, 0.78) 0%,
+            rgba(255, 255, 255, 0.55) 100%);
+    border-top-color: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.07),
+        0 16px 40px rgba(0, 0, 0, 0.13);
+}
+
+/* ── 5. DORMANT BADGE WELL ── */
+.badgeWell {
+    /* position:relative anchors the ::before halo to THIS element, not a distant ancestor */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/*
+ * Ambient neon halo — breathes slowly to signal "live dormant" hardware.
+ * Not a static placeholder. Not yet activated.
+ */
+.badgeWell::before {
+    content: "";
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+            rgba(34, 211, 238, 0.22) 0%,
+            rgba(168, 85, 247, 0.15) 50%,
+            transparent 80%);
+    filter: blur(16px);
+    animation: dormantPulse 3.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Brand "D" — etched into the hardware chassis */
+.brandLogo {
+    width: 40%;
+    height: 40%;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 2;
+    opacity: 0.88;
+    filter:
+        drop-shadow(0 0 10px rgba(34, 211, 238, 0.4)) drop-shadow(0 0 24px rgba(168, 85, 247, 0.22));
+}
+
+@keyframes dormantPulse {
+
+    0%,
+    100% {
+        opacity: 0.65;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1.00;
+        transform: scale(1.1);
+    }
+}
+
+/* ── 6. SIDE B — THE REVEAL ── */
+.faceB {
+    /*
+   * CRITICAL: position:absolute;inset:0 — same fix as .faceA.
+   * Pre-rotated 180°: invisible at 0°, surfaces when chassis reaches 180°.
+   */
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform: rotateY(180deg);
+    overflow: hidden;
+    background: #0a0b0d;
+    box-shadow:
+        inset 0 4px 15px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.faceB::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.65);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ── 7. PORTRAIT PHOTO ── */
+.photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+    border-radius: inherit;
+    display: block;
+    filter: contrast(1.08) brightness(0.88) saturate(0.85);
+}
+
+/* ── 8. DUAL-SOURCE NEON AMBIENT MASK ── */
+.neonMask {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    box-shadow:
+        inset 16px 0 44px rgba(34, 211, 238, 0.28),
+        inset -16px 0 44px rgba(168, 85, 247, 0.28),
+        inset 0 24px 44px rgba(0, 0, 0, 0.40),
+        inset 0 -24px 44px rgba(0, 0, 0, 0.60);
+}
+
+/* ── 9. REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+    .chassis {
+        transition: none !important;
+    }
+
+    .badgeWell::before {
+        animation: none;
+    }
+}

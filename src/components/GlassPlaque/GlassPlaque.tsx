@@ -8,10 +8,14 @@ import { cn } from "@/lib/utils";
 interface GlassPlaqueProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "default" | "inline" | "icon";
+  variant?: "default" | "inline" | "icon" | "about";
 }
 
-export function GlassPlaque({ children, className, variant = "default" }: GlassPlaqueProps) {
+export function GlassPlaque({
+  children,
+  className,
+  variant = "default",
+}: GlassPlaqueProps) {
   if (variant === "inline") {
     return (
       <span className={cn(styles.plaque, styles.variantInline, className)}>
@@ -20,15 +24,38 @@ export function GlassPlaque({ children, className, variant = "default" }: GlassP
     );
   }
 
-  return (
-    <div className={cn(styles.perspectiveWrapper, variant === "icon" && styles.iconWrapper, className)}>
+  // "about" variant: full-width panel chassis, no perspective wrapper
+  if (variant === "about") {
+    return (
       <motion.div
-        className={cn(styles.plaque, variant === "icon" ? styles.variantIcon : styles.variantDefault)}
-        initial={{ opacity: 0, y: 30, rotateX: 15, scale: 0.95 }}
-        whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
-        /* FIX: Removed the strict margin trap. Now fires when 10% of it is visible */
+        className={cn(styles.plaque, styles.variantAbout, className)}
+        initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         viewport={{ once: true, amount: 0.1 }}
-        transition={{ type: "spring", stiffness: 120, damping: 25 }}
+        transition={{ type: "spring", mass: 2.5, stiffness: 60, damping: 20 }}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        styles.perspectiveWrapper,
+        variant === "icon" && styles.iconWrapper,
+        className
+      )}
+    >
+      <motion.div
+        className={cn(
+          styles.plaque,
+          variant === "icon" ? styles.variantIcon : styles.variantDefault
+        )}
+        initial={{ opacity: 0, y: 30, scale: 0.97, filter: "blur(10px)" }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ type: "spring", mass: 2.5, stiffness: 60, damping: 20 }}
       >
         {children}
       </motion.div>

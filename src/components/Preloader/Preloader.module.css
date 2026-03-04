@@ -4,12 +4,14 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background-color: var(--bg);
+  /* Hard fallback: opaque from first paint before CSS custom props hydrate */
+  background-color: var(--bg, #09090b);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
+  isolation: isolate;
 }
 
 .logoWrapper {
@@ -49,7 +51,8 @@
 
 .progressWrapper {
   width: 200px;
-  height: 2px; /* Thinner for a cleaner look */
+  height: 2px;
+  /* Thinner for a cleaner look */
   background: var(--border);
   border-radius: 2px;
   overflow: hidden;
@@ -61,13 +64,15 @@
   background: var(--accent);
   width: 0%;
   transition: width 0.1s linear;
-  box-shadow: 0 0 10px var(--accent); /* Adds a glow to the bar */
+  box-shadow: 0 0 10px var(--accent);
+  /* Adds a glow to the bar */
 }
 
 @media (max-width: 640px) {
   .progressWrapper {
     width: 140px;
   }
+
   .logoWrapper {
     width: 60px;
     height: 60px;

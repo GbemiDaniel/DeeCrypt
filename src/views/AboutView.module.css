@@ -1,8 +1,12 @@
 /* src/views/AboutView.module.css */
-
 /* =========================================
-   1. GLOBAL LAYOUT & BACKGROUND
+   THE SYNTHESIS — AboutView Layout System
+   Dev × Writer | Cyan × Violet
    ========================================= */
+
+/* ================================================
+   1. ROOT CONTAINER
+   ================================================ */
 .container {
   width: 100%;
   position: relative;
@@ -10,76 +14,328 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-}
-.fixedBackground {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--bg);
-  transition: background-color 0.3s ease;
-}
-.fixedBackground::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  opacity: 0.4;
-  pointer-events: none;
+  /* NO isolation:isolate — traps Preloader z-index inside a local stacking context */
 }
 
-/* =========================================
-   2. SECTIONS & LAYOUT
-   ========================================= */
+/*
+ * MILLED ALLOY TEXT CASCADE
+ * Applied at the container level so ALL body text in AboutView
+ * inherits the machined aesthetic without threading className props
+ * into every sub-component. Excludes headings, interactive elements,
+ * and neon-colored spans that have their own explicit colors.
+ */
+.container p,
+.container li {
+  color: color-mix(in srgb, var(--foreground) 75%, #82a88e);
+  text-shadow:
+    -0.3px -0.3px 0.5px rgba(255, 255, 255, 0.08),
+    0.3px 0.5px 1px rgba(0, 0, 0, 0.40);
+  font-weight: 300;
+  /* font-light — milled spec */
+  line-height: 1.7;
+}
+
+/* Light mode: invert the pressed physics for bright surfaces */
+:root[data-theme="light"] .container p,
+:root[data-theme="light"] .container li {
+  color: color-mix(in srgb, var(--text) 75%, #4a7a54);
+  text-shadow:
+    -0.3px -0.3px 0.5px rgba(255, 255, 255, 0.60),
+    0.3px 0.5px 1px rgba(0, 0, 0, 0.12);
+}
+
+/* ================================================
+   MILLED ALLOY DESCRIPTION TEXT SYSTEM
+   Three-part fix for "generic/too white" text:
+   A) color-mix tints foreground toward ash-green metal
+   B) pressed text-shadow stack (white highlight top-left +
+      black shadow bottom-right) — text feels machined in
+   C) font-weight: 500 for machined substance
+   ================================================ */
+
+.milledText {
+  /* A: Metal-tinted color — not pure white/black */
+  color: color-mix(in srgb, var(--foreground) 75%, #82a88e);
+  /* B: Pressed physics — white edge top-left, dark cavity bottom-right */
+  text-shadow:
+    -0.3px -0.3px 0.5px rgba(255, 255, 255, 0.08),
+    0.3px 0.5px 1px rgba(0, 0, 0, 0.40);
+  /* C: Machined weight */
+  font-weight: 300;
+}
+
+/* Stronger variant — for titles, list headers, labels */
+.milledTextStrong {
+  color: color-mix(in srgb, var(--foreground) 85%, #82a88e);
+  text-shadow:
+    -0.4px -0.4px 0.5px rgba(255, 255, 255, 0.12),
+    0.4px 0.6px 1.5px rgba(0, 0, 0, 0.50);
+  font-weight: 500;
+  /* font-medium — card headings */
+}
+
+/* Subtext variant — dates, meta, secondary labels */
+.milledSubtext {
+  color: color-mix(in srgb, var(--muted) 80%, #82a88e);
+  text-shadow:
+    -0.2px -0.2px 0.3px rgba(255, 255, 255, 0.06),
+    0.2px 0.3px 0.8px rgba(0, 0, 0, 0.35);
+  font-weight: 300;
+  font-size: 0.75rem;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Light mode: invert the pressed shadow physics for bright surfaces */
+:root[data-theme="light"] .milledText,
+:root[data-theme="light"] .milledTextStrong {
+  color: color-mix(in srgb, var(--text) 75%, #4a7a54);
+  text-shadow:
+    -0.3px -0.3px 0.5px rgba(255, 255, 255, 0.6),
+    0.3px 0.5px 1px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] .milledSubtext {
+  color: color-mix(in srgb, var(--muted) 80%, #4a7a54);
+  text-shadow:
+    -0.2px -0.2px 0.3px rgba(255, 255, 255, 0.5),
+    0.2px 0.3px 0.8px rgba(0, 0, 0, 0.08);
+}
+
+/* ================================================
+   2. DUAL AMBIENT LIGHTING SYSTEM
+   Two fixed neon lanterns: Dev (Cyan, top-left)
+   and Writer (Violet, bottom-right).
+   GPU-composited. pointer-events: none.
+   ================================================ */
+.ambientCyan {
+  position: fixed;
+  top: -15vw;
+  left: -15vw;
+  width: 60vw;
+  height: 60vw;
+  max-width: 700px;
+  max-height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  will-change: opacity;
+  transform: translateZ(0);
+  transition: opacity 0.8s ease;
+}
+
+.ambientViolet {
+  position: fixed;
+  bottom: -15vw;
+  right: -15vw;
+  width: 60vw;
+  height: 60vw;
+  max-width: 700px;
+  max-height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  will-change: opacity;
+  transform: translateZ(0);
+  transition: opacity 0.8s ease;
+}
+
+/* ================================================
+   3. SECTION LAYOUT — Base Flow
+   ================================================ */
+.flowSection {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tighter padding for utilitarian sections */
+.flowSectionTight {
+  padding: 3.5rem 1.5rem;
+}
+
+/* More breathing room for theatrical sections */
+.flowSectionWide {
+  padding: 7rem 1.5rem;
+}
+
 .contentWrapper {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
-.flowSection {
+
+/* Narrow prose wrapper — for Timeline + narrative-heavy content */
+.contentWrapperNarrow {
   width: 100%;
-  padding: 6rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-@media (max-width: 640px) {
-  .flowSection { padding: 4rem 1rem; }
+  max-width: 860px;
+  margin: 0 auto;
 }
 
-/* --- GRID LAYOUTS --- */
-.gridSection {
+@media (max-width: 640px) {
+  .flowSection {
+    padding: 4rem 1rem;
+  }
+
+  .flowSectionTight {
+    padding: 2.5rem 1rem;
+  }
+
+  .flowSectionWide {
+    padding: 5rem 1rem;
+  }
+}
+
+/* ================================================
+   4. TIER 1: BENTO GRID — The Arsenal
+   Dominant card (2 cols) + two secondary cards.
+   ================================================ */
+.arsenalBento {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
   width: 100%;
+  margin-top: 1rem;
 }
+
 @media (min-width: 640px) {
-  .gridSection {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .arsenalBento {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .arsenalBento {
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     align-items: stretch;
   }
+
+  /* First child (primary skill) spans 2 columns on large screens */
+  .arsenalBento> :first-child {
+    grid-column: span 2;
+  }
 }
-.certGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+
+/* ================================================
+   5. TIER 3: STICKY DIPTYCH — WhatDrivesMe + Badges
+   Left (60%): scroll story. Right (40%): sticky panel.
+   ================================================ */
+.diptychOuter {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
   width: 100%;
 }
-@media (min-width: 640px) {
-  .certGrid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-    align-items: stretch;
+
+@media (min-width: 1024px) {
+  .diptychOuter {
+    flex-direction: row;
+    gap: 3rem;
+    align-items: flex-start;
   }
 }
+
+.diptychLeft {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .diptychLeft {
+    flex: 60;
+  }
+
+  .diptychRight {
+    flex: 40;
+  }
+}
+
+.diptychRight {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .diptychRight {
+    position: sticky;
+    top: 6rem;
+    /* Clears the Navbar */
+  }
+}
+
+/* ================================================
+   6. TIER 4: CLOSING DIPTYCH — Beyond + Contact
+   A mirror of Tier 3 but equal 50/50 split.
+   ================================================ */
+.closingDiptych {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .closingDiptych {
+    flex-direction: row;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .closingDiptych>* {
+    flex: 1;
+  }
+}
+
+/* ================================================
+   7. BADGE GRID (inside Sticky Panel)
+   ================================================ */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .badgeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ================================================
+   8. CTA / CONTACT SECTION
+   ================================================ */
 .ctaSection {
   width: 100%;
   display: flex;
   justify-content: center;
   padding: 1rem 0;
 }
+
 @media (max-width: 640px) {
-  .contentWrapper { padding: 0 1rem; }
-  .ctaSection { padding: 0; }
+  .contentWrapper {
+    padding: 0 0.5rem;
+  }
+
+  .ctaSection {
+    padding: 0;
+  }
+}
+
+/* ================================================
+   9. DIPTYCH SECTION LABEL COLUMN
+   When headers and content are stacked in a diptych,
+   labels sit above each column's content.
+   ================================================ */
+.diptychBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }

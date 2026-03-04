@@ -2,22 +2,26 @@
 
 /* === 1. THEME VARIABLES === */
 .skillCard {
-  --theme-color: var(--accent); /* Default (Dev) */
+  --theme-color: var(--accent);
+  /* Default (Dev) */
   --theme-glow: rgba(56, 189, 248, 0.15);
 }
 
 .skillCard[data-type="dev"] {
-  --theme-color: #38bdf8; /* Cyan */
+  --theme-color: #38bdf8;
+  /* Cyan */
   --theme-glow: rgba(56, 189, 248, 0.2);
 }
 
 .skillCard[data-type="test"] {
-  --theme-color: #fb923c; /* Orange/Amber */
+  --theme-color: #fb923c;
+  /* Orange/Amber */
   --theme-glow: rgba(251, 146, 60, 0.2);
 }
 
 .skillCard[data-type="writer"] {
-  --theme-color: #34d399; /* Emerald/Mint */
+  --theme-color: #34d399;
+  /* Emerald/Mint */
   --theme-glow: rgba(52, 211, 153, 0.2);
 }
 
@@ -28,20 +32,20 @@
   padding: 1.5rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
-  
+
   /* Glass Background */
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 85%, transparent),
-    color-mix(in oklab, var(--glass) 85%, transparent)
-  );
-  backdrop-filter: blur(12px);
-  
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--glass-strong) 85%, transparent),
+      color-mix(in oklab, var(--glass) 85%, transparent));
+  backdrop-filter: var(--glass-saturate);
+  /* blur(24px) saturate(150%) — full chassis standard */
+  -webkit-backdrop-filter: var(--glass-saturate);
+
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: 
-    border-color 0.3s ease, 
+  transition:
+    border-color 0.3s ease,
     transform 0.3s ease,
     background-color 0.3s ease;
 }
@@ -50,11 +54,9 @@
 .skillCard:hover {
   transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--theme-color) 40%, var(--border));
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 95%, transparent),
-    color-mix(in oklab, var(--glass) 90%, transparent)
-  );
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--glass-strong) 95%, transparent),
+      color-mix(in oklab, var(--glass) 90%, transparent));
 }
 
 /* === 3. HEADER (Icon + Title) === */
@@ -74,11 +76,11 @@
   border: 1px solid color-mix(in srgb, var(--theme-color) 20%, transparent);
   background: color-mix(in srgb, var(--theme-color) 10%, transparent);
   color: var(--theme-color);
-  
+
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  
+
   transition: all 0.3s ease;
 }
 
@@ -108,9 +110,11 @@
   position: relative;
   z-index: 2;
   margin: 0;
-  white-space: pre-wrap; 
-  margin-bottom: 1.5rem; /* Space for the pills */
-  flex-grow: 1; /* Pushes pills to bottom */
+  white-space: pre-wrap;
+  margin-bottom: 1.5rem;
+  /* Space for the pills */
+  flex-grow: 1;
+  /* Pushes pills to bottom */
 }
 
 /* === 5. TECH PILLS (With Icons Support) === */
@@ -131,17 +135,17 @@
   letter-spacing: 0.02em;
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
-  
+
   /* Flex layout to align icon and text */
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  
+
   /* PREMIUM GLASS STYLE */
   background: color-mix(in oklab, var(--glass-strong) 40%, transparent);
   border: 1px solid var(--border-soft);
   color: var(--muted);
-  
+
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: default;
 }
@@ -190,19 +194,18 @@
 @media (max-width: 768px) {
   .skillCard {
     padding: 1.25rem;
-    backdrop-filter: none; /* Performance fix for mobile scrolling */
+    backdrop-filter: none;
+    /* Performance fix for mobile scrolling */
     /* Add a subtle tint since hover effects don't exist on touch */
-    background: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--glass-strong) 90%, transparent),
-      color-mix(in oklab, var(--glass) 90%, transparent)
-    );
+    background: linear-gradient(180deg,
+        color-mix(in oklab, var(--glass-strong) 90%, transparent),
+        color-mix(in oklab, var(--glass) 90%, transparent));
   }
 
   .title {
     font-size: 1.05rem;
   }
-  
+
   .description {
     font-size: 0.9rem;
     margin-bottom: 1.25rem;
@@ -212,7 +215,8 @@
 /* === SMALL MOBILE DEVICES ( < 480px ) === */
 @media (max-width: 480px) {
   .skillCard {
-    padding: 1rem; /* Maximize content width */
+    padding: 1rem;
+    /* Maximize content width */
   }
 
   /* Compact Header */
@@ -222,11 +226,12 @@
   }
 
   .iconBox {
-    width: 2.25rem; /* Shrink main icon container */
+    width: 2.25rem;
+    /* Shrink main icon container */
     height: 2.25rem;
     border-radius: 0.6rem;
   }
-  
+
   /* Force icon inside to scale down slightly */
   .iconBox :global(svg) {
     width: 1.25rem;
@@ -234,21 +239,25 @@
   }
 
   .title {
-    font-size: 1rem; /* Prevent wrapping on narrow screens */
+    font-size: 1rem;
+    /* Prevent wrapping on narrow screens */
   }
 
   /* Compact Tech Pills */
   .techStack {
-    gap: 0.35rem; /* tighter spacing */
+    gap: 0.35rem;
+    /* tighter spacing */
   }
 
   .techPill {
     font-size: 0.65rem;
-    padding: 0.25rem 0.5rem; /* Smaller touch targets */
+    padding: 0.25rem 0.5rem;
+    /* Smaller touch targets */
     gap: 0.3rem;
   }
-  
+
   .pillIcon {
-    transform: scale(0.9); /* Micro-adjustment for icon balance */
+    transform: scale(0.9);
+    /* Micro-adjustment for icon balance */
   }
 }

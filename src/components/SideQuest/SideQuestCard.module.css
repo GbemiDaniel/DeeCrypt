@@ -15,15 +15,15 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
 
-  /* PREMIUM GLASS BACKGROUND */
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 85%, transparent),
-    color-mix(in oklab, var(--glass) 85%, transparent)
-  );
+  /* THE GLASSMORPHIC CHASSIS — Full Hardware Standard */
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--glass-strong) 85%, transparent),
+      color-mix(in oklab, var(--glass) 85%, transparent));
 
   box-shadow: var(--shadow-md), var(--shadow-inset);
-  backdrop-filter: blur(12px);
+  backdrop-filter: var(--glass-saturate);
+  /* blur(24px) saturate(150%) */
+  -webkit-backdrop-filter: var(--glass-saturate);
   overflow: hidden;
 
   /* HOVER TRANSITIONS */
@@ -34,18 +34,17 @@
     box-shadow 180ms ease;
 }
 
+/* Inner specular highlight — matches ModuleCard */
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(
-    circle at 25% 10%,
-    rgba(255, 255, 255, 0.1),
-    transparent 55%
-  );
-  opacity: 0.55;
+  background: radial-gradient(circle at 25% 10%,
+      rgba(255, 255, 255, 0.12),
+      transparent 55%);
+  opacity: 0.6;
 }
 
 .card:hover {
@@ -158,13 +157,16 @@
 .projectList::-webkit-scrollbar {
   width: 4px;
 }
+
 .projectList::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .projectList::-webkit-scrollbar-thumb {
   background: var(--border-soft);
   border-radius: 4px;
 }
+
 .projectList::-webkit-scrollbar-thumb:hover {
   background: var(--border);
 }
@@ -176,7 +178,8 @@
   align-items: center;
   gap: 1rem;
   border-radius: 0.75rem;
-  padding: 0.75rem; /* Standardized internal padding */
+  padding: 0.75rem;
+  /* Standardized internal padding */
   background: color-mix(in oklab, var(--glass) 50%, transparent);
   border: 1px solid transparent;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -222,6 +225,8 @@
   color: var(--muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
+  /* W3C standard — fixes lint */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -1,10 +1,9 @@
 import type { Mode } from "../app/modes";
-import { Code, Award, User, Mail, Heart, Smile } from "lucide-react";
-import styles from "./AboutView.module.css";
 import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { setSectionLabel } from "../hooks/useScrollSpy";
+import { setSectionLabel, SPY_CONFIG } from "../hooks/useScrollSpy";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 import { TIMELINE_DATA, ARSENAL_DATA, BADGES_DATA } from "@/data/about";
@@ -12,52 +11,42 @@ import { Timeline } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
 import { Preloader } from "@/components/Preloader/Preloader";
-import { SectionHeader } from "@/components/SectionHeader/SectionHeader";
 import { AboutHero } from "@/components/AboutHero/AboutHero";
 import { SkillCard } from "@/components/SkillCard/SkillCard";
 import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
 import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
+import { AboutSectionLabel } from "@/components/AboutSectionLabel/AboutSectionLabel";
+import { siteConfig } from "@/config/site";
 
+import styles from "./AboutView.module.css";
 
-//Badges Animation Variants
-const gridOrchestrator = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.1,
-      staggerChildren: 0.15, // This handles the cascade perfectly
-    },
-  },
-};
+// ─── Framer Motion Variants ────────────────────────────────────────────────
 
-const cardAnimation = {
-  hidden: { y: 40, opacity: 0 },
+// Physical-weight spring — Industrial Hardware standard
+const SPRING: Variants = {
+  hidden: { y: 30, opacity: 0, filter: "blur(6px)" },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 60, damping: 15, mass: 1 },
-  },
-};
-const contentContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { delayChildren: 0.2, staggerChildren: 0.1 },
+    filter: "blur(0px)",
+    transition: { type: "spring", mass: 2.5, stiffness: 60, damping: 20 },
   },
 };
 
-const cardVariant: Variants = {
-  hidden: { y: 30, opacity: 0 },
+// Orchestrator — stagger children within a section
+const STAGGER: Variants = {
+  hidden: { opacity: 0 },
   visible: {
-    y: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 60, damping: 15, mass: 1 },
+    transition: { delayChildren: 0.1, staggerChildren: 0.12 },
   },
 };
+
+// ─── Component ────────────────────────────────────────────────────────────
 
 type Props = {
   mode: Mode;
+  // Note: onModeChange is intentionally unused — Navbar handles it when in AboutView.
   onModeChange: (m: Mode) => void;
 };
 
@@ -65,51 +54,52 @@ export default function AboutView({ mode }: Props) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [isLoading, setIsLoading] = useState(true);
 
-  // === PERFORMANCE FIX: INCREASED DELAY ===
-  const spyConfig = {
-    rootMargin: "-45% 0px -45% 0px",
-    triggerOnce: false,
-    delay: 250, // Waits 250ms before updating Navbar text
-  };
+  const viewConfig = { once: true, margin: isMobile ? "-50px" : "-100px" };
 
+  // ─── Scroll Spy Refs ──────────────────────────────────────────────────
   const { ref: heroSpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel(null),
   });
 
   const { ref: arsenalSpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("THE ARSENAL"),
   });
 
   const { ref: journeySpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("THE JOURNEY"),
   });
 
-  const { ref: driveSpy } = useInView({
-    ...spyConfig,
+  const { ref: visionSpy } = useInView({
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("VISION"),
   });
 
   const { ref: badgesSpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("MILESTONES"),
   });
 
   const { ref: personalSpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("PERSONAL"),
   });
 
   const { ref: contactSpy } = useInView({
-    ...spyConfig,
+    ...SPY_CONFIG,
     onChange: (v) => v && setSectionLabel("GET IN TOUCH"),
   });
 
-  const viewConfig = { once: true, margin: isMobile ? "-50px" : "-100px" };
   return (
     <div className={styles.container} data-theme={mode}>
+
+      {/* ── Dual Ambient Lighting — Two Fixed Neon Lanterns ── */}
+      <div className={styles.ambientCyan} aria-hidden="true" />
+      <div className={styles.ambientViolet} aria-hidden="true" />
+
+      {/* ── Preloader ── */}
       <AnimatePresence mode="wait">
         {isLoading && (
           <Preloader key="loader" onComplete={() => setIsLoading(false)} />
@@ -118,29 +108,35 @@ export default function AboutView({ mode }: Props) {
 
       {!isLoading && (
         <>
-          {/* Note: Global FixedBackground in App.tsx handles the BG now */}
-          {/* <div className={styles.fixedBackground} /> <- REMOVED to avoid double background */}
-
+          {/* ════════════════════════════════════════════════
+              HERO — The cinematic typewriter sequence
+              (AboutHero preserves its full existing design)
+          ════════════════════════════════════════════════ */}
           <div ref={heroSpy}>
             <AboutHero isLoading={isLoading} />
           </div>
 
-          <section className={styles.flowSection} ref={arsenalSpy}>
+          {/* ════════════════════════════════════════════════
+              TIER 1 — THE ARSENAL
+              Bento grid: primary card (2-col) + secondaries.
+              Tone: Cyan — Technical, precise, builder.
+          ════════════════════════════════════════════════ */}
+          <section
+            className={`${styles.flowSection} ${styles.flowSectionTight}`}
+            ref={arsenalSpy}
+          >
             <div className={styles.contentWrapper}>
-              <SectionHeader
-                title="The Arsenal"
-                icon={Code}
-                variant="default"
-              />
+              <AboutSectionLabel title="The Arsenal" tone="cyan" />
+
               <motion.div
-                className={styles.gridSection}
+                className={styles.arsenalBento}
                 initial="hidden"
                 whileInView="visible"
                 viewport={viewConfig}
-                variants={contentContainer}
+                variants={STAGGER}
               >
                 {ARSENAL_DATA.map((item, index) => (
-                  <motion.div key={index} variants={cardVariant}>
+                  <motion.div key={index} variants={SPRING}>
                     <SkillCard
                       title={item.title}
                       description={item.description}
@@ -154,116 +150,138 @@ export default function AboutView({ mode }: Props) {
             </div>
           </section>
 
-          <section className={styles.flowSection} ref={journeySpy}>
-            <div className={styles.contentWrapper}>
-              <SectionHeader title="The Journey" icon={User} variant="writer" />
+          {/* ════════════════════════════════════════════════
+              TIER 2 — THE JOURNEY (Timeline)
+              The spine of the page — single column, narrow.
+              Tone: Violet — Writer, voice, introspective.
+          ════════════════════════════════════════════════ */}
+          <section
+            className={`${styles.flowSection} ${styles.flowSectionTight}`}
+            ref={journeySpy}
+          >
+            <div className={styles.contentWrapperNarrow}>
+              <AboutSectionLabel title="The Journey" tone="violet" />
+
               <motion.div
                 initial="hidden"
                 whileInView="visible"
                 viewport={viewConfig}
-                variants={contentContainer}
+                variants={STAGGER}
               >
-                <motion.div variants={cardVariant}>
+                <motion.div variants={SPRING}>
                   <Timeline items={TIMELINE_DATA} />
                 </motion.div>
               </motion.div>
             </div>
           </section>
 
-          <section className={styles.flowSection} ref={driveSpy}>
+          {/* ════════════════════════════════════════════════
+              TIER 3 — STICKY DIPTYCH
+              Left (60%): WhatDrivesMe scroll story
+              Right (40%): Badges — sticky as you scroll
+              Tone: Synthesis (both) on WhatDrivesMe
+                    Gold on Badges (earned achievements)
+          ════════════════════════════════════════════════ */}
+          <section
+            className={`${styles.flowSection} ${styles.flowSectionWide}`}
+            ref={visionSpy}
+          >
             <div className={styles.contentWrapper}>
-              <SectionHeader
-                title="What Drives Me"
-                icon={Heart}
-                variant="default"
-              />
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewConfig}
-                variants={contentContainer}
-              >
-                <motion.div variants={cardVariant}>
-                  <WhatDrivesMe />
-                </motion.div>
-              </motion.div>
+              <div className={styles.diptychOuter}>
+
+                {/* LEFT — WhatDrivesMe */}
+                <div className={styles.diptychLeft}>
+                  <div className={styles.diptychBlock}>
+                    <AboutSectionLabel title="What Drives Me" tone="synthesis" />
+                    <motion.div
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={viewConfig}
+                      variants={STAGGER}
+                    >
+                      <motion.div variants={SPRING}>
+                        <WhatDrivesMe />
+                      </motion.div>
+                    </motion.div>
+                  </div>
+                </div>
+
+                {/* RIGHT — Badges (sticky panel) */}
+                <div className={styles.diptychRight} ref={badgesSpy}>
+                  <div className={styles.diptychBlock}>
+                    <AboutSectionLabel title="Badges & Milestones" tone="gold" />
+                    <motion.div
+                      className={styles.badgeGrid}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ ...viewConfig, amount: 0.1 }}
+                      variants={STAGGER}
+                    >
+                      {BADGES_DATA.map((badge, i) => (
+                        <motion.div key={i} variants={SPRING}>
+                          <BadgeCard {...badge} />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </section>
 
-          <section className={styles.flowSection} ref={badgesSpy}>
+          {/* ════════════════════════════════════════════════
+              TIER 4 — CLOSING DIPTYCH
+              BeyondTheCode (Violet) + ContactPanel
+              The human side of the synthesis closes the page.
+          ════════════════════════════════════════════════ */}
+          <section
+            className={`${styles.flowSection} ${styles.flowSectionTight}`}
+            ref={personalSpy}
+          >
             <div className={styles.contentWrapper}>
-              <SectionHeader
-                title="Badges & Milestones"
-                icon={Award}
-                variant="trophy"
-              />
-              <motion.div
-                className={styles.certGrid}
-                initial="hidden"
-                whileInView="visible"
-                // We spread your existing viewConfig but add amount: 0.1
-                // This forces Framer Motion to wait until 10% of the grid is visible 
-                // before firing the stagger, completely fixing the "hidden bottom row" bug.
-                viewport={{ ...viewConfig, amount: 0.1 }}
-                variants={contentContainer}
-              >
-                {BADGES_DATA.map((badge, i) => (
-                  <motion.div key={i} variants={cardVariant}>
-                    <BadgeCard {...badge} />
+              <div className={styles.closingDiptych}>
+
+                {/* Beyond The Code */}
+                <div className={styles.diptychBlock}>
+                  <AboutSectionLabel title="Beyond The Code" tone="violet" />
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={viewConfig}
+                    variants={STAGGER}
+                  >
+                    <motion.div variants={SPRING}>
+                      <BeyondTheCode />
+                    </motion.div>
                   </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </section>
-          <section className={styles.flowSection} ref={personalSpy}>
-            <div className={styles.contentWrapper}>
-              <SectionHeader
-                title="Beyond The Code"
-                icon={Smile}
-                variant="default"
-              />
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewConfig}
-                variants={contentContainer}
-              >
-                <motion.div variants={cardVariant}>
-                  <BeyondTheCode />
-                </motion.div>
-              </motion.div>
-            </div>
-          </section>
+                </div>
 
-          <section className={styles.flowSection} ref={contactSpy}>
-            <div className={styles.contentWrapper}>
-              {/* <SectionHeader
-                title="Get In Touch"
-                icon={Mail}
-                variant="contact"
-              /> */}
-              <motion.div
-                className={styles.ctaSection}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewConfig}
-                variants={contentContainer}
-              >
-                <motion.div
-                  variants={cardVariant}
-                  className="w-full flex justify-center"
-                >
-                  <ContactPanel
-                    email="your-email@example.com"
-                    resumeUrl="/resume.pdf"
-                    socials={{
-                      github: "https://github.com/yourusername",
-                      twitter: "https://twitter.com/yourusername",
-                      linkedin: "https://linkedin.com/in/yourusername",
-                    }}
-                  />
-                </motion.div>
-              </motion.div>
+                {/* Contact Panel */}
+                <div className={styles.diptychBlock} ref={contactSpy}>
+                  <AboutSectionLabel title="Get In Touch" tone="cyan" />
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={viewConfig}
+                    variants={STAGGER}
+                    className={styles.ctaSection}
+                  >
+                    <motion.div variants={SPRING} style={{ width: "100%" }}>
+                      <ContactPanel
+                        email={siteConfig.email}
+                        resumeUrl={siteConfig.resumeUrl}
+                        socials={{
+                          github: siteConfig.socials.github,
+                          twitter: siteConfig.socials.twitter,
+                          linkedin: siteConfig.socials.linkedin,
+                        }}
+                      />
+                    </motion.div>
+                  </motion.div>
+                </div>
+
+              </div>
             </div>
           </section>
         </>

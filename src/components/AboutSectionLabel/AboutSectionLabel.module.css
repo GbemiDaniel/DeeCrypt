@@ -1,0 +1,169 @@
+/* src/components/AboutSectionLabel/AboutSectionLabel.module.css */
+
+/*
+ * THE NAKED ENGRAVED SECTION LABEL
+ * "Heavy physical labels milled into the metal."
+ * — No containers, no pills, no borders.
+ *   Just pure volumetric typographic mass.
+ */
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(0.75rem, 2vw, 1.25rem);
+    overflow: visible;
+    /* The ambient horizontal rule — a single machined groove beneath the label */
+}
+
+/* The horizontal ruled groove that emerges beneath the title */
+.groove {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--border-soft) 15%,
+            var(--border-soft) 85%,
+            transparent 100%);
+    transform-origin: left;
+    will-change: transform, opacity;
+}
+
+/* === THE CLIMAX LABEL — Naked engraved typographic mass === */
+.label {
+    /* CRITICAL: inline-flex + nowrap = guaranteed single-line. */
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    white-space: nowrap;
+    gap: 0;
+
+    font-family: var(--font-serif);
+    /* Min drops to 1.6rem so even long headers fit on 320px screens */
+    font-size: clamp(1.6rem, 5vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin: 0;
+}
+
+/* === THE LIT CAP (The Neon Reservoir — first letter only) === */
+
+/* Cyan — Dev / Arsenal / Technical */
+.litCyan {
+    color: #22d3ee;
+    text-shadow:
+        0px -1px 1px rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(34, 211, 238, 0.8),
+        5px 0 15px rgba(34, 211, 238, 0.6);
+}
+
+/* Violet — Writer / Personal / Journey */
+.litViolet {
+    color: #a855f7;
+    text-shadow:
+        0px -1px 1px rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(168, 85, 247, 0.8),
+        5px 0 15px rgba(168, 85, 247, 0.6);
+}
+
+/* Gold — Achievement / Milestones */
+.litGold {
+    color: #f59e0b;
+    text-shadow:
+        0px -1px 1px rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(245, 158, 11, 0.8),
+        5px 0 15px rgba(245, 158, 11, 0.6);
+}
+
+/* Synthesis — Cyan-to-Violet gradient on a single letter */
+.litSynthesis {
+    background: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Two-source neon bleed: both colors simultaneously */
+    filter:
+        drop-shadow(0 0 12px rgba(34, 211, 238, 0.5)) drop-shadow(5px 0 12px rgba(168, 85, 247, 0.5));
+}
+
+/* === THE GLASS TAIL (Trailing letters — Dark, translucent, carved) === */
+
+/*
+ * DARK MODE (default): Heavy smoked obsidian body.
+ * Exact user spec: rgba(15,20,30,0.4) color, 1px rgba(255,255,255,0.15) stroke.
+ * These must look ENGRAVED into the hardware — not just faded.
+ */
+.glassTail {
+    color: rgba(15, 20, 30, 0.4);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+}
+
+/* Light MODE: Pristine etched acrylic */
+:root[data-theme="light"] .glassTail {
+    color: rgba(0, 0, 0, 0.08);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
+}
+
+/* Color-specific bleed on the glass tail — neon gas inside the acrylic */
+.tailCyan {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.8),
+        -25px 0 25px rgba(34, 211, 238, 0.7);
+}
+
+.tailViolet {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.8),
+        -25px 0 25px rgba(168, 85, 247, 0.7);
+}
+
+.tailGold {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.8),
+        -25px 0 25px rgba(245, 158, 11, 0.7);
+}
+
+.tailSynthesis {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.8),
+        -20px 0 20px rgba(34, 211, 238, 0.5),
+        15px 0 20px rgba(168, 85, 247, 0.5);
+}
+
+/* LIGHT MODE overrides for glass tail bleeds */
+:root[data-theme="light"] .tailCyan {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.08),
+        -25px 0 25px rgba(34, 211, 238, 0.35);
+}
+
+:root[data-theme="light"] .tailViolet {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.08),
+        -25px 0 25px rgba(168, 85, 247, 0.35);
+}
+
+:root[data-theme="light"] .tailGold {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.08),
+        -25px 0 25px rgba(245, 158, 11, 0.35);
+}
+
+:root[data-theme="light"] .tailSynthesis {
+    text-shadow:
+        2px 4px 6px rgba(0, 0, 0, 0.08),
+        -20px 0 20px rgba(34, 211, 238, 0.3),
+        15px 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* Mobile: more aggressive size floor to prevent hidden overflow */
+@media (max-width: 640px) {
+    .label {
+        /* At 375px: clamp(1.6rem, 5vw, ...) →1.875rem — fits any title on one line */
+        font-size: clamp(1.2rem, 4.5vw, 2.5rem);
+        letter-spacing: -0.03em;
+    }
+}

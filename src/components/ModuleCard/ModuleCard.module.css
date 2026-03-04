@@ -11,15 +11,15 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-soft);
 
-  /* PREMIUM GLASS BACKGROUND */
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 85%, transparent),
-    color-mix(in oklab, var(--glass) 85%, transparent)
-  );
+  /* THE GLASSMORPHIC CHASSIS — Full Hardware Standard */
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--glass-strong) 85%, transparent),
+      color-mix(in oklab, var(--glass) 85%, transparent));
 
   box-shadow: var(--shadow-md), var(--shadow-inset);
-  backdrop-filter: blur(12px);
+  backdrop-filter: var(--glass-saturate);
+  /* blur(24px) saturate(150%) */
+  -webkit-backdrop-filter: var(--glass-saturate);
   overflow: hidden;
 
   /* HOVER TRANSITIONS */
@@ -30,19 +30,18 @@
     box-shadow 180ms ease;
 }
 
-/* Inner highlight (premium glass edge) */
+/* Inner specular highlight — cursor-tracked in Priority 5 via --mx/--my */
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(
-    circle at 25% 10%,
-    rgba(255, 255, 255, 0.1),
-    transparent 55%
-  );
-  opacity: 0.55;
+  background: radial-gradient(circle at var(--mx, 25%) var(--my, 10%),
+      rgba(255, 255, 255, 0.12),
+      transparent 55%);
+  opacity: 0.6;
+  transition: background 0.1s ease;
 }
 
 /* Hover Lift Effect */
@@ -56,6 +55,7 @@
   .card {
     transition: none;
   }
+
   .card:hover {
     transform: none;
   }
@@ -105,7 +105,8 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 600;
-  font-size: clamp(1.25rem, 1.5vw, 1.5rem); /* Slightly adjusted for balance */
+  font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+  /* Slightly adjusted for balance */
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--text);
@@ -140,7 +141,8 @@
 
 /* === FOOTER SECTION === */
 .footer {
-  margin-top: auto; /* Pushes footer to bottom if card stretches */
+  margin-top: auto;
+  /* Pushes footer to bottom if card stretches */
   padding-top: 1.25rem;
   border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
 }

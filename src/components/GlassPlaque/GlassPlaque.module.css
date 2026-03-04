@@ -8,29 +8,33 @@
   transform-style: preserve-3d;
 }
 
-.iconWrapper { width: auto; }
+.iconWrapper {
+  width: auto;
+}
 
 /* --- LIGHT MODE (Native App Glass Theme) --- */
 .plaque {
   position: relative;
   overflow: hidden;
-  
-  /* Uses your app's existing card color with transparency */
-  background: color-mix(in srgb, var(--card) 75%, transparent);
+
+  /* Uses the --card token: pristine acrylic in light, smoked in dark */
+  background: color-mix(in srgb, var(--card) 90%, transparent);
   border: 1px solid var(--border-soft);
-  border-top: 1px solid rgba(255, 255, 255, 0.8); /* Clean light catch */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  /* Physical rim-light — standard 0.15 */
 }
 
-/* --- DARK MODE (Your Exact Original Dark Glass) --- */
+/* --- DARK MODE (Heavy Smoked Obsidian Glass) --- */
 :global(.dark) .plaque,
 :global([data-theme="dark"]) .plaque {
   background: linear-gradient(135deg, rgba(15, 15, 20, 0.65) 0%, rgba(0, 0, 0, 0.85) 100%);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-top: 1px solid rgba(255, 255, 255, 0.15);
+  /* Rim-light: standard 0.15 */
   border-bottom: 2px solid rgba(0, 0, 0, 0.8);
 }
 
-/* Ambient Inner Glow */
+/* Ambient Inner Glow — GENERIC (rainbow spectrum for default usage) */
 .plaque::before {
   content: "";
   position: absolute;
@@ -40,7 +44,10 @@
   z-index: 0;
 }
 
-.plaque > * { position: relative; z-index: 1; }
+.plaque>* {
+  position: relative;
+  z-index: 1;
+}
 
 /* --- VARIANT: DEFAULT --- */
 .variantDefault {
@@ -48,22 +55,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: fit-content; 
+  width: fit-content;
   padding: 1rem 2.5rem;
   border-radius: 1.25rem;
-  backdrop-filter: blur(16px);
-  
-  /* Light mode soft shadow */
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  backdrop-filter: var(--glass-saturate);
+  /* blur(24px) saturate(150%) */
+  -webkit-backdrop-filter: var(--glass-saturate);
+
+  /* Light mode: credible physical mass — not floating */
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 16px 40px rgba(0, 0, 0, 0.12),
+    0 40px 80px rgba(0, 0, 0, 0.06);
 }
 
 :global(.dark) .variantDefault,
 :global([data-theme="dark"]) .variantDefault {
-  box-shadow: 
-    inset 0 4px 15px rgba(0, 0, 0, 0.6), 
+  box-shadow:
+    inset 0 4px 15px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 30px 60px -15px rgba(0, 0, 0, 0.6), 
-    0 0 0 1px rgba(0, 0, 0, 0.5); 
+    0 30px 60px -15px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
 /* --- VARIANT: INLINE --- */
@@ -73,18 +85,20 @@
   justify-content: center;
   padding: 0.15em 0.65em;
   border-radius: 0.5em;
-  margin: 0.2em 0.25em; 
-  white-space: nowrap; 
-  backdrop-filter: blur(12px); 
-  transform: translateY(-0.1em); 
-  
+  margin: 0.2em 0.25em;
+  white-space: nowrap;
+  backdrop-filter: var(--glass-light);
+  /* blur(16px) saturate(140%) */
+  -webkit-backdrop-filter: var(--glass-light);
+  transform: translateY(-0.1em);
+
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 :global(.dark) .variantInline,
 :global([data-theme="dark"]) .variantInline {
-  box-shadow: 
-    inset 0 2px 6px rgba(0, 0, 0, 0.8), 
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -96,17 +110,62 @@
   justify-content: center;
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 50%; 
-  backdrop-filter: blur(16px);
-  
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); 
+  border-radius: 50%;
+  backdrop-filter: var(--glass-light);
+  /* blur(16px) saturate(140%) */
+  -webkit-backdrop-filter: var(--glass-light);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 :global(.dark) .variantIcon,
 :global([data-theme="dark"]) .variantIcon {
-  box-shadow: 
-    inset 0 4px 15px rgba(0, 0, 0, 0.6), 
+  box-shadow:
+    inset 0 4px 15px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 20px rgba(0, 0, 0, 0.4), 
-    0 0 0 1px rgba(0, 0, 0, 0.5); 
+    0 10px 20px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/* --- VARIANT: ABOUT (Synthesis — Dual-Refraction Chassis) --- */
+.variantAbout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  border-radius: 1.25rem;
+  backdrop-filter: var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-saturate);
+
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 16px 40px rgba(0, 0, 0, 0.12),
+    0 40px 80px rgba(0, 0, 0, 0.06);
+}
+
+/* Override the generic rainbow ::before with the Synthesis dual-refraction */
+.variantAbout::before {
+  background: linear-gradient(135deg,
+      rgba(34, 211, 238, 0.09) 0%,
+      /* Cyan — Dev source */
+      rgba(168, 85, 247, 0.09) 100%
+      /* Violet — Writer source */
+    ) !important;
+}
+
+:global(.dark) .variantAbout,
+:global([data-theme="dark"]) .variantAbout {
+  box-shadow:
+    inset 0 4px 15px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 60px -15px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark mode dual-refraction — more intense neon internal glow */
+:global(.dark) .variantAbout::before,
+:global([data-theme="dark"]) .variantAbout::before {
+  background: linear-gradient(135deg,
+      rgba(34, 211, 238, 0.12) 0%,
+      rgba(168, 85, 247, 0.12) 100%) !important;
 }

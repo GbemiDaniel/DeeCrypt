@@ -2,6 +2,7 @@ import { Github, Twitter, Linkedin, Mail } from "lucide-react";
 import styles from "./Footer.module.css";
 // Ensure you import the Mode type so TypeScript is happy
 import type { Mode } from "../../app/modes";
+import { siteConfig } from "@/config/site";
 
 interface FooterProps {
   mode: Mode;
@@ -11,18 +12,18 @@ export default function Footer({ mode }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com/yourusername", label: "GitHub" },
+    { icon: Github, href: siteConfig.socials.github, label: "GitHub" },
     {
       icon: Twitter,
-      href: "https://twitter.com/yourusername",
+      href: siteConfig.socials.twitter,
       label: "Twitter",
     },
     {
       icon: Linkedin,
-      href: "https://linkedin.com/in/yourusername",
+      href: siteConfig.socials.linkedin,
       label: "LinkedIn",
     },
-    { icon: Mail, href: "mailto:your@email.com", label: "Email" },
+    { icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email" },
   ];
 
   // Determine which class to apply based on mode
@@ -38,7 +39,7 @@ export default function Footer({ mode }: FooterProps) {
       <div className={`container ${styles.inner}`}>
         {/* Left: Brand & Copy */}
         <div className={styles.left}>
-          <span className={styles.brand}>Gbemi Daniel</span>
+          <span className={styles.brand}>{siteConfig.name}</span>
           <p className={styles.copy}>
             &copy; {currentYear} &middot; Built with React & Tailwind.
           </p>

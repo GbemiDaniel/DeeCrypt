@@ -20,6 +20,7 @@ import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA";
 import { sideProjects } from "../data/sidequests";
 import { projects, type Project } from "../data/projects";
 import { SideQuestCard } from "@/components/SideQuest/SideQuestCard";
+import { siteConfig } from "@/config/site";
 import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react";
 import {
   SiReact,
@@ -137,7 +138,7 @@ export default function DevView({ mode, onModeChange }: Props) {
               key={mode}
               mode={mode}
               availabilityLabel="OPEN FOR COLLABORATION"
-              headlineTop="Gbemi Daniel"
+              headlineTop={siteConfig.name}
               headlineBottom="Frontend Developer"
               subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
               modeToggleSlot={
@@ -222,12 +223,12 @@ export default function DevView({ mode, onModeChange }: Props) {
               description="Open to frontend roles, Web3 collaborations, and freelance projects."
               primaryAction={{
                 label: "Email Me",
-                href: "mailto:adamsdaniel043@gmail.com",
+                href: `mailto:${siteConfig.email}`,
                 icon: Mail,
               }}
               secondaryAction={{
                 label: "Resume",
-                href: "/resume.pdf",
+                href: siteConfig.resumeUrl,
                 icon: FileText,
                 download: true,
               }}

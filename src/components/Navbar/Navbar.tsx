@@ -21,7 +21,7 @@ function Navbar({
 }: NavbarProps) {
   // 1. Performance: Listen for scroll section updates
   const { sectionLabel } = useNavState();
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -67,7 +67,7 @@ function Navbar({
   const handleToggle = () => setIsOpen((prev) => !prev);
 
   // --- VISIBILITY LOGIC ---
-  
+
   // 1. Are we currently scrolling through a section?
   const isScrolling = !!sectionLabel;
 
@@ -86,9 +86,8 @@ function Navbar({
       <div className={`container ${styles.inner}`}>
         <div className={styles.left}>
           <div
-            className={`${styles.brandWrap} ${
-              shouldShowMenu ? styles.showMenu : ""
-            }`}
+            className={`${styles.brandWrap} ${shouldShowMenu ? styles.showMenu : ""
+              }`}
             onClick={handleToggle}
             onMouseEnter={() => {
               setIsHovered(true);
@@ -148,9 +147,8 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("about");
                     }}
-                    className={`${styles.navLink} ${
-                      mode === "about" ? styles.activeAbout : ""
-                    }`}
+                    className={`${styles.navLink} ${mode === "about" ? styles.activeAbout : ""
+                      }`}
                   >
                     Story
                   </button>
@@ -160,9 +158,8 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("dev");
                     }}
-                    className={`${styles.navLink} ${
-                      mode === "dev" ? styles.activeDev : ""
-                    }`}
+                    className={`${styles.navLink} ${mode === "dev" ? styles.activeDev : ""
+                      }`}
                   >
                     Dev
                   </button>
@@ -172,9 +169,8 @@ function Navbar({
                       e.stopPropagation();
                       handleNav("writer");
                     }}
-                    className={`${styles.navLink} ${
-                      mode === "writer" ? styles.activeWriter : ""
-                    }`}
+                    className={`${styles.navLink} ${mode === "writer" ? styles.activeWriter : ""
+                      }`}
                   >
                     Writer
                   </button>

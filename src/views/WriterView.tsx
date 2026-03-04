@@ -17,6 +17,7 @@ import Tag from "../components/Tag/Tag";
 import WriterCarousel from "../components/WriterCarousel/WriterCarousel";
 import WriterDialog from "../components/WriterDialog/WriterDialog";
 import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA";
+import { siteConfig } from "@/config/site";
 
 import { posts } from "../data/posts";
 import styles from "./WriterView.module.css";
@@ -41,28 +42,28 @@ type Props = {
 const PLATFORMS = [
   {
     id: "twitter",
-    href: "https://x.com/",
+    href: siteConfig.socials.twitter,
     label: "X (Twitter)",
     icon: <X size={14} />,
     color: "#ffffff",
   },
   {
     id: "linkedin",
-    href: "https://linkedin.com/",
+    href: siteConfig.socials.linkedin,
     label: "LinkedIn",
     icon: <Linkedin size={14} />,
     color: "#0a66c2",
   },
   {
     id: "mirror",
-    href: "https://mirror.xyz/",
+    href: siteConfig.socials.mirror,
     label: "Mirror",
     icon: <BookOpen size={14} />,
     color: "#3898FF",
   },
   {
     id: "medium",
-    href: "https://medium.com/",
+    href: siteConfig.socials.medium,
     label: "Medium",
     icon: <Newspaper size={14} />,
     color: "#FFC017",
@@ -255,12 +256,12 @@ export default function WriterView({ mode, onModeChange }: Props) {
               description="Simplifying blockchain tech through clarity."
               primaryAction={{
                 label: "Follow Updates",
-                href: "https://twitter.com/deecrypthub",
+                href: siteConfig.socials.secondaryTwitter,
                 icon: Twitter,
               }}
               secondaryAction={{
                 label: "Get Notified",
-                href: "mailto:adamsdaniel043@gmail.com",
+                href: `mailto:${siteConfig.email}`,
                 icon: Mail,
               }}
             />
