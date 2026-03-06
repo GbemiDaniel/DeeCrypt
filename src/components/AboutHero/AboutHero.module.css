@@ -239,6 +239,26 @@
 /* Deecrypt Crown Jewel (The Theme Looper) */
 .deecryptPlaque {
   z-index: 2;
+  /* Compact plaque — close to the width of the header text above it */
+  width: clamp(200px, 32vw, 300px) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/*
+ * Teal/Cyan ambient override — child div rendered AFTER the global ::before,
+ * visually covering GlassPlaque's rainbow gradient with a localized dark-teal marine glow.
+ * STRICTLY local to AboutHero. No global CSS modified.
+ */
+.deecryptGlowOverride {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: linear-gradient(115deg,
+      rgba(0, 200, 185, 0.10) 0%,
+      rgba(10, 150, 200, 0.07) 55%,
+      rgba(0, 100, 160, 0.05) 100%) !important;
 }
 
 .pulseDeecrypt {
@@ -267,6 +287,13 @@
   animation:
     panThemeGradient 9s linear infinite,
     engravePulseThemeLoop 9s ease-in-out infinite;
+}
+
+.pulseDeecryptImg {
+  will-change: filter;
+  /* Static ambient metallic teal/cyan etching — no pulsing, matches logo sheen */
+  filter:
+    drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.75)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.12)) drop-shadow(0 0 10px rgba(0, 200, 185, 0.35)) drop-shadow(0 0 4px rgba(20, 160, 200, 0.2));
 }
 
 /* Inline Badges */

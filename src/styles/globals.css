@@ -1,6 +1,6 @@
 ﻿@import "tailwindcss";
 /* Make sure this path is correct! If tokens.css is in the same folder, use ./ */
-@import "./tokens.css"; 
+@import "./tokens.css";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -41,7 +41,7 @@
 
   /* FIXED: Defined border color */
   --color-border: var(--border);
-  
+
   --color-input: var(--input);
   --color-ring: var(--ring);
 
@@ -64,17 +64,15 @@
 /* === 2. BASE STYLES === */
 :root {
   --radius: 0.625rem;
-  
+
   /* --- CHROME TEXTURE VARS --- */
-  --metal-gradient: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #e2e8f0 35%,
-    #64748b 50%,
-    #94a3b8 51%,
-    #f8fafc 80%,
-    #ffffff 100%
-  );
+  --metal-gradient: linear-gradient(180deg,
+      #ffffff 0%,
+      #e2e8f0 35%,
+      #64748b 50%,
+      #94a3b8 51%,
+      #f8fafc 80%,
+      #ffffff 100%);
 }
 
 @layer base {
@@ -82,22 +80,29 @@
     box-sizing: border-box;
     @apply border-border outline-ring/50;
   }
-  html, body {
-    height: 100%;
+
+  html,
+  body {
+    height: 100dvh;
+    scrollbar-gutter: stable;
   }
+
   body {
     margin: 0;
     font-family: var(--font-sans);
     @apply bg-background text-foreground;
-    background-attachment: scroll; 
+    background-attachment: scroll;
   }
+
   a {
     color: inherit;
     text-decoration: none;
   }
+
   button {
     font: inherit;
   }
+
   ::selection {
     background: rgba(56, 189, 248, 0.25);
   }
@@ -123,6 +128,7 @@
 .metal-dev {
   filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5));
 }
+
 .metal-writer {
   filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5));
 }
@@ -133,18 +139,19 @@
 
 /* === 4. MOBILE OPTIMIZATIONS (Hybrid Approach) === */
 @media (max-width: 768px) {
+
   /* 1. Disable blur on everything EXCEPT the Header and its children */
   /* This allows the navbar to have the glass effect while keeping the rest fast */
   *:not(header):not(header *) {
     backdrop-filter: none !important;
   }
-  
+
   /* 2. Fallback for Glass Cards (Non-Header) */
-  .card, 
+  .card,
   [class*="ModuleCard"] {
-    background-color: var(--bg); 
+    background-color: var(--bg);
     border: 1px solid var(--border);
   }
-  
+
   /* NOTE: Header background is handled in Navbar.module.css */
 }

@@ -1,12 +1,5 @@
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .main {
   padding: 2.25rem 0 3rem;
-  flex: 1;
 }
 
 .footer {

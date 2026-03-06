@@ -53,68 +53,67 @@ export const projects: Project[] = [
     },
   },
   {
-    id: "Worldwise",
-    title: "Worldwise",
-    subtitle: "Keep Track of Your Adventures",
-    badge: "WEB2",
-    previewImage: "/preview/Worldview.png",
+    id: "Webscript",
+    title: "Webscript Digital Agency",
+    subtitle: "Premium services for all things web",
+    badge: "B2B",
+    previewImage: "/preview/Webscript Agency.png",
     previewVideo: "/previews/sample.mp4",
     meta: [
       { label: "ROLE", value: "Frontend", accent: true },
-      { label: "TYPE", value: "Demo" },
-      { label: "YEAR", value: "2025" },
+      { label: "TYPE", value: "Live" },
+      { label: "YEAR", value: "202" },
     ],
     descriptionLong:
-      "A travel tracking web app I built while learning advanced React patterns and  working with map libraries. Users can log cities they've visited on an iteractive map and build a personal travel history",
-
+      "A premium, full-stack B2B platform engineered for a digital agency. It seamlessly merges a high-converting marketing shell with a secure, role-based client portal, utilizing advanced Next.js App Router architecture and a bespoke 'Hardware-Glass' design system.",
     // --- NEW: Personal Project Highlights ---
-    highlightsTitle: "WHAT I BUILT",
+    highlightsTitle: "ARCHITECTURAL HIGHLIGHTS",
     highlights: [
-      "Interactive map with geolocation using Leaflet.js to pinpoint and track visits.",
-      "Persistent local storage system—your travel history saves without needing a backend.",
-      "Custom form validation for adding new cities with dates and personal notes.",
-      "Clean, travel-focused UI that makes journaling your trips feel effortless.",
+      "Role-Based Dashboards: Built distinct, secure portals for Admin data analytics and Client project tracking.",
+      "Custom Design System: Engineered a high-performance 'Premium Glass' UI layer with custom, etched-wireframe SVGs.",
+      "Tactile Micro-Interactions: Integrated Framer Motion for hardware-accelerated, hybrid hover and scroll physics.",
+      "Next.js Optimization: Leveraged React Server Components and optimized image architecture for sub-second load times.",
     ],
     // ----------------------------------------
 
     links: {
-      primary: { href: "https://example.com", label: "Case study" },
+      primary: {
+        href: "https://websrcipts-agency.vercel.app/",
+        label: "Live Deployment"
+      },
       secondary: {
-        href: "https://github.com/GbemiDaniel/Worldview",
-        label: "GitHub",
+        href: "https://github.com/GbemiDaniel/webscripts-agency",
+        label: "GitHub Repository",
       },
     },
   },
   {
     id: "Portfolio",
-    title: "Portfolio Website",
-    subtitle: "Designed and Built from Scratch",
-    badge: "WEB2",
-    previewImage: "/previews/sample.jpg",
-    previewVideo: "/previews/sample.mp4",
+    title: "Gbemi Daniel — Portfolio 2026",
+    subtitle: "Interactive, multi-view digital identity built from scratch",
+    badge: "FRONTEND / UI",
+    previewImage: "/preview/Portfolio-hero.png", // Update with your actual path
+    previewVideo: "/previews/portfolio-preview.mp4", // Update with your actual path
     meta: [
-      { label: "ROLE", value: "Frontend", accent: true },
-      { label: "TYPE", value: "Personal Project" },
+      { label: "ROLE", value: "System Architect & UI/UX", accent: true },
+      { label: "STACK", value: "React, Tailwind, Framer" },
       { label: "YEAR", value: "2026" },
     ],
     descriptionLong:
-      "The website you're looking at right now. I designed and built this portfolio over two months to showcase my work and prove I can take projects from concept to deployment—no templates, just intentional design and problem-solving.",
+      "A highly interactive, performance-driven personal portfolio designed to mirror my dual focus as a UI engineer and technical writer. Built completely from scratch without templates, the architecture features a custom mode-switching system, glassmorphic bento-grid layouts, and a strictly typed data pipeline. Every interaction—from the physics-based carousels to the cursor-tracked specular highlights—was engineered to feel tactile, intentional, and premium.",
 
-    // --- NEW: Design/Tech Focus ---
-    highlightsTitle: "KEY FEATURES:",
+    highlightsTitle: "TECHNICAL HIGHLIGHTS:",
     highlights: [
-      "Three-view system (Dev, Writer, About) with seamless mode switching",
-      "Custom-designed card components tailored for different content types.",
-      "Interactive project preview carousel built without external libraries",
-
-      "Performance-optimized architecture for fast load times",
-      "Unified theme system merging multiple visual identities",
+      "Dual-mode architecture (Builder/Writer) with seamless state and layout transitions",
+      "Custom 'Chameleon' dialog system that dynamically shape-shifts to mock platform-native UI (X, LinkedIn, Medium, DevTo)",
+      "Responsive Bento-grid module system with a custom P5-style cursor-tracked specular highlight effect",
+      "Physics-based slide transitions and interactive carousels powered by Framer Motion",
+      "Theme-agnostic, performant CSS architecture using backdrop-blur glassmorphism and elastic flexbox distribution",
     ],
-    // ------------------------------
 
     links: {
-      primary: { href: "https://example.com", label: "Live demo" },
-      secondary: { href: "https://github.com/", label: "GitHub" },
+      primary: { href: "http://gbemidaniel.vercel.app/", label: "Live" },
+      secondary: { href: "https://github.com/GbemiDaniel/DeeCrypt", label: "GitHub" },
     },
-  },
+  }
 ];

@@ -1,0 +1,34 @@
+﻿src/components/BeyondTheCode/BeyondTheCode.tsx(87,25): error TS6133: 'event' is declared but its value is never read.
+src/components/MinimalCTA/MinimalCTA.tsx(2,10): error TS1484: 'LucideIcon' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/motion/TextReveal.tsx(15,3): error TS6133: 'variant' is declared but its value is never read.
+src/components/NavLink.tsx(16,8): error TS2322: Type '{ children: ReactNode; about?: string | undefined; type?: string | undefined; onClick?: MouseEventHandler<HTMLAnchorElement> | undefined; ... 281 more ...; className: string | undefined; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Type '{ children: ReactNode; about?: string | undefined; type?: string | undefined; onClick?: MouseEventHandler<HTMLAnchorElement> | undefined; ... 281 more ...; className: string | undefined; }' is not assignable to type 'HTMLAttributes<HTMLDivElement>'.
+    Types of property 'onCopy' are incompatible.
+      Type 'ClipboardEventHandler<HTMLAnchorElement> | undefined' is not assignable to type 'ClipboardEventHandler<HTMLDivElement> | undefined'.
+        Type 'ClipboardEventHandler<HTMLAnchorElement>' is not assignable to type 'ClipboardEventHandler<HTMLDivElement>'.
+          Property 'align' is missing in type 'HTMLAnchorElement' but required in type 'HTMLDivElement'.
+src/components/PreviewCarousel/PreviewCarousel.tsx(161,23): error TS2322: Type '{ className: string; src: string; alt: string; loading: "lazy"; decoding: "async"; fetchpriority: string; }' is not assignable to type 'DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>'.
+  Property 'fetchpriority' does not exist on type 'DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>'. Did you mean 'fetchPriority'?
+src/components/PreviewCarousel/PreviewCarousel.tsx(246,13): error TS2322: Type '(el: HTMLButtonElement | null) => HTMLButtonElement | null' is not assignable to type 'Ref<HTMLButtonElement> | undefined'.
+  Type '(el: HTMLButtonElement | null) => HTMLButtonElement | null' is not assignable to type '(instance: HTMLButtonElement | null) => void | (() => VoidOrUndefinedOnly)'.
+    Type 'HTMLButtonElement | null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+      Type 'null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+src/components/PreviewDialog/PreviewDialog.tsx(13,10): error TS1484: 'Mode' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/PreviewDialog/PreviewDialog.tsx(60,3): error TS6133: 'secondaryLabel' is declared but its value is never read.
+src/components/PreviewDialog/PreviewDialog.tsx(62,3): error TS6133: 'mode' is declared but its value is never read.
+src/components/SectionHeader/SectionHeader.tsx(1,18): error TS1484: 'Variants' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/SkillBadge/SkillBadge.tsx(18,3): error TS6133: 'className' is declared but its value is never read.
+src/components/Timeline.tsx(38,9): error TS2349: This expression is not callable.
+  Type 'never' has no call signatures.
+src/components/Timeline.tsx(47,9): error TS6133: 'isLeft' is declared but its value is never read.
+src/components/ui/carousel.tsx(5,8): error TS2724: '"embla-carousel-react"' has no exported member named 'EmblaCarouselType'. Did you mean 'UseEmblaCarouselType'?
+src/components/ui/carousel.tsx(6,8): error TS2614: Module '"embla-carousel-react"' has no exported member 'EmblaOptionsType'. Did you mean to use 'import EmblaOptionsType from "embla-carousel-react"' instead?
+src/components/WhatDrivesMe/WhatDrivesMe.tsx(5,31): error TS6133: 'RefreshCw' is declared but its value is never read.
+src/data/about.tsx(13,3): error TS6133: 'Cpu' is declared but its value is never read.
+src/data/sidequests.ts(1,1): error TS6192: All imports in import declaration are unused.
+src/hooks/useCinematicIntro.ts(12,18): error TS2503: Cannot find namespace 'NodeJS'.
+src/hooks/useScramble.ts(9,24): error TS2503: Cannot find namespace 'NodeJS'.
+src/hooks/useScramble.ts(16,23): error TS6133: 'prev' is declared but its value is never read.
+src/hooks/useScramble.ts(19,17): error TS6133: 'letter' is declared but its value is never read.
+src/views/DevView.tsx(198,29): error TS2741: Property '$$typeof' is missing in type 'IconType' but required in type 'ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>'.
+src/views/WriterView.tsx(143,14): error TS2741: Property 'mode' is missing in type '{ availabilityLabel: string; headlineTop: string; headlineBottom: Element; subcopy: Element; modeToggleSlot: Element; }' but required in type 'HeroProps'.

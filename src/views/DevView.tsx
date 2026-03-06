@@ -3,8 +3,7 @@ import { useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
-import { AnimatePresence } from "framer-motion";
-import { Preloader } from "@/components/Preloader/Preloader";
+import { motion } from "framer-motion";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -52,15 +51,13 @@ const SPY_CONFIG = {
 
 type Props = {
   mode: Mode;
-  onModeChange: (m: Mode) => void;
 };
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
-export default function DevView({ mode, onModeChange }: Props) {
-  const [isLoading, setIsLoading] = useState(true);
+export default function DevView({ mode }: Props) {
   const [activeProject, setActiveProject] = useState(0);
   const [openPreview, setOpenPreview] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -124,118 +121,113 @@ export default function DevView({ mode, onModeChange }: Props) {
   );
 
   return (
-    <>
-      <AnimatePresence mode="wait">
-        {isLoading && (
-          <Preloader key="loader" onComplete={() => setIsLoading(false)} />
-        )}
-      </AnimatePresence>
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, x: -25 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div ref={heroRef}>
+        <Hero
+          key="dev"
+          mode="dev"
+          availabilityLabel="OPEN FOR COLLABORATION"
+          headlineTop={siteConfig.name}
+          headlineBottom="Frontend Developer"
+          subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
+          modeToggleSlot={
+            <ModeToggle />
+          }
+        />
+      </div>
 
-      {!isLoading && (
-        <>
-          <div ref={heroRef}>
-            <Hero
-              key={mode}
-              mode={mode}
-              availabilityLabel="OPEN FOR COLLABORATION"
-              headlineTop={siteConfig.name}
-              headlineBottom="Frontend Developer"
-              subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
-              modeToggleSlot={
-                <ModeToggle mode={mode} onChange={onModeChange} />
-              }
-            />
-          </div>
+      <div ref={isDesktop ? desktopGridRef : undefined}>
+        <ModuleGrid
+          left={
+            <div
+              ref={!isDesktop ? mobileProjectsRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <PreviewCarousel {...carouselProps} />
+            </div>
+          }
+          rightTop={
+            <div
+              ref={!isDesktop ? mobileSideQuestRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <SideQuestCard
+                title="Side Quests"
+                subtitle="Experimental labs where I test new ideas."
+                icon={Rocket}
+                projects={sideProjects}
+              />
+            </div>
+          }
+          rightBottom={
+            <div
+              ref={!isDesktop ? mobileStackRef : undefined}
+              style={{ height: "100%" }}
+            >
+              <ModuleCard
+                title="Stack"
+                subtitle="My Tech Stack"
+                icon={Layers2}
+                footer={
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+                  >
+                    {TECH_STACK.map((tech) => (
+                      <SkillBadge
+                        key={tech.name}
+                        name={tech.name}
+                        icon={tech.icon}
+                        color={tech.color}
+                      />
+                    ))}
+                  </div>
+                }
+              />
+            </div>
+          }
+        />
+      </div>
 
-          <div ref={isDesktop ? desktopGridRef : undefined}>
-            <ModuleGrid
-              left={
-                <div
-                  ref={!isDesktop ? mobileProjectsRef : undefined}
-                  style={{ height: "100%" }}
-                >
-                  <PreviewCarousel {...carouselProps} />
-                </div>
-              }
-              rightTop={
-                <div
-                  ref={!isDesktop ? mobileSideQuestRef : undefined}
-                  style={{ height: "100%" }}
-                >
-                  <SideQuestCard
-                    title="Side Quests"
-                    subtitle="Experimental labs where I test new ideas."
-                    icon={Rocket}
-                    projects={sideProjects}
-                  />
-                </div>
-              }
-              rightBottom={
-                <div
-                  ref={!isDesktop ? mobileStackRef : undefined}
-                  style={{ height: "100%" }}
-                >
-                  <ModuleCard
-                    title="Stack"
-                    subtitle="My Tech Stack"
-                    icon={Layers2}
-                    footer={
-                      <div
-                        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
-                      >
-                        {TECH_STACK.map((tech) => (
-                          <SkillBadge
-                            key={tech.name}
-                            name={tech.name}
-                            icon={tech.icon}
-                            color={tech.color}
-                          />
-                        ))}
-                      </div>
-                    }
-                  />
-                </div>
-              }
-            />
-          </div>
+      <PreviewDialog
+        open={openPreview}
+        title={active?.title ?? "Preview"}
+        imageSrc={active?.previewImage}
+        videoSrc={active?.previewVideo}
+        description={active?.descriptionLong ?? active?.subtitle}
+        meta={active?.meta}
+        primaryHref={active?.links?.primary?.href}
+        primaryLabel={active?.links?.primary?.label}
+        secondaryHref={active?.links?.secondary?.href}
+        secondaryLabel={active?.links?.secondary?.label}
+        onClose={() => setOpenPreview(false)}
+        mode={mode}
+        highlights={active?.highlights}
+        highlightsTitle={active?.highlightsTitle}
+      />
 
-          <PreviewDialog
-            open={openPreview}
-            title={active?.title ?? "Preview"}
-            imageSrc={active?.previewImage}
-            videoSrc={active?.previewVideo}
-            description={active?.descriptionLong ?? active?.subtitle}
-            meta={active?.meta}
-            primaryHref={active?.links?.primary?.href}
-            primaryLabel={active?.links?.primary?.label}
-            secondaryHref={active?.links?.secondary?.href}
-            secondaryLabel={active?.links?.secondary?.label}
-            onClose={() => setOpenPreview(false)}
-            mode={mode}
-            highlights={active?.highlights}
-            highlightsTitle={active?.highlightsTitle}
-          />
-
-          <div ref={ctaSpy}>
-            <MinimalCTA
-              icon={Terminal}
-              title="Ready to ship?"
-              description="Open to frontend roles, Web3 collaborations, and freelance projects."
-              primaryAction={{
-                label: "Email Me",
-                href: `mailto:${siteConfig.email}`,
-                icon: Mail,
-              }}
-              secondaryAction={{
-                label: "Resume",
-                href: siteConfig.resumeUrl,
-                icon: FileText,
-                download: true,
-              }}
-            />
-          </div>
-        </>
-      )}
-    </>
+      <div ref={ctaSpy}>
+        <MinimalCTA
+          icon={Terminal}
+          title="Ready to ship?"
+          description="Open to frontend roles, Web3 collaborations, and freelance projects."
+          primaryAction={{
+            label: "Email Me",
+            href: `mailto:${siteConfig.email}`,
+            icon: Mail,
+          }}
+          secondaryAction={{
+            label: "Resume",
+            href: siteConfig.resumeUrl,
+            icon: FileText,
+            download: true,
+          }}
+        />
+      </div>
+    </motion.div>
   );
 }

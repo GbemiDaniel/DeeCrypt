@@ -10,7 +10,7 @@ import {
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { cn } from "@/lib/utils";
-import { Mode } from "../../app/modes";
+import type { Mode } from "../../app/modes";
 import styles from "./PreviewDialog.module.css";
 
 export type PreviewDialogMeta = {
@@ -57,9 +57,7 @@ export default function PreviewDialog({
   primaryHref,
   primaryLabel,
   secondaryHref,
-  secondaryLabel,
   onClose,
-  mode = "dev",
 }: PreviewDialogProps) {
   // --- MEDIA LOGIC (Unchanged) ---
   const slides = useMemo(() => {

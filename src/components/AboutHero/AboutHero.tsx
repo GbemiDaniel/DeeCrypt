@@ -103,7 +103,14 @@ export function AboutHero({ isLoading }: Props) {
                 </div>
 
                 <GlassPlaque variant="default" className={styles.deecryptPlaque}>
-                  <span className={styles.pulseDeecrypt}>Deecrypt</span>
+                  {/* Localized teal/cyan glow override — paints over GlassPlaque's global ::before.
+                      No global styles modified. Strictly scoped to this instance. */}
+                  <div className={styles.deecryptGlowOverride} aria-hidden="true" />
+                  <motion.img
+                    src="/logos/DeeCrypt_handwritten_logo.png"
+                    alt="DeeCrypt handwritten metallic logo"
+                    className={`w-full h-full object-contain scale-[1.4] ${styles.pulseDeecryptImg}`}
+                  />
                 </GlassPlaque>
 
               </motion.div>

@@ -115,7 +115,10 @@ function Navbar({
             />
 
             <div className={styles.brandText}>
-              <div className={styles.brandName}>{brand}</div>
+              <div className={`${styles.brandName} ${styles.brandMetal} ${mode === "dev" ? styles.brandGlowDev
+                  : mode === "writer" ? styles.brandGlowWriter
+                    : styles.brandGlowAbout
+                }`}>{brand}</div>
 
               <div className={styles.brandVer}>
                 {/* 1. SCROLL LABEL (Visible only when scrolling) */}

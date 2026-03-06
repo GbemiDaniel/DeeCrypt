@@ -45,7 +45,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   return (
     <motion.div
-      className={styles.loaderContainer}
+      className={`fixed inset-0 z-99999 w-screen h-dvh flex flex-col items-center justify-center gap-6 ${styles.loaderContainer}`}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }} // Faster exit
       key="preloader"

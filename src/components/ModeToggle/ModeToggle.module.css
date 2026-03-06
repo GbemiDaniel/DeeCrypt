@@ -21,6 +21,11 @@
   /* FLUID PADDING: Optimized for touch targets */
   padding: clamp(0.4rem, 1.5vw, 0.52rem) clamp(0.6rem, 2.5vw, 0.85rem);
 
+  /* Flex center so SVG icons sit perfectly in the pill */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   border-radius: var(--radius-pill);
   border: 0;
   background: transparent;
@@ -38,7 +43,18 @@
     background 180ms ease,
     color 180ms ease,
     transform 120ms ease,
-    text-shadow 300ms ease;
+    filter 300ms ease;
+}
+
+/* Icon + text hybrid inner layout */
+.btnInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.78rem, 1.8vw, 0.88rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -47,26 +63,23 @@
 }
 
 .active {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--glass-strong) 92%, transparent),
-    color-mix(in oklab, var(--glass) 88%, transparent)
-  );
+  background: linear-gradient(180deg,
+      color-mix(in oklab, var(--glass-strong) 92%, transparent),
+      color-mix(in oklab, var(--glass) 88%, transparent));
   color: var(--text);
   box-shadow: var(--shadow-inset);
   border: 1px solid color-mix(in oklab, var(--border) 65%, transparent);
 }
 
 .devActive {
-  text-shadow:
-    0 0 8px color-mix(in srgb, var(--accent) 70%, transparent),
-    0 0 16px color-mix(in srgb, var(--accent) 30%, transparent);
+  /* filter drop-shadow works on SVG icon strokes; text-shadow does not */
+  filter:
+    drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 70%, transparent)) drop-shadow(0 0 16px color-mix(in srgb, var(--accent) 30%, transparent));
   color: var(--accent);
 }
 
 .writerActive {
-  text-shadow:
-    0 0 8px color-mix(in srgb, var(--accent2) 70%, transparent),
-    0 0 16px color-mix(in srgb, var(--accent2) 30%, transparent);
+  filter:
+    drop-shadow(0 0 8px color-mix(in srgb, var(--accent2) 70%, transparent)) drop-shadow(0 0 16px color-mix(in srgb, var(--accent2) 30%, transparent));
   color: var(--accent2);
 }

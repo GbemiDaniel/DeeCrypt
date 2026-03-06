@@ -59,6 +59,7 @@
   font-weight: 700;
   letter-spacing: 0.2px;
   line-height: 1;
+  transition: text-shadow 0.5s ease, filter 0.5s ease;
 }
 
 .brandVer {
@@ -88,6 +89,7 @@
     opacity 0.4s ease,
     transform 0.4s ease;
 }
+
 .introLabel {
   transition:
     opacity 1.2s ease,
@@ -175,10 +177,12 @@
 
 /* 3. ABOUT (STORY): Merged Color + Sleek Pulse */
 @keyframes pulse-merged {
+
   0%,
   100% {
     text-shadow: 0 0 5px color-mix(in srgb, var(--merged) 20%, transparent);
   }
+
   50% {
     text-shadow: 0 0 18px color-mix(in srgb, var(--merged) 50%, transparent);
   }
@@ -248,4 +252,42 @@
 
 .themeBtn:hover .themeIcon {
   transform: rotate(18deg) scale(1.05);
+}
+
+/* ─── BRAND METALLIC GLOW ─────────────────────────────────────────── */
+
+/* Base: Chrome gradient text — the "machined titanium" resting state */
+.brandMetal {
+  background: var(--metal-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Dev mode: Cyan neon bleed */
+.brandGlowDev {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 55%, transparent));
+}
+
+/* Writer mode: Purple neon bleed */
+.brandGlowWriter {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent2) 55%, transparent));
+}
+
+/* About mode: Merged pulse glow */
+@keyframes pulse-brand {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 30%, var(--accent2)));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 16px color-mix(in srgb, var(--accent) 50%, var(--accent2)));
+  }
+}
+
+.brandGlowAbout {
+  animation: pulse-brand 3s ease-in-out infinite;
 }

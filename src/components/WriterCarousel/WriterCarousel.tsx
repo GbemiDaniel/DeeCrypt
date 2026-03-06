@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState, type TouchEvent, type SyntheticEvent } from "react";
+import { useEffect, useMemo, useState, type TouchEvent } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./WriterCarousel.module.css";
-import type { WriterPost } from "../../data/posts";
+import type { ChameleonPost } from "../../data/featuredPosts";
 
 export type WriterCarouselProps = {
-  items: WriterPost[];
+  items: ChameleonPost[];
   activeId?: string;
   onActiveIdChange?: (id: string) => void;
-  onOpen?: (item: WriterPost) => void;
+  onOpen?: (item: ChameleonPost) => void;
 };
 
 export default function WriterCarousel({
@@ -26,10 +26,6 @@ export default function WriterCarousel({
   }, [safeItems, activeId]);
 
   const [index, setIndex] = useState(initialIndex);
-  
-  // === NEW STATE ===
-  // We track if the current slide's image has successfully loaded.
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -38,11 +34,6 @@ export default function WriterCarousel({
 
   const item = safeItems[index];
   const canGo = safeItems.length > 1;
-
-  // Reset the "Loaded" state whenever the slide changes
-  useEffect(() => {
-    setIsImageLoaded(false);
-  }, [item?.id]);
 
   function go(delta: number) {
     if (!canGo) return;
@@ -76,42 +67,15 @@ export default function WriterCarousel({
     setTouchEnd(null);
   }
 
-  const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.style.display = "none";
-    // If error, we ensure isImageLoaded stays false so background remains
-    setIsImageLoaded(false); 
-  };
-
-  const handleImageLoad = () => {
-    // Success! Now we can safely hide the default background
-    setIsImageLoaded(true);
-  };
-
   return (
     <div
       className={styles.card}
-      /* === THE LOGIC FIX === */
-      /* Only remove the default background if the new image exists AND has loaded. */
-      style={{
-        backgroundImage: (item?.previewImage && isImageLoaded) ? "none" : undefined
-      }}
-      /* ==================== */
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       <div className={styles.preview} aria-hidden="true">
         <div className={styles.previewTint} />
-        {item?.previewImage ? (
-          <img 
-            key={item.id} 
-            className={styles.previewImg} 
-            src={item.previewImage} 
-            alt="" 
-            onError={handleImageError}
-            onLoad={handleImageLoad} // <--- Trigger the swap here
-          />
-        ) : null}
       </div>
 
       <div className={styles.body}>
@@ -124,8 +88,24 @@ export default function WriterCarousel({
           {item?.title ?? "—"}
         </div>
 
-        <div className={styles.hook}>{item?.hook ?? ""}</div>
+        {item?.tags && item.tags.length > 0 && (
+          <div className={styles.tagsRow} aria-label="Topics">
+            {item.tags.map((tag) => (
+              <span key={tag} className={styles.tagPill}>
+                <span className={styles.statusDot} aria-hidden="true" />
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
+        {item?.tldr && (
+          <div className={styles.tldrPanel}>
+            <p className={styles.tldrText}>{item.tldr}</p>
+          </div>
+        )}
+
+        {/* Spacer: absorbs flex space between tags and footer, footer pinned to bottom */}
         <div className={styles.spacer} />
 
         <div className={styles.bottomRow}>

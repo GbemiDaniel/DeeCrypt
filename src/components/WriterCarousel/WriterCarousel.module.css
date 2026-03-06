@@ -3,17 +3,20 @@
 .card {
   position: relative;
   border-radius: var(--radius-3xl);
+  /* Volumetric rim: translucent top border simulates physical rim light */
   border: 1px solid var(--border);
-  background: color-mix(in oklab, var(--bg) 92%, var(--glass));
+  border-top-color: rgba(255, 255, 255, 0.15);
+
+  /* Stable, theme-agnostic frosted glass surface — no image, no race condition */
+  background: color-mix(in oklab, var(--bg) 88%, var(--glass));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+
+  /* GPU layer — keeps animation smooth */
+  will-change: transform;
   overflow: hidden;
   isolation: isolate;
 
-  /* Background Image */
-  background-image: url("/preview/WriterCarosuel%20bg%20image.png");
-  background-size: cover;
-  background-position: center;
-
-  /* FIX: Ensure it fills the grid cell but doesn't force overflow */
   height: 100%;
   min-height: 0;
   display: flex;
@@ -31,27 +34,19 @@
 .previewTint {
   position: absolute;
   inset: 0;
+  /* Ambient neon bleed — pure CSS, zero loading, zero jank */
   background:
-    radial-gradient(
-      circle at 30% 20%,
-      rgba(56, 189, 248, 0.16),
-      transparent 55%
-    ),
-    radial-gradient(
-      circle at 80% 60%,
-      rgba(168, 85, 247, 0.12),
-      transparent 60%
-    );
-  opacity: 0.65;
-}
-
-.previewImg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.18;
+    radial-gradient(ellipse at 20% 15%,
+      rgba(56, 189, 248, 0.18),
+      transparent 50%),
+    radial-gradient(ellipse at 85% 70%,
+      rgba(168, 85, 247, 0.14),
+      transparent 55%),
+    radial-gradient(ellipse at 55% 100%,
+      rgba(var(--accent-rgb, 99, 102, 241), 0.08),
+      transparent 60%);
+  /* Static — never animates, no paint storm */
+  opacity: 1;
 }
 
 /* Body Content */
@@ -96,16 +91,157 @@
 
 .title {
   font-family: var(--font-serif);
-  /* Desktop Title Size */
-  font-size: clamp(1.75rem, 3.3vw, 2.75rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  /* Floor lowered to 1.5rem so it survives 320px screens without overflow */
+  font-size: clamp(1.5rem, 3.8vw + 0.5rem, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--text);
+
+  /* Safety net: cap at 2 lines on desktop, 3 on mobile (see @media block) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .hook {
   max-width: 62ch;
-  color: color-mix(in oklab, var(--text) 78%, var(--muted));
-  line-height: 1.75;
+  /* Bumped from 88% — more body, more breathing room */
+  color: color-mix(in oklab, var(--text) 88%, var(--muted));
+  font-size: 1rem;
+  line-height: 1.8;
+
+  /* Safety net: cap preview text at 3 lines on desktop */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Topic Tag Pills — grouped tightly under preview text, spacer below pushes footer down */
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  /* Squishes on short viewports rather than pushing footer out */
+  margin-top: clamp(0.75rem, 3vh, 1.75rem);
+}
+
+.tagPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* space between status dot and label */
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+
+  /* Richer frosted glass: slightly more opaque, distinct from card */
+  background: color-mix(in oklab, var(--glass-strong) 12%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-top-color: rgba(255, 255, 255, 0.18);
+
+  /* Typography — brighter, more present */
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+
+  /* Premium transitions — all props, 280ms */
+  transition:
+    border-color 280ms ease-out,
+    background 280ms ease-out,
+    color 280ms ease-out,
+    transform 280ms ease-out;
+  will-change: transform;
+}
+
+.tagPill:hover {
+  background: color-mix(in oklab, var(--glass-strong) 22%, transparent);
+  border-color: rgba(34, 211, 238, 0.30);
+  /* cyan-500/30 */
+  border-top-color: rgba(34, 211, 238, 0.45);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+/* Glowing status dot inside each tag pill */
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: rgba(34, 211, 238, 0.8);
+  /* cyan-400/80 */
+  box-shadow: 0 0 7px 1px rgba(34, 211, 238, 0.55);
+}
+
+/* TL;DR inset glass panel */
+.tldrPanel {
+  margin-top: clamp(0.5rem, 2vh, 1.25rem);
+  padding: 0.9rem 1rem 0.9rem 1.25rem;
+  border-radius: var(--radius-xl, 0.75rem);
+  position: relative;
+  overflow: hidden;
+
+  /* Inset glass: very subtle, doesn't compete with card */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.035) 0%,
+      transparent 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  /* Left-border accent — cyan neon gas tube */
+  border-left: 2px solid rgba(34, 211, 238, 0.45);
+}
+
+/* Faint radial glow in the top-left of the panel */
+.tldrPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 0%,
+      rgba(34, 211, 238, 0.07),
+      transparent 65%);
+  pointer-events: none;
+}
+
+.tldrText {
+  position: relative;
+  /* sits above ::before glow */
+  margin: 0;
+  font-style: italic;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--text) 65%, var(--muted));
+}
+
+/* === DESKTOP COMPRESSION (min-width: 768px) ===
+   Mobile layout is perfect as-is. On desktop the grid constrains row height,
+   so we claw back vertical space from the new elements. */
+@media (min-width: 768px) {
+  .tagsRow {
+    margin-top: 1rem;
+    /* 1.75rem → 1rem — tags stay close to text */
+  }
+
+  .tldrPanel {
+    margin-top: 0.75rem;
+    /* 1.25rem → 0.75rem */
+    padding: 0.55rem 0.85rem 0.55rem 1rem;
+    /* tighter all-round */
+  }
+
+  .tldrText {
+    font-size: 0.75rem;
+    /* 0.8125rem → 0.75rem */
+    line-height: 1.55;
+    /* 1.7 → 1.55 — saves ~2 lines of descent */
+  }
 }
 
 /* Spacer keeps bottom controls pinned cleanly */
@@ -235,11 +371,13 @@
 }
 
 @keyframes pulseHint {
+
   0%,
   100% {
     transform: translateY(0);
     opacity: 0.9;
   }
+
   50% {
     transform: translateY(-2px);
     opacity: 1;
@@ -260,8 +398,10 @@
   }
 
   .title {
-    /* FIX 3: Smaller minimum font size to prevent blowout on small phones */
-    font-size: clamp(1.4rem, 5vw, 2rem);
+    /* Tighter floor for <360px phones — allows 3 lines before clamping */
+    font-size: clamp(1.25rem, 5vw, 2rem);
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   .hook {
@@ -269,6 +409,7 @@
     /* FIX 4: Aggressively limit text lines to prevent overflow */
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -280,6 +421,7 @@
   .arrows {
     display: none;
   }
+
   .mobileArrows {
     display: flex;
   }

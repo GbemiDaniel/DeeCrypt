@@ -1,32 +1,38 @@
+import { Code, PenLine } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./ModeToggle.module.css";
-import { MODES, type Mode } from "../../app/modes";
 
-type ModeToggleProps = {
-  mode: Mode;
-  onChange: (m: Mode) => void;
-};
+export default function ModeToggle() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isWriter = location.pathname === "/writer";
 
-export default function ModeToggle({ mode, onChange }: ModeToggleProps) {
   return (
     <div className={styles.wrap} role="group" aria-label="Mode toggle">
       <button
         type="button"
-        className={`${styles.btn} ${mode === MODES.DEV ? `${styles.active} ${styles.devActive}` : ""}`}
-        onClick={() => onChange(MODES.DEV)}
-        aria-pressed={mode === MODES.DEV}
+        className={`${styles.btn} ${!isWriter ? `${styles.active} ${styles.devActive}` : ""}`}
+        onClick={() => navigate("/")}
+        aria-pressed={!isWriter}
+        aria-label="Switch to Developer/Builder View"
       >
-        Builder
+        <span className={styles.btnInner}>
+          Dev
+          <Code size={15} strokeWidth={2} aria-hidden="true" />
+        </span>
       </button>
 
       <button
         type="button"
-        className={`${styles.btn} ${
-          mode === MODES.WRITER ? `${styles.active} ${styles.writerActive}` : ""
-        }`}
-        onClick={() => onChange(MODES.WRITER)}
-        aria-pressed={mode === MODES.WRITER}
+        className={`${styles.btn} ${isWriter ? `${styles.active} ${styles.writerActive}` : ""}`}
+        onClick={() => navigate("/writer")}
+        aria-pressed={isWriter}
+        aria-label="Switch to Writer View"
       >
-        Writer
+        <span className={styles.btnInner}>
+          Writer
+          <PenLine size={15} strokeWidth={2} aria-hidden="true" />
+        </span>
       </button>
     </div>
   );
