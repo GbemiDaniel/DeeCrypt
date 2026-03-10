@@ -10,7 +10,6 @@ import {
   Tv,
   BookOpen,
   Footprints,
-  Cpu,
   Globe,
   Terminal, // <--- ADDED THIS (Was missing)
 } from "lucide-react";
@@ -75,8 +74,8 @@ export const ARSENAL_DATA = [
     description:
       "I break products under real conditions to learn how to build them better. Every bug found is a lesson in creating resilient systems.",
     icon: <Terminal size={24} />,
-    type: "test", 
-    tech: ["Manual Testing", "User Flows", "JIRA", "Bug Reporting"],
+    type: "test",
+    tech: ["Manual Testing", "User Flows", "Bug Reporting"],
   },
   {
     title: "Technical Writer",

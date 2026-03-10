@@ -2,10 +2,9 @@
 
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Code2, Bug, PenTool, RefreshCw } from "lucide-react";
+import { Code2, Bug, PenTool } from "lucide-react";
 import styles from "./WhatDrivesMe.module.css";
 import { cn } from "@/lib/utils";
-import { GlassPlaque } from "@/components/GlassPlaque/GlassPlaque";
 
 type Phase = "build" | "test" | "write" | "hidden";
 
@@ -24,7 +23,7 @@ const paragraphVariants = {
     transition: { duration: 0.5, ease: "easeOut" }
   },
   visible: {
-    opacity: 1, 
+    opacity: 1,
     filter: "blur(0px)", // Snaps into crisp focus
     y: 0,
     transition: { duration: 0.5, ease: "easeOut" }
@@ -42,7 +41,7 @@ export function WhatDrivesMe() {
     setActivePhase(phase);
     const refs = { build: buildRef, test: testRef, write: writeRef, hidden: null };
     const target = refs[phase];
-    
+
     if (target?.current) {
       target.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -56,7 +55,7 @@ export function WhatDrivesMe() {
 
   return (
     <section className={styles.section}>
-      
+
       <div className={styles.ambientWrapper}>
         <div className={cn(styles.ambientLayer, styles.layerBuild)} style={{ opacity: activePhase === "build" ? 0.15 : 0 }} />
         <div className={cn(styles.ambientLayer, styles.layerTest)} style={{ opacity: activePhase === "test" ? 0.15 : 0 }} />
@@ -66,9 +65,9 @@ export function WhatDrivesMe() {
       <div className={styles.content}>
 
         {/* --- THE STICKY TACTILE SUB-NAV --- */}
-        <motion.div 
+        <motion.div
           className={styles.stickyTracker}
-          animate={{ 
+          animate={{
             opacity: activePhase === "hidden" ? 0 : 1,
             y: activePhase === "hidden" ? -20 : 0
           }}
@@ -104,7 +103,7 @@ export function WhatDrivesMe() {
 
         {/* --- THE PURE SPOTLIGHT STORY --- */}
         <div className={styles.storyScroller}>
-          
+
           <motion.p
             ref={buildRef}
             className={styles.paragraph}
@@ -182,47 +181,7 @@ export function WhatDrivesMe() {
           </motion.p>
         </div>
 
-        {/* --- THE CLIMAX (Pinned Plaque) --- */}
-        <motion.div 
-          className={styles.footer}
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ type: "spring", stiffness: 80, damping: 20 }}
-        >
-          <motion.div 
-            className={styles.pinWrapper}
-            onViewportEnter={() => setActivePhase("hidden")}
-            viewport={{ margin: "-40% 0px -40% 0px" }}
-          >
-            <div className={styles.pin} />
-          </motion.div>
-
-          <GlassPlaque variant="default">
-            
-            <div className={styles.climaxWrapper}>
-              <h3 className={styles.climax}>
-                
-                <span className={styles.word}>
-                  <span className={styles.litBuild}>B</span>
-                  <span className={cn(styles.glassText, styles.glassReflectBuild)}>uild.</span>
-                </span>
-                
-                <span className={styles.word}>
-                  <span className={styles.litTest}>T</span>
-                  <span className={cn(styles.glassText, styles.glassReflectTest)}>est.</span>
-                </span>
-                
-                <span className={styles.word}>
-                  <span className={styles.litWrite}>W</span>
-                  <span className={cn(styles.glassText, styles.glassReflectWrite)}>rite.</span>
-                </span>
-
-              </h3>
-            </div>
-
-          </GlassPlaque>
-        </motion.div>
+        {/* Climax section removed */}
       </div>
     </section>
   );

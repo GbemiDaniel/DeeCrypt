@@ -18,15 +18,9 @@
 /* MASTER CONTROLLER */
 .headline {
   margin: 0;
-  line-height: 1.05;
-  font-family: var(--font-serif);
-
-  /* TUNED FOR "NATURAL" FEEL */
-  /* Min: 2.5rem (40px) - clean on mobile */
-  /* Growth: 7vw - scales up quickly on tablet */
-  /* Max: 5.2rem (83px) - impressive on desktop */
-  font-size: clamp(2.5rem, 7vw, 5.2rem);
-
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   transition: all 0.4s ease;
 }
 
@@ -34,7 +28,6 @@
 .top {
   display: block;
   padding: 0;
-  /* Removed specific font-size so it obeys the clamp above */
 }
 
 .bottom {
@@ -45,43 +38,81 @@
 /* ================================================= */
 /* === MODE 1: DEV VIEW ("Coder/Techy Vibe") === */
 /* ================================================= */
+/* ================================================= */
+/* === MODE 1: DEV VIEW ("Coder/Techy Vibe") === */
+/* ================================================= */
 
 .hero[data-mode="dev"] .headline {
-  font-weight: 500;
+  font-family: var(--font-sans);
   letter-spacing: -0.02em;
 }
 
 .hero[data-mode="dev"] .top {
+  /* THE FIX: Reverted strictly to your original, preferred aesthetic */
+  font-size: clamp(2.5rem, 8vw + 1rem, 5.5rem);
+  font-weight: 500;
+  line-height: 1.05;
   font-style: normal;
-  color: var(--text, #ffffff);
+  color: var(--foreground);
+  /* No opacity tricks, just solid clean text */
 }
 
 .hero[data-mode="dev"] .bottom {
-  /* 1. FONT: Monospace */
-  font-family: var(--font-mono, monospace);
+  /* 1. FONT: Premium Sans-Serif */
+  font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 400;
-  letter-spacing: -0.03em;
 
-  /* 2. SCALE DOWN: Mono is wide, so we shrink it to 75% of the serif size */
-  font-size: 0.75em;
+  /* 2. SUBORDINATE HIERARCHY */
+  font-weight: 500;
+  /* Dropped from 600 so it feels sleek, not sharp/bulky */
+  letter-spacing: -0.01em;
+  font-size: clamp(1.25rem, 4vw + 0.5rem, 2.75rem);
+  /* Safely smaller than the name */
   line-height: 1.3;
 
-  /* 3. METAL GRADIENT */
-  background-image: linear-gradient(
-    180deg,
-    var(--metal-shine, #ffffff) 0%,
-    var(--metal-highlight, #cbd5e1) 45%,
-    var(--metal-crease, #64748b) 50%,
-    var(--metal-highlight, #cbd5e1) 55%,
-    var(--metal-shine, #ffffff) 100%
-  );
+  /* 3. MATTE BRUSHED METAL GRADIENT */
+  /* Uses rock-solid hex codes based on Tailwind's Slate palette for a softer, glare-free metal */
+  background-image: linear-gradient(180deg,
+      #e2e8f0 0%,
+      /* Slate 200 (Soft light instead of pure white) */
+      #94a3b8 85%,
+      /* Slate 400 */
+      #475569 90%,
+      /* Slate 600 (Darker crease for depth) */
+      #94a3b8 55%,
+      #e2e8f0 100%);
   background-size: 100% 120%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+  /* A very gentle shadow just to lift it off the background */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* ================================================= */
+/* === LIGHT MODE OVERRIDES FOR DEV HERO === */
+/* ================================================= */
+
+:global([data-theme="light"]) .hero[data-mode="dev"] .top {
+  /* THE FIX: Softens the harsh pure black to a rich, premium dark slate */
+  color: #334155;
+}
+
+:global([data-theme="light"]) .hero[data-mode="dev"] .bottom {
+  /* THE FIX: Dark Brushed Steel gradient so it doesn't fade into the white background */
+  background-image: linear-gradient(180deg,
+      #64748b 0%,
+      /* Slate 500 (Soft top reflection) */
+      #334155 45%,
+      /* Slate 700 (Mid-tone) */
+      #0f172a 50%,
+      /* Slate 900 (Deep, sharp crease) */
+      #334155 55%,
+      #64748b 100%);
+
+  /* A much softer, barely-there shadow for white backgrounds */
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
 }
 
 /* ================================================= */
@@ -90,7 +121,8 @@
 
 .hero[data-mode="writer"] .headline {
   font-family: var(--font-serif);
-  font-weight: 400; /* Lighter weight = Elegant */
+  font-weight: 400;
+  /* Lighter weight = Elegant */
   letter-spacing: -0.04em;
 
   /* Define highlight color */
@@ -100,8 +132,9 @@
 .hero[data-mode="writer"] .top {
   font-style: italic;
   color: var(--text, #ffffff);
-  /* Inherit the 2.5rem clamp directly */
-  font-size: inherit;
+  /* Restore the original elegant clamp size */
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  line-height: 1.05;
 }
 
 .hero[data-mode="writer"] .bottom {
@@ -110,8 +143,9 @@
   font-style: italic;
   font-weight: 400;
 
-  /* 2. SCALE: Full size (1em) because Serif is narrower than Mono */
-  font-size: inherit;
+  /* 2. SCALE: Full size */
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  line-height: 1.05;
 
   /* 3. SOLID INK COLOR */
   background: none;

@@ -103,13 +103,19 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 600;
   font-size: clamp(1.25rem, 1.5vw, 1.5rem);
   /* Slightly adjusted for balance */
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--text);
+}
+
+/* WRITER VARIANT: Restores Serif typography for editorial context */
+.writer .title {
+  font-family: var(--font-serif);
+  font-weight: 500;
 }
 
 /* NARRATIVE SUBTITLE (The Microcopy) */

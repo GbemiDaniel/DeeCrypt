@@ -90,10 +90,12 @@
 }
 
 .title {
+  flex-shrink: 0;
+  /* Prevents vertical crushing on short viewports */
   font-family: var(--font-serif);
-  /* Floor lowered to 1.5rem so it survives 320px screens without overflow */
-  font-size: clamp(1.5rem, 3.8vw + 0.5rem, 3.25rem);
-  line-height: 1.05;
+  /* Resized max desktop font to prevent clipping into the floor */
+  font-size: clamp(1.5rem, 3vw + 0.5rem, 2.25rem);
+  line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--text);
 
@@ -122,6 +124,8 @@
 
 /* Topic Tag Pills — grouped tightly under preview text, spacer below pushes footer down */
 .tagsRow {
+  flex-shrink: 0;
+  /* Safeguard on short viewports */
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -183,6 +187,8 @@
 
 /* TL;DR inset glass panel */
 .tldrPanel {
+  flex-shrink: 0;
+  /* Prevents text cutoff when height squeezed */
   margin-top: clamp(0.5rem, 2vh, 1.25rem);
   padding: 0.9rem 1rem 0.9rem 1.25rem;
   border-radius: var(--radius-xl, 0.75rem);

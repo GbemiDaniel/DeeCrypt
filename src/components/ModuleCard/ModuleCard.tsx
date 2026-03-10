@@ -10,6 +10,7 @@ interface ModuleCardProps {
   icon?: LucideIcon;
   footer?: ReactNode;
   children?: ReactNode;
+  variant?: 'default' | 'writer';
   className?: string;
 }
 
@@ -20,6 +21,7 @@ export default function ModuleCard({
   icon: Icon,
   footer,
   children,
+  variant = 'default',
   className,
 }: ModuleCardProps) {
   const cardRef = useRef<HTMLElement>(null);
@@ -55,7 +57,7 @@ export default function ModuleCard({
   return (
     <article
       ref={cardRef}
-      className={`${styles.card} ${className || ""}`}
+      className={`${styles.card} ${variant === 'writer' ? styles.writer : ''} ${className || ""}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

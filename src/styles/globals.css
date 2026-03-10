@@ -18,39 +18,27 @@
   /* COLORS */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-
   --color-destructive: var(--destructive);
-
-  /* FIXED: Defined border color */
   --color-border: var(--border);
-
   --color-input: var(--input);
   --color-ring: var(--ring);
-
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -83,8 +71,12 @@
 
   html,
   body {
-    height: 100dvh;
+    /* CRITICAL FIX: Changed height to min-height to allow scrolling */
+    min-height: 100dvh;
     scrollbar-gutter: stable;
+    overflow-x: clip;
+    max-width: 100%;
+    overscroll-behavior-x: none;
   }
 
   body {
@@ -125,6 +117,12 @@
   filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.6));
 }
 
+/* THE FIX: Dark machined metal gradient for Light Mode */
+:root[data-theme="light"] .text-metal {
+  background-image: linear-gradient(180deg, #1e293b 0%, #334155 50%, #0f172a 100%);
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.8));
+}
+
 .metal-dev {
   filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5));
 }
@@ -137,21 +135,51 @@
   pointer-events: none !important;
 }
 
-/* === 4. MOBILE OPTIMIZATIONS (Hybrid Approach) === */
+/* === 4. MOBILE OPTIMIZATIONS === */
 @media (max-width: 768px) {
-
-  /* 1. Disable blur on everything EXCEPT the Header and its children */
-  /* This allows the navbar to have the glass effect while keeping the rest fast */
   *:not(header):not(header *) {
     backdrop-filter: none !important;
   }
 
-  /* 2. Fallback for Glass Cards (Non-Header) */
   .card,
   [class*="ModuleCard"] {
     background-color: var(--bg);
     border: 1px solid var(--border);
   }
+}
 
-  /* NOTE: Header background is handled in Navbar.module.css */
+/* === 5. NATIVE VIEW TRANSITIONS (PREMIUM CROSSFADE) === */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

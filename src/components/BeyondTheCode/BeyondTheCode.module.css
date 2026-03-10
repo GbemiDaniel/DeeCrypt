@@ -2,7 +2,7 @@
 
 .section {
   width: 100%;
-  max-width: 900px; 
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -31,8 +31,15 @@
 }
 
 @keyframes gentleBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 .masterCard {
@@ -80,8 +87,15 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
-  100% { transform: scale(1.2) translate(-20px, 20px); opacity: 1; }
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.2) translate(-20px, 20px);
+    opacity: 1;
+  }
 }
 
 /* === TOP HALF: ENTIRE ZONE IS DRAGGABLE === */
@@ -97,7 +111,8 @@
   mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
   cursor: grab;
-  touch-action: pan-y; /* Allows vertical scrolling but captures horizontal swipes */
+  touch-action: pan-y;
+  /* Allows vertical scrolling but captures horizontal swipes */
 }
 
 .carouselZone:active {
@@ -171,12 +186,13 @@
 .storyZone {
   position: relative;
   padding: clamp(1.5rem, 5vw, 2.5rem);
-  min-height: clamp(200px, 35vw, 240px); 
+  min-height: clamp(200px, 35vw, 240px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   z-index: 2;
-  overflow-x: hidden; /* CRITICAL: Prevents horizontal scrollbars during text slide animation */
+  overflow-x: hidden;
+  /* CRITICAL: Prevents horizontal scrollbars during text slide animation */
 }
 
 .storyContent {
@@ -189,6 +205,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  display: flex;
+  align-items: center;
 }
 
 .storyTitle {
@@ -220,6 +238,7 @@
   font-size: clamp(0.9rem, 3.5vw, 1rem);
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   line-height: 1.7;
+  text-align: center;
 }
 
 .mantraFooter {
@@ -244,16 +263,17 @@
 
 @media (max-width: 768px) {
   .masterCard {
-    background-color: var(--bg); 
+    background-color: var(--bg);
     backdrop-filter: none !important;
   }
 }
 
 @media (max-width: 360px) {
   .storyZone {
-    min-height: 270px; 
+    min-height: 270px;
     padding: 1.25rem;
   }
+
   .storyDescription {
     line-height: 1.5;
   }

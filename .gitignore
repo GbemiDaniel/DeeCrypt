@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent directories and rules
+.agent
+.agents
+_agent
+_agents
+.gemini

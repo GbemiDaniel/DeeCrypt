@@ -96,7 +96,7 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 600;
   /* MATCHED: ModuleCard Typography */
   font-size: clamp(1.25rem, 1.5vw, 1.5rem);

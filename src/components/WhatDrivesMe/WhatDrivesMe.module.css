@@ -149,6 +149,50 @@
     0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* =========================================================
+   LIGHT MODE OVERRIDES FOR THE SUB-NAV
+   Converts the dark obsidian into pristine, frosted white glass
+   ========================================================= */
+
+/* The Outer Track */
+:global([data-theme="light"]) .navTrack {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.05),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+/* The Inactive Text (Slate gray, no dark shadows) */
+:global([data-theme="light"]) .navContent {
+  color: #64748b;
+  text-shadow: none;
+}
+
+:global([data-theme="light"]) .navIcon {
+  filter: none;
+}
+
+/* The Active Text (Theme color with a soft bright glow) */
+:global([data-theme="light"]) .navItemActive .navContent {
+  color: var(--active-color);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--active-color) 40%, transparent);
+}
+
+:global([data-theme="light"]) .navItemActive .navIcon {
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--active-color) 40%, transparent));
+}
+
+/* The Sliding Glass Pill */
+:global([data-theme="light"]) .activePillBackground {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid color-mix(in srgb, var(--active-color) 30%, rgba(0, 0, 0, 0.1));
+  box-shadow:
+    0 4px 12px color-mix(in srgb, var(--active-color) 15%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
 /* --- SPOTLIGHT SCROLL --- */
 .storyScroller {
   display: flex;

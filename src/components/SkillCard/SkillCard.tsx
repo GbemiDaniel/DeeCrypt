@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
-import { 
-  Code2, 
-  FileType, 
-  Wind, 
-  Framer, 
-  Bug, 
-  Search, 
-  FileText, 
-  BookOpen, 
-  Globe 
+import {
+  Code2,
+  FileType,
+  Wind,
+  Framer,
+  Bug,
+  Search,
+  FileText,
+  BookOpen,
+  Globe
 } from "lucide-react";
 import styles from "./SkillCard.module.css";
 
@@ -29,11 +29,11 @@ const getTechIcon = (name: string) => {
   if (lowerName.includes("type")) return <FileType size={size} />;
   if (lowerName.includes("tail")) return <Wind size={size} />;
   if (lowerName.includes("framer")) return <Framer size={size} />;
-  
+
   if (lowerName.includes("test")) return <Bug size={size} />;
   if (lowerName.includes("flow")) return <Search size={size} />;
   if (lowerName.includes("jira") || lowerName.includes("bug")) return <Bug size={size} />;
-  
+
   if (lowerName.includes("doc")) return <FileText size={size} />;
   if (lowerName.includes("blog")) return <BookOpen size={size} />;
   if (lowerName.includes("web3")) return <Globe size={size} />;
@@ -50,7 +50,7 @@ export function SkillCard({ title, description, icon, type, tech }: Props) {
         </div>
         <h3 className={styles.title}>{title}</h3>
       </div>
-      
+
       <p className={styles.description}>
         {description}
       </p>
@@ -69,7 +69,7 @@ export function SkillCard({ title, description, icon, type, tech }: Props) {
           ))}
         </div>
       )}
-      
+
       <div className={styles.glow} />
     </article>
   );

@@ -26,40 +26,42 @@ export default function Hero({
         <Pill tone="accent">{availabilityLabel}</Pill>
       </div>
 
-      <h1 className={styles.headline}>
-        <span className={styles.top}>
+      <div className={styles.headline}>
+        <h1 className={styles.top}>
           {/* LINE 1: FALLS FROM TOP */}
-          <TextReveal 
-            variant={mode} 
-            split="words" 
+          <TextReveal
+            variant={mode}
+            split="words"
             direction="top"  // <--- NEW
             delay={0.1}      // Starts almost immediately
           >
             {headlineTop}
           </TextReveal>
-        </span>
+        </h1>
 
         {/* LINE 2: RISES FROM BOTTOM */}
-        <TextReveal
-          className={styles.bottom}
-          variant={mode}
-          split={mode === "dev" ? "none" : "words"}
-          direction="bottom" // <--- NEW
-          delay={0.3}        // Slight delay for impact
-        >
-          {headlineBottom}
-        </TextReveal>
-      </h1>
+        <h2>
+          <TextReveal
+            className={styles.bottom}
+            variant={mode}
+            split={mode === "dev" ? "none" : "words"}
+            direction="bottom" // <--- NEW
+            delay={0.3}        // Slight delay for impact
+          >
+            {headlineBottom}
+          </TextReveal>
+        </h2>
+      </div>
 
       <div className={styles.bottomRow}>
         <div className={styles.subcopy}>
           {subcopy && (
             // LINE 3: RISES FROM BOTTOM (Anchors the layout)
-            <TextReveal 
-              variant={mode} 
-              split="words" 
-              direction="bottom" 
-              delay={0.5} 
+            <TextReveal
+              variant={mode}
+              split="words"
+              direction="bottom"
+              delay={0.5}
             >
               {subcopy}
             </TextReveal>

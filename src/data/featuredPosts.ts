@@ -49,5 +49,26 @@ export const featuredPosts: ChameleonPost[] = [
         originalUrl: "https://medium.com/@gbemidaniel01/is-frontend-dead-or-evolving-navigating-the-era-of-vibe-coding-b58e72f067a0",
         tags: ["Frontend", "React", "AI", "Vibe Coding", "Web Development", "Career"],
         tldr: "AI lowers the floor for building UIs, but architectural judgment — knowing when and why to use the right patterns — is what separates engineers from vibe coders.",
+    },
+    {
+        id: "ai-can-vibe-code-now-frontend-roadmap",
+        platform: "DevTo",
+        title: "AI Can Vibe Code Now. So What's the Actual Frontend Roadmap?",
+        previewText: "Every week there's a new demo of someone shipping a full product with a single prompt. And every week, the same question quietly surfaces in the back of every learner's mind—but nobody's giving it a straight answer. We've all seen the timeline demos. A non-technical founder prompts a full UI into existence in thirty seconds. A seasoned engineer generates a complex dashboard over their morning coffee. The comment section declares frontend development dead—again.",
+        date: "2026-03-10",
+        readTime: "6 min read",
+        author: {
+            name: "Gbemi Daniel",
+            handle: "@deecrypt",
+        },
+        content: [
+            "Every week there's a new demo of someone shipping a full product with a single prompt. And every week, the same question quietly surfaces in the back of every learner's mind—but nobody's giving it a straight answer.",
+            "The Unscratchable Itch",
+            "We've all seen the timeline demos. A non-technical founder prompts a full UI into existence in thirty seconds. A seasoned engineer generates a complex dashboard over their morning coffee. The comment section declares frontend development dead—again.",
+            "I watch these videos while actively building and shipping, and I know exactly what they do to anyone trying to learn or level up right now. It creates this unscratchable itch. A literal thorn under the skin: If an AI can just generate a Next.js app on command, what is the actual roadmap to becoming a frontend engineer in 2026?"
+        ],
+        originalUrl: "https://dev.to/deecrypt/ai-can-vibe-code-now-so-whats-the-actual-frontend-roadmap-1mdc",
+        tags: ["Frontend", "AI", "Vibe Coding", "UI/UX", "Web Development", "Systems"],
+        tldr: "While AI can prompt UIs into existence instantly, true frontend engineering now demands deep architectural intuition and an intense focus on actual user experience.",
     }
 ];

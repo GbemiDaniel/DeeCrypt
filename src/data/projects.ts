@@ -62,7 +62,7 @@ export const projects: Project[] = [
     meta: [
       { label: "ROLE", value: "Frontend", accent: true },
       { label: "TYPE", value: "Live" },
-      { label: "YEAR", value: "202" },
+      { label: "YEAR", value: "2026" },
     ],
     descriptionLong:
       "A premium, full-stack B2B platform engineered for a digital agency. It seamlessly merges a high-converting marketing shell with a secure, role-based client portal, utilizing advanced Next.js App Router architecture and a bespoke 'Hardware-Glass' design system.",

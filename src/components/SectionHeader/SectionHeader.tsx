@@ -1,73 +1,62 @@
-import { motion, Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 import styles from "./SectionHeader.module.css";
-import type { LucideIcon } from "lucide-react";
+import React from "react";
 
-// --- ANIMATION VARIANTS (Internalized) ---
-const headerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
-  },
-};
+export type SectionHeaderVariant = "default" | "writer" | "trophy" | "contact";
 
-const lineVariant: Variants = {
-  hidden: { scaleX: 0, opacity: 0 },
-  visible: {
-    scaleX: 1,
-    opacity: 1,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const pillVariant: Variants = {
-  hidden: { y: 20, opacity: 0, scale: 0.9 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring", stiffness: 100, damping: 20 },
-  },
-};
-
-export type HeaderVariant = "default" | "writer" | "trophy" | "contact";
-
-type Props = {
+interface Props {
   title: string;
   icon: LucideIcon;
-  variant?: HeaderVariant;
-  className?: string;
+  variant?: SectionHeaderVariant;
+}
+
+// Extracting exact RGB values so CSS can manipulate opacities
+const themeMap: Record<SectionHeaderVariant, { hex: string; rgb: string }> = {
+  default: { hex: "#22d3ee", rgb: "34, 211, 238" }, // Cyan
+  writer: { hex: "#a78bfa", rgb: "167, 139, 250" }, // Violet
+  trophy: { hex: "#facc15", rgb: "250, 204, 21" }, // Gold
+  contact: { hex: "#22d3ee", rgb: "34, 211, 238" }, // Cyan
 };
 
-export function SectionHeader({
-  title,
-  icon: Icon,
-  variant = "default",
-  className,
-}: Props) {
-  // Map the variant string to the CSS module class
-  const variantClass = variant !== "default" ? styles[variant] : "";
+export function SectionHeader({ title, icon: Icon, variant = "default" }: Props) {
+  const activeTheme = themeMap[variant];
 
   return (
-    <motion.div
-      className={cn(styles.sectionHeader, className)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.3 }}
-      variants={headerVariants}
+    <div
+      className={styles.headerContainer}
+      style={{
+        "--theme-hex": activeTheme.hex,
+        "--theme-rgb": activeTheme.rgb,
+      } as React.CSSProperties}
     >
-      <motion.div variants={lineVariant} className={styles.headerLine} />
-
       <motion.div
-        variants={pillVariant}
-        className={cn(styles.headerPill, variantClass)}
+        className={styles.iconWrapper}
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <Icon className={styles.headerIcon} />
-        <span>{title}</span>
+        <Icon size={20} className={styles.icon} strokeWidth={1.5} />
       </motion.div>
 
-      <motion.div variants={lineVariant} className={styles.headerLine} />
-    </motion.div>
+      <motion.h2
+        className={`text-metal ${styles.title}`}
+        initial={{ opacity: 0, x: -15 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+      >
+        {title}
+      </motion.h2>
+
+      <motion.div
+        className={styles.line}
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
+      />
+    </div>
   );
 }

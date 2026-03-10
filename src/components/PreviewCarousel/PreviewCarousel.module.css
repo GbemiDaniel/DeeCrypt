@@ -20,11 +20,11 @@
   scrollbar-width: none;
   border-radius: var(--radius-lg);
 }
+
 .rail::-webkit-scrollbar {
   display: none;
 }
 
-/* === ORIGINAL CONTAINER HEIGHT PRESERVED === */
 .slide {
   position: relative;
   scroll-snap-align: start;
@@ -47,35 +47,43 @@
   contain: layout paint;
 }
 
-/* background */
+/* =========================================
+   1. BACKGROUNDS & IMAGES (FOG REMOVED)
+   ========================================= */
 .preview {
   position: absolute;
   inset: 0;
-  opacity: 0.92;
+  opacity: 1;
   z-index: 0;
   pointer-events: none;
 }
+
+/* Notice: The .preview::after murky gradient scrim has been completely deleted! */
+
 .previewImg {
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  filter: blur(8px);
-  transform: scale(1.1);
+  filter: blur(3px);
+  /* Retains depth of field */
+  opacity: 0.85;
+  transform: scale(1.05);
 }
+
 .previewTintOnly {
   position: absolute;
   inset: 0;
   z-index: 0;
+  /* Fixed to respect theme colors instead of hardcoded black */
   background:
-    radial-gradient(
-      circle at 25% 8%,
-      rgba(56, 189, 248, 0.14),
-      transparent 30%
-    ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.72));
+    radial-gradient(circle at 25% 8%,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      transparent 30%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--background) 60%, transparent));
   pointer-events: none;
 }
+
 .previewVideo {
   position: absolute;
   inset: 0;
@@ -85,9 +93,7 @@
   pointer-events: none;
   opacity: 0;
   transform: scale(1.01);
-  transition:
-    opacity 240ms ease,
-    transform 240ms ease;
+  transition: opacity 240ms ease, transform 240ms ease;
 }
 
 .previewVideoActive {
@@ -95,7 +101,9 @@
   transform: scale(1);
 }
 
-/* top overlay */
+/* =========================================
+   2. UI OVERLAYS
+   ========================================= */
 .overlayUi {
   position: absolute;
   inset: 14px 14px auto 14px;
@@ -118,7 +126,6 @@
   white-space: nowrap;
 }
 
-/* content */
 .content {
   position: relative;
   z-index: 2;
@@ -138,37 +145,68 @@
   justify-content: end;
 }
 
-/* Typography Scaling */
-/* ... previous styles ... */
-
+/* =========================================
+   3. TYPOGRAPHY & AMBIENT HALOS
+   ========================================= */
 .title {
   margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 520;
+  font-family: var(--font-sans);
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
   font-size: clamp(1.35rem, 5vw, 2.35rem);
   overflow-wrap: break-word;
+  color: var(--foreground);
 
-  /* This creates a soft, dark "cloud" behind the text letters only.
-     It lifts the text off the image without adding a box or gradient. */
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
-  
-  /* Optional: Ensures the text layer sits clearly on top */
+  /* THE FIX: The Ambient Halo. This stacks the background color behind the text,
+     ensuring perfect readability on ANY image without a box or fog overlay. */
+  text-shadow:
+    0 0 10px var(--background),
+    0 0 20px var(--background),
+    0 0 30px var(--background),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+
   position: relative;
   z-index: 10;
 }
 
-
-.subtitle {
-  margin: 0.7rem 0 0;
-  color: var(--muted);
-  line-height: 1.6;
-  max-width: 70ch;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+/* Light mode specific shadow tweak */
+:global([data-theme="light"]) .title {
+  text-shadow:
+    0 0 10px var(--background),
+    0 0 20px var(--background),
+    0 0 30px var(--background),
+    0 2px 4px rgba(255, 255, 255, 0.6);
 }
 
-/* Bottom row layout */
+.subtitle {
+  margin: 0.4rem 0 0;
+  /* Tighter spacing pulls it closer to the title */
+  /* THE FIX: Faded to a much softer, natural secondary text color */
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  line-height: 1.5;
+  max-width: 70ch;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+
+  /* THE FIX: Dropped from 500 to 400 to strip away the bulky thickness */
+  font-weight: 400;
+
+  /* THE FIX: Replaced the massive heavy halo with a single, delicate soft-edge */
+  text-shadow: 0 1px 4px var(--background);
+
+  position: relative;
+  z-index: 10;
+}
+
+/* Light mode specific tweak to keep it crisp and faint */
+:global([data-theme="light"]) .subtitle {
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================
+   4. BOTTOM ROW & METADATA (GRID FIX)
+   ========================================= */
 .bottomRow {
   z-index: 4;
   border-top: 1px solid color-mix(in oklab, var(--border-soft) 80%, transparent);
@@ -199,6 +237,7 @@
 .metaValue {
   margin-top: 6px;
   font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -215,7 +254,8 @@
   justify-content: center;
 }
 
-.navBtn {
+.navBtn,
+.eyeBtn {
   border-color: color-mix(in oklab, var(--border-soft) 90%, transparent);
   background: color-mix(in oklab, var(--glass) 88%, transparent);
 }
@@ -224,17 +264,17 @@
   width: 92px;
 }
 
-.eyeBtn {
-  border-color: color-mix(in oklab, var(--border-soft) 90%, transparent);
-  background: color-mix(in oklab, var(--glass) 88%, transparent);
-}
-
-/* === UPDATED DOTS PAGINATION === */
+/* =========================================
+   5. RESTORED GLOW DOTS
+   ========================================= */
+/* =========================================
+   5. RESTORED GLOW DOTS (SUBTLE COOL ACCENT)
+   ========================================= */
 .dots {
   display: flex;
   justify-content: center;
-  gap: 12px; /* Increased gap for easier clicking */
-  padding-top: 8px; /* Slight padding from the card */
+  gap: 12px;
+  padding-top: 8px;
   z-index: 10;
 }
 
@@ -242,34 +282,37 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-
-  /* INACTIVE: Subtle border, semi-transparent background */
   border: 1px solid var(--border-soft);
   background: color-mix(in oklab, var(--text) 20%, transparent);
-
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover effect for inactive dots */
 .dot:hover:not(.dotActive) {
   background: color-mix(in oklab, var(--text) 40%, transparent);
   transform: scale(1.1);
 }
 
 .dotActive {
-  /* ACTIVE: Solid accent color + Glow + Scale */
-  background: var(--accent);
-  border-color: var(--accent);
+  /* THE FIX: A subtle, frosty cool cyan */
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
 
-  /* Scale up significantly so it's obvious */
-  transform: scale(1.4);
+  /* A slightly gentler scale so it feels premium, not jarring */
+  transform: scale(1.4) !important;
 
-  /* Add a glow shadow */
-  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent);
+  /* A soft, diffuse glow instead of a harsh neon laser */
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent) !important;
 }
 
-/* Mobile arrows outside + pulse */
+/* Light mode specific tweak: Deepen the blue slightly for better contrast against white */
+:global([data-theme="light"]) .dotActive {
+  background: #0ea5e9 !important;
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 8px rgba(14, 165, 233, 0.3) !important;
+}
+
+/* Mobile arrows */
 .edgeArrow {
   position: absolute;
   top: 50%;
@@ -283,21 +326,25 @@
 .edgeLeft {
   left: -18px;
 }
+
 .edgeRight {
   right: -18px;
 }
 
 @keyframes pulseHint {
+
   0%,
   70%,
   100% {
     transform: translateY(-50%) scale(1);
     opacity: 0.9;
   }
+
   75% {
     transform: translateY(-50%) scale(1.05);
     opacity: 1;
   }
+
   82% {
     transform: translateY(-50%) scale(1);
     opacity: 0.95;
@@ -331,7 +378,7 @@
   }
 
   .meta {
-    gap: 10px;
+    column-gap: 1rem;
   }
 
   .dots {
@@ -341,6 +388,7 @@
   .edgeLeft {
     left: 6px;
   }
+
   .edgeRight {
     right: 6px;
   }

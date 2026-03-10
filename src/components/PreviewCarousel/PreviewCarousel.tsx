@@ -195,9 +195,8 @@ export default function PreviewCarousel({
                         <div className={styles.metaCell} key={m.label}>
                           <div className={styles.metaLabel}>{m.label}</div>
                           <div
-                            className={`${styles.metaValue} ${
-                              m.accent ? styles.accent : ""
-                            }`}
+                            className={`${styles.metaValue} ${m.accent ? styles.accent : ""
+                              }`}
                           >
                             {m.value}
                           </div>

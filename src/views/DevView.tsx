@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
-import { motion } from "framer-motion";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -39,13 +38,10 @@ const TECH_STACK = [
   { name: "Framer", color: "#0055FF", icon: SiFramer },
 ];
 
-// === PERFORMANCE FIX: INCREASED DELAY ===
 const SPY_CONFIG = {
   threshold: 0,
   rootMargin: "-45% 0px -45% 0px",
   triggerOnce: false,
-  // 250ms delay means the Navbar only updates AFTER you stop scrolling vigorously.
-  // This saves the CPU from re-rendering the header 60 times a second.
   delay: 250,
 };
 
@@ -121,12 +117,7 @@ export default function DevView({ mode }: Props) {
   );
 
   return (
-    <motion.div
-      className="w-full"
-      initial={{ opacity: 0, x: -25 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className="w-full">
       <div ref={heroRef}>
         <Hero
           key="dev"
@@ -135,9 +126,7 @@ export default function DevView({ mode }: Props) {
           headlineTop={siteConfig.name}
           headlineBottom="Frontend Developer"
           subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
-          modeToggleSlot={
-            <ModeToggle />
-          }
+          modeToggleSlot={<ModeToggle />}
         />
       </div>
 
@@ -174,9 +163,7 @@ export default function DevView({ mode }: Props) {
                 subtitle="My Tech Stack"
                 icon={Layers2}
                 footer={
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
-                  >
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {TECH_STACK.map((tech) => (
                       <SkillBadge
                         key={tech.name}
@@ -228,6 +215,6 @@ export default function DevView({ mode }: Props) {
           }}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

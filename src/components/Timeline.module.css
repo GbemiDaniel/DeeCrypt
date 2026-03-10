@@ -20,13 +20,11 @@
   bottom: 0;
   left: 50%;
   width: 2px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    var(--border-soft) 10%,
-    var(--border-soft) 90%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      var(--border-soft) 10%,
+      var(--border-soft) 90%,
+      transparent 100%);
   transform: translateX(-50%);
   z-index: 0;
   display: block;
@@ -42,7 +40,7 @@
   position: relative;
   transition: opacity 0.6s ease, transform 0.6s ease;
   will-change: transform, opacity;
-  -webkit-tap-highlight-color: transparent; 
+  -webkit-tap-highlight-color: transparent;
 }
 
 .rowRight {
@@ -112,38 +110,58 @@
 }
 
 /* Elevate node + connector on hover OR active scroll state */
-.row:hover .connector, .row.active .connector {
+.row:hover .connector,
+.row.active .connector {
   opacity: 0.8;
 }
 
-.row:hover .node, .row.active .node {
+.row:hover .node,
+.row.active .node {
   box-shadow:
     0 0 20px color-mix(in srgb, var(--accent-color) 60%, transparent),
     0 0 0 6px color-mix(in srgb, var(--accent-color) 12%, transparent);
 }
 
 /* Header alignment fixes */
-.rowLeft .header { flex-direction: row-reverse; }
-.rowLeft .yearBadge { margin-left: 0.5rem; margin-right: 0; }
-.rowRight .yearBadge { margin-right: 0.5rem; }
+.rowLeft .header {
+  flex-direction: row-reverse;
+}
+
+.rowLeft .yearBadge {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+.rowRight .yearBadge {
+  margin-right: 0.5rem;
+}
 
 /* === THEME: DEV === */
-.themeDev { --accent-color: #22d3ee; }
+.themeDev {
+  --accent-color: #22d3ee;
+}
+
 .themeDev .card {
   background: color-mix(in oklab, var(--glass-strong) 80%, transparent);
   border-color: var(--border-soft);
 }
-.themeDev .card:hover, .themeDev.active .card {
+
+.themeDev .card:hover,
+.themeDev.active .card {
   border-color: #22d3ee;
   box-shadow: 0 16px 50px -12px rgba(34, 211, 238, 0.18);
 }
 
 /* === THEME: WRITER === */
-.themeWriter { --accent-color: #a855f7; }
+.themeWriter {
+  --accent-color: #a855f7;
+}
+
 .themeWriter .card {
   background: color-mix(in oklab, var(--bg) 92%, var(--glass));
   border-color: var(--border-soft);
 }
+
 .themeWriter .card::after {
   content: "";
   position: absolute;
@@ -151,22 +169,30 @@
   pointer-events: none;
   background: radial-gradient(circle at 90% 10%, rgba(168, 85, 247, 0.08), transparent 60%);
 }
-.themeWriter .card:hover, .themeWriter.active .card {
+
+.themeWriter .card:hover,
+.themeWriter.active .card {
   border-color: #a855f7;
   box-shadow: 0 16px 50px -12px rgba(168, 85, 247, 0.18);
 }
+
 .themeWriter .title {
   font-family: var(--font-serif);
   letter-spacing: -0.01em;
 }
 
 /* === THEME: BUSINESS === */
-.themeBiz { --accent-color: #f59e0b; }
+.themeBiz {
+  --accent-color: #f59e0b;
+}
+
 .themeBiz .card {
   background: linear-gradient(135deg, color-mix(in srgb, var(--card) 40%, transparent), color-mix(in srgb, var(--bg) 60%, transparent));
   border-color: var(--border-soft);
 }
-.themeBiz .card:hover, .themeBiz.active .card {
+
+.themeBiz .card:hover,
+.themeBiz.active .card {
   border-color: #f59e0b;
   box-shadow: 0 16px 50px -12px rgba(245, 158, 11, 0.18);
 }
@@ -194,7 +220,9 @@
   color: var(--muted-foreground);
   transition: color 0.3s ease;
 }
-.row:hover .icon, .row.active .icon {
+
+.row:hover .icon,
+.row.active .icon {
   color: var(--accent-color);
 }
 
@@ -206,7 +234,9 @@
   line-height: 1.2;
   transition: color 0.3s ease;
 }
-.row:hover .title, .row.active .title {
+
+.row:hover .title,
+.row.active .title {
   color: var(--accent-color);
 }
 
@@ -217,15 +247,28 @@
 }
 
 /* --- ANIMATION --- */
-.hidden { opacity: 0; transform: translateY(2rem); }
-.visible { opacity: 1; transform: translateY(0); }
+.hidden {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* =========================================
    MOBILE: THE "SNAKE" CONNECTION
    ========================================= */
 @media (max-width: 768px) {
-  .desktopSpine { display: none; }
-  .container { gap: clamp(2rem, 6vw, 3rem); }
+  .desktopSpine {
+    display: none;
+  }
+
+  .container {
+    gap: clamp(2rem, 6vw, 3rem);
+  }
+
   .row {
     width: 100%;
     padding: 0 clamp(0.75rem, 4vw, 1rem);
@@ -234,51 +277,171 @@
     align-self: center;
     overflow: visible;
   }
+
   .rowRight {
     grid-template-columns: clamp(1.2rem, 4vw, 2rem) clamp(1.5rem, 5vw, 2.5rem) 1fr;
     grid-template-areas: "node connector card";
     text-align: left;
   }
+
   .rowLeft {
     grid-template-columns: 1fr clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 4vw, 2rem);
     grid-template-areas: "card connector node";
     text-align: left;
     flex-direction: row;
   }
-  .rowRight .node, .rowLeft .node { grid-area: node; margin: 0 auto; transform: none; position: relative; z-index: 10; }
-  .rowRight .connector, .rowLeft .connector { grid-area: connector; align-self: center; width: 100%; height: 2px; opacity: 0.6; }
-  .rowRight .card, .rowLeft .card { grid-area: card; max-width: none; width: 100%; }
-  
+
+  .rowRight .node,
+  .rowLeft .node {
+    grid-area: node;
+    margin: 0 auto;
+    transform: none;
+    position: relative;
+    z-index: 10;
+  }
+
+  .rowRight .connector,
+  .rowLeft .connector {
+    grid-area: connector;
+    align-self: center;
+    width: 100%;
+    min-width: 0;
+    height: 2px;
+    opacity: 0.6;
+  }
+
+  .rowRight .card,
+  .rowLeft .card {
+    grid-area: card;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
   /* Layout scaling - no more translate overrides fighting the scale! */
-  .card { padding: clamp(1rem, 4vw, 1.5rem); }
-  .title { font-size: clamp(1.05rem, 4.2vw, 1.25rem); }
-  .description { font-size: clamp(0.85rem, 3.5vw, 0.9rem); }
-  .yearBadge { font-size: clamp(0.65rem, 3vw, 0.7rem); }
-  .connector { display: block; }
-  
-  .row::before { content: ""; position: absolute; top: 0; bottom: -1.5rem; width: 2px; background: var(--border-soft); z-index: 0; }
-  .rowRight::before { left: clamp(1.2rem, 4vw, 2rem); transform: translateX(-50%); }
-  .rowLeft::before { right: clamp(1.2rem, 4vw, 2rem); transform: translateX(50%); }
-  
-  .row::after { content: ""; position: absolute; bottom: -1.5rem; height: 2px; background: var(--border-soft); z-index: 0; left: clamp(1.2rem, 4vw, 2rem); right: clamp(1.2rem, 4vw, 2rem); }
-  .row:last-child::before { bottom: 50%; }
-  .row:last-child::after { display: none; }
-  .rowLeft .header { flex-direction: row; }
-  .rowLeft .yearBadge { margin-left: 0; margin-right: 0.5rem; }
-  .row:first-child::before { top: 50%; }
-  .row:first-child::after { display: none; }
+  .card {
+    padding: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .title {
+    font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+  }
+
+  .description {
+    font-size: clamp(0.85rem, 3.5vw, 0.9rem);
+  }
+
+  .yearBadge {
+    font-size: clamp(0.65rem, 3vw, 0.7rem);
+  }
+
+  .connector {
+    display: block;
+  }
+
+  .row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: -1.5rem;
+    width: 2px;
+    background: var(--border-soft);
+    z-index: 0;
+  }
+
+  .rowRight::before {
+    left: clamp(1.2rem, 4vw, 2rem);
+    transform: translateX(-50%);
+  }
+
+  .rowLeft::before {
+    right: clamp(1.2rem, 4vw, 2rem);
+    transform: translateX(50%);
+  }
+
+  .row::after {
+    content: "";
+    position: absolute;
+    bottom: -1.5rem;
+    height: 2px;
+    background: var(--border-soft);
+    z-index: 0;
+    left: clamp(1.2rem, 4vw, 2rem);
+    right: clamp(1.2rem, 4vw, 2rem);
+  }
+
+  .row:last-child::before {
+    bottom: 50%;
+  }
+
+  .row:last-child::after {
+    display: none;
+  }
+
+  .rowLeft .header {
+    flex-direction: row;
+  }
+
+  .rowLeft .yearBadge {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+
+  .row:first-child::before {
+    top: 50%;
+  }
+
+  .row:first-child::after {
+    display: none;
+  }
 }
 
 @media (max-width: 360px) {
-  .container { gap: 1.75rem; }
-  .row { padding: 0 0.75rem; }
-  .rowRight { grid-template-columns: 1rem 1.25rem 1fr; }
-  .rowLeft { grid-template-columns: 1fr 1.25rem 1rem; }
-  .rowRight::before { left: 1rem; }
-  .rowLeft::before { right: 1rem; }
-  .row::after { left: 1rem; right: 1rem; }
-  .card { padding: 0.9rem; border-radius: 18px; }
-  .title { font-size: 1rem; }
-  .description { font-size: 0.82rem; line-height: 1.45; }
-  .yearBadge { font-size: 0.62rem; padding: 0.25rem 0.55rem; }
+  .container {
+    gap: 1.75rem;
+  }
+
+  .row {
+    padding: 0 0.75rem;
+  }
+
+  .rowRight {
+    grid-template-columns: 1rem 1.25rem 1fr;
+  }
+
+  .rowLeft {
+    grid-template-columns: 1fr 1.25rem 1rem;
+  }
+
+  .rowRight::before {
+    left: 1rem;
+  }
+
+  .rowLeft::before {
+    right: 1rem;
+  }
+
+  .row::after {
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .card {
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .yearBadge {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.55rem;
+  }
 }

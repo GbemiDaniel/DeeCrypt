@@ -114,9 +114,8 @@
   letter-spacing: -0.04em;
   font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 500;
-  color: #82a88e;
-  /* Muted Ash Metallic Green */
-  text-shadow: 0 0 8px rgba(130, 168, 142, 0.4);
+  color: #64748b;
+  /* Dull Mono Terminal Text */
 }
 
 .cursor {
@@ -144,7 +143,7 @@
 
 /* LIGHT MODE: Static Premium Dark Slate (No Train Animation) */
 .metallicHeader {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: clamp(1.75rem, 4.5vw, 3.25rem);
   font-weight: 800;
   line-height: 1.1;

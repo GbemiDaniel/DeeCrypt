@@ -1,13 +1,8 @@
-
 import { useMemo, useState } from "react";
 import type { CSSProperties } from "react";
-
-// 1. IMPORTS
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-// === FIX: Import the shared config here ===
 import { setSectionLabel, SPY_CONFIG } from "../hooks/useScrollSpy";
-import { motion } from "framer-motion";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
 import Hero from "../components/Hero/Hero";
@@ -25,21 +20,19 @@ import heroStyles from "../components/Hero/Hero.module.css";
 import {
   BookOpen,
   Newspaper,
-  X,
   Linkedin,
   PenTool,
   Twitter,
   Mail,
+  X,
   TerminalSquare,
 } from "lucide-react";
-
-// === DELETED: Local SPY_CONFIG (Now using the shared one) ===
 
 const PLATFORMS = [
   {
     id: "twitter",
     href: siteConfig.socials.twitter,
-    label: "X (Twitter)",
+    label: " ",
     icon: <X size={14} />,
     color: "#ffffff",
   },
@@ -52,7 +45,7 @@ const PLATFORMS = [
   },
   {
     id: "devto",
-    href: siteConfig.socials.medium, // Using medium as fallback for now
+    href: siteConfig.socials.medium,
     label: "DevTo",
     icon: <TerminalSquare size={14} />,
     color: "#000000",
@@ -67,15 +60,11 @@ const PLATFORMS = [
 ];
 
 export default function WriterView() {
-
   const [activePostId, setActivePostId] = useState(posts[0]?.id);
   const [open, setOpen] = useState(false);
 
-  // 3. DETECT LAYOUT
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // --- OBSERVERS ---
-  // All hooks now use the imported SPY_CONFIG (250ms delay)
   const { ref: heroRef } = useInView({
     ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel(null),
@@ -107,7 +96,6 @@ export default function WriterView() {
     onChange: (inView) => inView && !isDesktop && setSectionLabel("PLATFORMS"),
   });
 
-  // --- CTA OBSERVER ---
   const { ref: ctaSpy } = useInView({
     ...SPY_CONFIG,
     onChange: (inView) => inView && setSectionLabel("CONNECT"),
@@ -119,22 +107,20 @@ export default function WriterView() {
   );
 
   return (
-    <motion.div
-      className={styles.writerScope}
-      initial={{ opacity: 0, x: 25 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4 }}
-    >
+    <div className={styles.writerScope}>
       <div ref={heroRef}>
         <Hero
           key="writer"
           mode="writer"
           availabilityLabel="WRITING"
-          headlineTop="Writing in"
+          headlineTop={
+            <>
+              <span className={heroStyles.writerHighlight}>Writing</span> in
+            </>
+          }
           headlineBottom={
             <>
-              <span className={heroStyles.writerHighlight}>public</span>, on
-              purpose.
+              public, <span className={heroStyles.writerHighlight}>on purpose.</span>
             </>
           }
           subcopy={
@@ -147,13 +133,10 @@ export default function WriterView() {
               .
             </>
           }
-          modeToggleSlot={
-            <ModeToggle />
-          }
+          modeToggleSlot={<ModeToggle />}
         />
       </div>
 
-      {/* 4. ATTACH REFS */}
       <div ref={isDesktop ? desktopGridRef : undefined}>
         <ModuleGrid
           left={
@@ -175,13 +158,12 @@ export default function WriterView() {
               style={{ height: "100%" }}
             >
               <ModuleCard
+                variant="writer"
                 title="Topics"
                 subtitle="Themes I keep circling back to."
                 icon={BookOpen}
                 footer={
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
-                  >
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {[
                       "UI clarity",
                       "Frontend systems",
@@ -203,6 +185,7 @@ export default function WriterView() {
               style={{ height: "100%" }}
             >
               <ModuleCard
+                variant="writer"
                 title="Platforms"
                 subtitle="Where I publish."
                 icon={Newspaper}
@@ -239,7 +222,6 @@ export default function WriterView() {
         onClose={() => setOpen(false)}
       />
 
-      {/* 5. MINIMAL CTA */}
       <div ref={ctaSpy}>
         <MinimalCTA
           icon={PenTool}
@@ -257,6 +239,6 @@ export default function WriterView() {
           }}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

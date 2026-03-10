@@ -1,98 +1,95 @@
 /* src/components/SectionHeader/SectionHeader.module.css */
 
-.sectionHeader {
+.headerContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* === LIGHT MODE (Default) === */
+.iconWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto 3rem auto;
-}
-
-.headerLine {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--border-soft) 50%,
-    transparent 100%
-  );
-  opacity: 0.6;
-  min-width: 1rem;
-}
-
-.headerPill {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  
-  /* FLUID PADDING: Scales slightly with viewport */
-  padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(1rem, 3vw, 1.25rem);
-  
-  border-radius: 99px;
-  background: color-mix(in oklab, var(--glass-strong) 60%, transparent);
-  border: 1px solid var(--border-soft);
-  backdrop-filter: blur(8px);
-  
-  /* FLUID TYPOGRAPHY: 
-     Min: 1.05rem (Mobile - distinct but not huge)
-     Max: 1.25rem (Desktop - elegant)
-     The '4vw' ensures it grows smoothly between mobile and tablet.
-  */
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 4vw, 1.25rem);
-  font-weight: 600;
-  color: var(--foreground);
-  
-  transition: border-color 0.3s ease;
-  white-space: nowrap;
-  max-width: 90vw;
-}
-
-.headerIcon {
-  color: var(--accent);
-  opacity: 0.9;
-  
-  /* RELATIVE SIZING: 
-     Using 'em' locks the icon size to the font-size.
-     If the text grows via clamp(), the icon grows with it automatically.
-  */
-  width: 1.1em;
-  height: 1.1em;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  /* THE FIX: A soft, frosty tint of the active theme color */
+  background: rgba(var(--theme-rgb), 0.1);
+  border: 1px solid rgba(var(--theme-rgb), 0.3);
+  /* A soft colored glow reflecting on the white page */
+  box-shadow: 0 4px 12px rgba(var(--theme-rgb), 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-/* === COLOR VARIANTS === */
-.writer .headerIcon {
-  color: #a855f7;
+.title {
+  font-size: 1.5rem;
+  margin: 0;
+  white-space: normal;
+  word-break: break-word;
+  letter-spacing: -0.02em;
 }
 
-.trophy .headerIcon {
-  color: #f59e0b;
+.line {
+  flex-grow: 1;
+  min-width: 0;
+  height: 2px;
+  /* Increased from 1px to make it clearly visible */
+  transform-origin: left;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--theme-hex) 0%, transparent 100%);
+  opacity: 0.6;
+  /* Stronger opacity for Light Mode */
 }
 
-.contact .headerIcon {
-  color: #22c55e;
+/* === DARK MODE OVERRIDES === */
+:global([data-theme="dark"]) .iconWrapper {
+  /* Inject the actual theme color into the glass background to make it glow from within */
+  background: rgba(var(--theme-rgb), 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(var(--theme-rgb), 0.5);
+  /* Crank up the inner and outer neon bloom */
+  box-shadow: 0 0 15px rgba(var(--theme-rgb), 0.3) inset, 0 0 20px rgba(var(--theme-rgb), 0.4);
 }
 
-/* === MOBILE ADJUSTMENTS === */
-/* We removed the font-size overrides because clamp() handles it now. */
-@media (max-width: 768px) {
-  .sectionHeader {
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+/* Make the SVG icon itself emit light */
+:global([data-theme="dark"]) .icon {
+  filter: drop-shadow(0 0 8px var(--theme-hex));
+}
+
+:global([data-theme="dark"]) .title {
+  filter: drop-shadow(0 0 10px rgba(var(--theme-rgb), 0.3));
+}
+
+:global([data-theme="dark"]) .line {
+  opacity: 0.8;
+  box-shadow: 0 0 8px rgba(var(--theme-rgb), 0.5);
+}
+
+/* Desktop Scaling */
+@media (min-width: 768px) {
+  .headerContainer {
+    gap: 1.25rem;
+    margin-bottom: 3rem;
   }
-  
-  /* Just fine-tuning the gap for smaller screens */
-  .headerPill {
-    gap: 0.5rem;
-  }
-}
 
-@media (max-width: 400px) {
-  .sectionHeader {
-    gap: 0.5rem;
+  .iconWrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .iconWrapper svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .title {
+    font-size: 2rem;
   }
 }
