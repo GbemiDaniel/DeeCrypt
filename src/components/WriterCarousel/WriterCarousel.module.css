@@ -105,6 +105,9 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  /* Height Normalization: locks physical footprint perfectly to math */
+  min-height: calc(2 * 1.1em);
 }
 
 .hook {
@@ -120,6 +123,7 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: calc(3 * 1.8em);
 }
 
 /* Topic Tag Pills — grouped tightly under preview text, spacer below pushes footer down */
@@ -131,6 +135,9 @@
   gap: 10px;
   /* Squishes on short viewports rather than pushing footer out */
   margin-top: clamp(0.75rem, 3vh, 1.75rem);
+
+  /* Reserves enough footprint for ~2 wrapped tag lines */
+  min-height: 56px;
 }
 
 .tagPill {
@@ -224,36 +231,38 @@
   font-size: 0.8125rem;
   line-height: 1.7;
   color: color-mix(in oklab, var(--text) 65%, var(--muted));
+
+  /* Force TLDR clamping and height normalization globally */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(3 * 1.7em);
 }
 
-/* === DESKTOP COMPRESSION (min-width: 768px) ===
-   Mobile layout is perfect as-is. On desktop the grid constrains row height,
-   so we claw back vertical space from the new elements. */
+/* === DESKTOP COMPRESSION (min-width: 768px) === */
 @media (min-width: 768px) {
   .tagsRow {
     margin-top: 1rem;
-    /* 1.75rem → 1rem — tags stay close to text */
   }
 
   .tldrPanel {
     margin-top: 0.75rem;
-    /* 1.25rem → 0.75rem */
     padding: 0.55rem 0.85rem 0.55rem 1rem;
-    /* tighter all-round */
   }
 
   .tldrText {
     font-size: 0.75rem;
-    /* 0.8125rem → 0.75rem */
     line-height: 1.55;
-    /* 1.7 → 1.55 — saves ~2 lines of descent */
+    min-height: calc(3 * 1.55em);
   }
 }
 
 /* Spacer keeps bottom controls pinned cleanly */
 .spacer {
   flex: 1;
-  min-height: 0;
+  min-height: 1rem;
 }
 
 /* Bottom Row */
@@ -348,12 +357,7 @@
 
 /* Mobile arrows */
 .mobileArrows {
-  position: absolute;
-  inset: auto 16px 16px 16px;
   display: none;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 4;
 }
 
 .mobileArrowBtn {
@@ -392,32 +396,37 @@
 
 /* === MOBILE FIXES (< 720px) === */
 @media (max-width: 720px) {
-  /* FIX 1: REMOVED the hard min-height clamp here.
-     This allows the card to fit whatever height the parent Grid gives it. */
-
   .body {
-    /* FIX 2: Relaxed padding */
-    /* Reduced minimum horizontal padding (14px) and bottom padding (50px) */
-    padding: clamp(14px, 5vw, 28px);
-    padding-bottom: clamp(50px, 15vw, 96px);
-    gap: var(--space-3);
+    /* THE FIX: Standardized padding, letting .mobileArrows handle the bottom spacing natively */
+    padding: clamp(14px, 5vw, 24px);
+    gap: var(--space-4);
+    /* unified breathing room */
   }
 
   .title {
-    /* Tighter floor for <360px phones — allows 3 lines before clamping */
     font-size: clamp(1.25rem, 5vw, 2rem);
     -webkit-line-clamp: 3;
     line-clamp: 3;
+    min-height: calc(3 * 1.1em);
   }
 
   .hook {
     line-height: 1.55;
-    /* FIX 4: Aggressively limit text lines to prevent overflow */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: calc(3 * 1.55em);
+  }
+
+  .meta {
+    /* THE FIX: Defensive CSS for metadata - adds ellipsis if text exceeds space */
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .bottomRow {
@@ -429,6 +438,77 @@
   }
 
   .mobileArrows {
+    /* THE FIX: Re-enables the arrows but within the normal document flow */
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+    /* Bulletproof: anchors to bottom */
+    flex-shrink: 0;
+    /* Bulletproof: prevents crushing */
+  }
+}
+
+/* === TIER 1 SMALL MOBILE (< 480px) === */
+@media (max-width: 480px) {
+  .body {
+    padding: 16px;
+    gap: var(--space-4);
+    /* unified breathing room */
+  }
+
+  .title {
+    font-size: clamp(1.15rem, 5vw, 1.5rem);
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    min-height: calc(3 * 1.1em);
+  }
+
+  .hook {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    min-height: calc(2 * 1.55em);
+  }
+}
+
+/* === TIER 2 ULTRA NARROW (< 360px) === */
+@media (max-width: 360px) {
+  .body {
+    padding: 12px;
+    gap: 12px;
+    /* proportional breathing room for micro-view */
+  }
+
+  .title {
+    font-size: 1.15rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    min-height: calc(2 * 1.1em);
+  }
+
+  .hook {
+    display: none;
+    /* Hide on micro screens to save vertical space */
+  }
+
+  .tldrPanel {
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .tldrText {
+    font-size: 0.75rem;
+  }
+
+  .tagPill {
+    font-size: 0.55rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .tagsRow {
+    gap: 6px;
+    min-height: 44px;
+    /* Slightly tighter on compact mode */
   }
 }

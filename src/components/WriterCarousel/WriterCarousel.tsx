@@ -160,28 +160,27 @@ export default function WriterCarousel({
             />
           ))}
         </div>
-      </div>
+        <div className={styles.mobileArrows} aria-hidden="false">
+          <button
+            type="button"
+            className={styles.mobileArrowBtn}
+            onClick={() => go(-1)}
+            disabled={!canGo}
+            aria-label="Previous post"
+          >
+            <ChevronLeft size={18} />
+          </button>
 
-      <div className={styles.mobileArrows} aria-hidden="false">
-        <button
-          type="button"
-          className={styles.mobileArrowBtn}
-          onClick={() => go(-1)}
-          disabled={!canGo}
-          aria-label="Previous post"
-        >
-          <ChevronLeft size={18} />
-        </button>
-
-        <button
-          type="button"
-          className={styles.mobileArrowBtn}
-          onClick={() => go(1)}
-          disabled={!canGo}
-          aria-label="Next post"
-        >
-          <ChevronRight size={18} />
-        </button>
+          <button
+            type="button"
+            className={styles.mobileArrowBtn}
+            onClick={() => go(1)}
+            disabled={!canGo}
+            aria-label="Next post"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
     </div>
   );
