@@ -34,12 +34,12 @@
   border-bottom: 2px solid rgba(0, 0, 0, 0.8);
 }
 
-/* Ambient Inner Glow — GENERIC (rainbow spectrum for default usage) */
+/* Ambient Inner Glow — GENERIC (cyan and purple only) */
 .plaque::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(34, 211, 238, 0.08) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(168, 85, 247, 0.08) 100%);
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
   pointer-events: none;
   z-index: 0;
 }

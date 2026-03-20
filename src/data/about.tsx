@@ -31,7 +31,7 @@ export const TIMELINE_DATA = [
     description:
       "Joined test.io to break products under real conditions. Learning exactly how systems fail in the wild so I can write more bulletproof code.",
     icon: <Terminal size={14} />,
-    type: "test" as TimelineType, // Will use the Orange theme
+    type: "dev" as TimelineType,
   },
   {
     year: "2025",
@@ -39,7 +39,7 @@ export const TIMELINE_DATA = [
     description:
       "Started learning smart contract security via Cyfrin Updraft. Documenting my journey through blockchain, AI, and frontend to help others learn.",
     icon: <PenTool size={14} />,
-    type: "writer" as TimelineType, // Will use the Purple/Writer theme
+    type: "writer" as TimelineType,
   },
   {
     year: "2024",
@@ -74,7 +74,7 @@ export const ARSENAL_DATA = [
     description:
       "I break products under real conditions to learn how to build them better. Every bug found is a lesson in creating resilient systems.",
     icon: <Terminal size={24} />,
-    type: "test",
+    type: "dev",
     tech: ["Manual Testing", "User Flows", "Bug Reporting"],
   },
   {
@@ -100,7 +100,7 @@ export const BADGES_DATA = [
     icon: <Code size={28} color="var(--accent)" />,
   },
   {
-    type: "test" as const,
+    type: "dev" as const,
     title: "Bronze QA Tester",
     subtitle: "3 Badges Earned on test.io",
     date: "2026",

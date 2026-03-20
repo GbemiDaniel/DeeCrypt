@@ -226,7 +226,7 @@ export default function WriterView() {
         <MinimalCTA
           icon={PenTool}
           title="DeeCrypt / Q2 2026"
-          description="Simplifying blockchain tech through clarity."
+          subtitle="Simplifying blockchain tech through clarity."
           primaryAction={{
             label: "Follow Updates",
             href: siteConfig.socials.secondaryTwitter,

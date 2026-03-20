@@ -64,6 +64,31 @@
   gap: var(--space-4);
 }
 
+/* CSS Grid Single-Cell Layering */
+.slideStack {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+}
+
+.slideBody {
+  grid-area: 1 / 1 / 2 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.slideBody[data-active="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
 .kickerRow {
   display: flex;
   justify-content: space-between;
@@ -105,9 +130,6 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
-  /* Height Normalization: locks physical footprint perfectly to math */
-  min-height: calc(2 * 1.1em);
 }
 
 .hook {
@@ -123,7 +145,6 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: calc(3 * 1.8em);
 }
 
 /* Topic Tag Pills — grouped tightly under preview text, spacer below pushes footer down */
@@ -135,9 +156,6 @@
   gap: 10px;
   /* Squishes on short viewports rather than pushing footer out */
   margin-top: clamp(0.75rem, 3vh, 1.75rem);
-
-  /* Reserves enough footprint for ~2 wrapped tag lines */
-  min-height: 56px;
 }
 
 .tagPill {
@@ -231,14 +249,12 @@
   font-size: 0.8125rem;
   line-height: 1.7;
   color: color-mix(in oklab, var(--text) 65%, var(--muted));
-
   /* Force TLDR clamping and height normalization globally */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: calc(3 * 1.7em);
 }
 
 /* === DESKTOP COMPRESSION (min-width: 768px) === */
@@ -255,7 +271,6 @@
   .tldrText {
     font-size: 0.75rem;
     line-height: 1.55;
-    min-height: calc(3 * 1.55em);
   }
 }
 
@@ -403,11 +418,14 @@
     /* unified breathing room */
   }
 
+  .slideBody {
+    gap: var(--space-4);
+  }
+
   .title {
     font-size: clamp(1.25rem, 5vw, 2rem);
     -webkit-line-clamp: 3;
     line-clamp: 3;
-    min-height: calc(3 * 1.1em);
   }
 
   .hook {
@@ -417,7 +435,6 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: calc(3 * 1.55em);
   }
 
   .meta {
@@ -458,17 +475,19 @@
     /* unified breathing room */
   }
 
+  .slideBody {
+    gap: var(--space-4);
+  }
+
   .title {
     font-size: clamp(1.15rem, 5vw, 1.5rem);
     -webkit-line-clamp: 3;
     line-clamp: 3;
-    min-height: calc(3 * 1.1em);
   }
 
   .hook {
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    min-height: calc(2 * 1.55em);
   }
 }
 
@@ -480,11 +499,14 @@
     /* proportional breathing room for micro-view */
   }
 
+  .slideBody {
+    gap: 12px;
+  }
+
   .title {
     font-size: 1.15rem;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    min-height: calc(2 * 1.1em);
   }
 
   .hook {
@@ -508,7 +530,5 @@
 
   .tagsRow {
     gap: 6px;
-    min-height: 44px;
-    /* Slightly tighter on compact mode */
   }
 }

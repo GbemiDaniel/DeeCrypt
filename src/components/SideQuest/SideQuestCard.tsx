@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { CircularProgress } from "./CircularProgress";
 import { ExternalLink } from "lucide-react";
@@ -21,6 +22,31 @@ interface SideQuestCardProps {
   className?: string;
 }
 
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0.05, y: 20, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      mass: 2.5,
+      stiffness: 60,
+      damping: 20,
+    },
+  },
+};
+
 export function SideQuestCard({
   title,
   subtitle,
@@ -35,6 +61,8 @@ export function SideQuestCard({
   // 1. Ref to track the card element
   const cardRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  // Track hover for desktop
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // 2. Click Outside Logic
   useEffect(() => {
@@ -81,7 +109,11 @@ export function SideQuestCard({
       </div>
 
       {/* Projects list */}
-      <div
+      <motion.div
+        variants={listVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
         className={cn(
           styles.projectList,
           scrollMobile && styles.scrollMobile,
@@ -90,15 +122,19 @@ export function SideQuestCard({
       >
         {projects.map((project, index) => {
           const isActive = activeIndex === index;
+          const isHovered = hoveredIndex === index;
 
           return (
-            <div
+            <motion.div
+              variants={itemVariants}
               key={index}
               className={cn(
                 styles.projectItem,
                 isActive && styles.projectItemActive,
               )}
               onClick={() => handleItemClick(index)}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <div className={styles.projectInfo}>
                 <h4 className={styles.projectName}>{project.name}</h4>
@@ -112,6 +148,7 @@ export function SideQuestCard({
                   value={project.progress}
                   size={42}
                   strokeWidth={4}
+                  animateToValue={isActive || isHovered}
                 />
 
                 {project.url && (
@@ -131,10 +168,10 @@ export function SideQuestCard({
                   </a>
                 )}
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </article>
   );
 }

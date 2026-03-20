@@ -17,18 +17,30 @@
   stroke: var(--border-soft);
 }
 
-.progress {
+.dullProgress {
   fill: none;
-  /* Use the global accent color */
+  /* Dull default state that STAYS visible */
+  stroke: color-mix(in oklab, var(--border-soft) 80%, transparent);
+  stroke-linecap: round;
+}
+
+.accentProgress {
+  fill: none;
+  /* Use the global accent color when active (this overlays the dull progress) */
   stroke: var(--accent);
   stroke-linecap: round;
-  transition: stroke-dashoffset 500ms ease-out;
 }
 
 .percentage {
   position: absolute;
   font-size: 0.75rem;
   font-weight: 600;
-  /* Use the global primary text color */
-  color: var(--text);
+  /* Dull default text */
+  color: var(--muted);
+  transition: color 0.4s ease;
+}
+
+.percentageActive {
+  /* Use the global primary text color when active */
+  color: var(--text-primary, var(--text));
 }

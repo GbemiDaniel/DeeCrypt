@@ -7,8 +7,8 @@
   grid-template-columns: 1fr;
 
   /* MOBILE FIX: 
-     Strict, fixed height to prevent layout shift between varying slide lengths. */
-  grid-template-rows: 480px auto;
+     Uncapped Grid rows so internal elements organically dictate the height footprint. */
+  grid-template-rows: auto auto;
 }
 
 .rightColumn {

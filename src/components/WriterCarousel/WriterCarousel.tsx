@@ -79,33 +79,44 @@ export default function WriterCarousel({
       </div>
 
       <div className={styles.body}>
-        <div className={styles.kickerRow}>
-          <div className={styles.kicker}>Latest essay</div>
-          <div className={styles.platformPill}>{item?.platform ?? "Post"}</div>
+        <div className={styles.slideStack}>
+          {safeItems.map((currItem, i) => (
+            <div
+              key={currItem.id}
+              className={styles.slideBody}
+              data-active={i === index}
+              aria-hidden={i !== index}
+            >
+              <div className={styles.kickerRow}>
+                <div className={styles.kicker}>Latest essay</div>
+                <div className={styles.platformPill}>{currItem?.platform ?? "Post"}</div>
+              </div>
+
+              <div className={styles.title} title={currItem?.title}>
+                {currItem?.title ?? "—"}
+              </div>
+
+              {currItem?.tags && currItem.tags.length > 0 && (
+                <div className={styles.tagsRow} aria-label="Topics">
+                  {currItem.tags.map((tag) => (
+                    <span key={tag} className={styles.tagPill}>
+                      <span className={styles.statusDot} aria-hidden="true" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {currItem?.tldr && (
+                <div className={styles.tldrPanel}>
+                  <p className={styles.tldrText}>{currItem.tldr}</p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
-        <div className={styles.title} title={item?.title}>
-          {item?.title ?? "—"}
-        </div>
-
-        {item?.tags && item.tags.length > 0 && (
-          <div className={styles.tagsRow} aria-label="Topics">
-            {item.tags.map((tag) => (
-              <span key={tag} className={styles.tagPill}>
-                <span className={styles.statusDot} aria-hidden="true" />
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {item?.tldr && (
-          <div className={styles.tldrPanel}>
-            <p className={styles.tldrText}>{item.tldr}</p>
-          </div>
-        )}
-
-        {/* Spacer: absorbs flex space between tags and footer, footer pinned to bottom */}
+        {/* Spacer: absorbs global flex space, pushing footer down */}
         <div className={styles.spacer} />
 
         <div className={styles.bottomRow}>

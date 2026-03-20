@@ -3,8 +3,8 @@ import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import styles from "./BadgeCard.module.css";
 
-// 1. Expanded to include "test"
-export type BadgeType = "dev" | "writer" | "test";
+// 1. Removed "test", keeping only "dev" and "writer"
+export type BadgeType = "dev" | "writer";
 
 interface BadgeCardProps {
   type: BadgeType;
@@ -35,10 +35,7 @@ export function BadgeCard({
   const isFinishedState = ["Completed", "Live", "Active"].includes(status);
 
   // Determine the exact theme class
-  const themeClass = 
-    type === "writer" ? styles.cardWriter : 
-    type === "test" ? styles.cardTest : 
-    styles.cardDev;
+  const themeClass = type === "writer" ? styles.cardWriter : styles.cardDev;
 
   // "Click Outside" logic
   useEffect(() => {

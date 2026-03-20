@@ -135,6 +135,7 @@ export default function DevView({ mode }: Props) {
           left={
             <div
               ref={!isDesktop ? mobileProjectsRef : undefined}
+              className="min-h-[480px] md:min-h-0"
               style={{ height: "100%" }}
             >
               <PreviewCarousel {...carouselProps} />
@@ -201,7 +202,7 @@ export default function DevView({ mode }: Props) {
         <MinimalCTA
           icon={Terminal}
           title="Ready to ship?"
-          description="Open to frontend roles, Web3 collaborations, and freelance projects."
+          subtitle="Let's build something great together."
           primaryAction={{
             label: "Email Me",
             href: `mailto:${siteConfig.email}`,

@@ -8,6 +8,10 @@
   margin-bottom: 2rem;
 }
 
+.headerContainer.centered {
+  justify-content: center;
+}
+
 /* === LIGHT MODE (Default) === */
 .iconWrapper {
   display: flex;
@@ -27,7 +31,7 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.25rem; /* Scaled down for mobile */
   margin: 0;
   white-space: normal;
   word-break: break-word;
@@ -44,6 +48,11 @@
   background: linear-gradient(90deg, var(--theme-hex) 0%, transparent 100%);
   opacity: 0.6;
   /* Stronger opacity for Light Mode */
+}
+
+.lineLeft {
+  transform-origin: right;
+  background: linear-gradient(270deg, var(--theme-hex) 0%, transparent 100%);
 }
 
 /* === DARK MODE OVERRIDES === */

@@ -1,8 +1,9 @@
 import type { Mode } from "../app/modes";
 // 1. UPDATED IMPORTS: Premium Industrial Icons (No Emojis)
-import { Terminal, Hexagon, Fingerprint, Activity, Compass, Radio } from "lucide-react";
+import { Terminal, Hexagon, Fingerprint } from "lucide-react";
 import styles from "./AboutView.module.css";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -14,8 +15,8 @@ import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
 import { SectionHeader } from "@/components/SectionHeader/SectionHeader";
 import { AboutHero } from "@/components/AboutHero/AboutHero";
 import { SkillCard } from "@/components/SkillCard/SkillCard";
-import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
-import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
+// import { WhatDrivesMe } from "@/components/WhatDrivesMe/WhatDrivesMe";
+// import { BeyondTheCode } from "@/components/BeyondTheCode/BeyondTheCode";
 import { siteConfig } from "@/config/site";
 
 // --- Framer Motion Variants ---
@@ -65,20 +66,20 @@ export default function AboutView({ mode }: Props) {
     onChange: (v) => v && setSectionLabel("THE JOURNEY"),
   });
 
-  const { ref: driveSpy } = useInView({
-    ...spyConfig,
-    onChange: (v) => v && setSectionLabel("VISION"),
-  });
+  // const { ref: driveSpy } = useInView({
+  //   ...spyConfig,
+  //   onChange: (v) => v && setSectionLabel("VISION"),
+  // });
 
   const { ref: badgesSpy } = useInView({
     ...spyConfig,
     onChange: (v) => v && setSectionLabel("MILESTONES"),
   });
 
-  const { ref: personalSpy } = useInView({
-    ...spyConfig,
-    onChange: (v) => v && setSectionLabel("PERSONAL"),
-  });
+  // const { ref: personalSpy } = useInView({
+  //   ...spyConfig,
+  //   onChange: (v) => v && setSectionLabel("PERSONAL"),
+  // });
 
   const { ref: contactSpy } = useInView({
     ...spyConfig,
@@ -99,6 +100,7 @@ export default function AboutView({ mode }: Props) {
             title="The Arsenal"
             icon={Terminal}
             variant="default"
+            centered
           />
           <motion.div
             className={styles.gridSection}
@@ -128,6 +130,7 @@ export default function AboutView({ mode }: Props) {
             title="The Journey"
             icon={Fingerprint}
             variant="writer"
+            centered
           />
           <motion.div
             initial="hidden"
@@ -142,12 +145,14 @@ export default function AboutView({ mode }: Props) {
         </div>
       </section>
 
+      {/* 
       <section className={styles.flowSection} ref={driveSpy}>
         <div className={styles.contentWrapper}>
           <SectionHeader
             title="What Drives Me"
             icon={Activity}
             variant="default"
+            centered
           />
           <motion.div
             initial="hidden"
@@ -161,13 +166,15 @@ export default function AboutView({ mode }: Props) {
           </motion.div>
         </div>
       </section>
+      */}
 
       <section className={styles.flowSection} ref={badgesSpy}>
         <div className={styles.contentWrapper}>
           <SectionHeader
             title="Badges & Milestones"
             icon={Hexagon}
-            variant="trophy"
+            variant="default"
+            centered
           />
           <motion.div
             className={styles.certGrid}
@@ -185,12 +192,14 @@ export default function AboutView({ mode }: Props) {
         </div>
       </section>
 
+      {/* 
       <section className={styles.flowSection} ref={personalSpy}>
         <div className={styles.contentWrapper}>
           <SectionHeader
             title="Beyond The Code"
             icon={Compass}
             variant="default"
+            centered
           />
           <motion.div
             initial="hidden"
@@ -204,15 +213,11 @@ export default function AboutView({ mode }: Props) {
           </motion.div>
         </div>
       </section>
+      */}
 
       <section className={styles.flowSection} ref={contactSpy}>
         <div className={styles.contentWrapper}>
-          {/* Note: Un-commented your old Contact header and assigned it the Radio icon */}
-          <SectionHeader
-            title="Get In Touch"
-            icon={Radio}
-            variant="contact"
-          />
+
           <motion.div
             className={styles.ctaSection}
             initial="hidden"
