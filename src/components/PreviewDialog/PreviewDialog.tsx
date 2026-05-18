@@ -5,10 +5,10 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2, // New icon for bullet points
+  CheckCircle2,
 } from "lucide-react";
 import { useEffect, useState, useRef, useMemo } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { Mode } from "../../app/modes";
 import styles from "./PreviewDialog.module.css";
@@ -26,12 +26,8 @@ export type PreviewDialogProps = {
   gallery?: string[];
   videoSrc?: string;
   description?: string;
-
-  // --- NEW PROPS ---
-  highlights?: string[]; // Array of bullet points
-  highlightsTitle?: string; // Custom header (e.g. "Key Contributions")
-  // ----------------
-
+  highlights?: string[];
+  highlightsTitle?: string;
   meta?: PreviewDialogMeta[];
   primaryHref?: string;
   primaryLabel?: string;
@@ -39,6 +35,7 @@ export type PreviewDialogProps = {
   secondaryLabel?: string;
   onClose: () => void;
   mode?: Mode;
+  layout?: "default" | "flipped";
 };
 
 export default function PreviewDialog({
@@ -48,24 +45,24 @@ export default function PreviewDialog({
   gallery = [],
   videoSrc,
   description,
-
-  // Destructure new props with defaults
   highlights,
   highlightsTitle = "Key Highlights",
-
   meta,
   primaryHref,
   primaryLabel,
   secondaryHref,
   onClose,
+  layout = "default",
 }: PreviewDialogProps) {
-  // --- MEDIA LOGIC (Unchanged) ---
+
   const slides = useMemo(() => {
     const list = [];
     if (imageSrc) list.push({ type: "image", src: imageSrc });
-    if (gallery.length > 0) {
+
+    if (Array.isArray(gallery) && gallery.length > 0) {
       gallery.forEach((img) => list.push({ type: "image", src: img }));
     }
+
     if (videoSrc) list.push({ type: "video", src: videoSrc });
     return list;
   }, [imageSrc, gallery, videoSrc]);
@@ -97,21 +94,23 @@ export default function PreviewDialog({
       <DialogContent
         className={cn(
           styles.dialogContent,
-          "max-w-[1100px] w-[96vw] h-[85vh] md:h-[650px] p-0 gap-0 border-0",
+          "max-w-[1100px] w-[96vw] h-[85vh] md:h-[650px] p-0 gap-0 border-0", // <-- Removed "relative" to restore "fixed" centering
+          "[&>button[aria-label='Close']]:hidden" // <-- Precisely hides Shadcn's default button
         )}
       >
-        <div className={styles.root}>
-          {/* === LEFT COLUMN: MEDIA STAGE (Always Dark) === */}
-          <div className="relative w-full h-[45vh] md:h-full md:w-[60%] bg-black group shrink-0">
-            {/* Mobile Close Button */}
-            <button
-              onClick={onClose}
-              className="md:hidden absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white backdrop-blur-md border border-white/10 shadow-lg"
-              aria-label="Close Preview"
-            >
-              <X size={20} />
-            </button>
+        {/* OUR PREMIUM BUTTON: Uses aria-label="Close Preview" so it survives the class above */}
+        <button
+          onClick={onClose}
+          className={styles.glassCloseBtn}
+          aria-label="Close Preview"
+        >
+          <X size={22} strokeWidth={1.5} />
+        </button>
 
+        <div className={cn(styles.root, layout === "flipped" && styles.rootFlipped)}>
+
+          {/* === MEDIA STAGE (Always Dark) === */}
+          <div className="relative w-full h-[45vh] md:h-full md:w-[60%] bg-black group shrink-0">
             <div className="w-full h-full relative overflow-hidden">
               {slides.map((slide, idx) => (
                 <div
@@ -123,18 +122,20 @@ export default function PreviewDialog({
                 >
                   {slide.type === "image" ? (
                     <>
-                      {/* Blurred Background */}
                       <img
                         src={slide.src}
                         className={styles.backdropImg}
                         alt=""
                         aria-hidden="true"
+                        loading="lazy"
+                        decoding="async"
                       />
-                      {/* Main Image */}
                       <img
                         src={slide.src}
                         alt={`Preview Slide ${idx + 1}`}
                         className={styles.containImg}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </>
                   ) : (
@@ -152,7 +153,6 @@ export default function PreviewDialog({
               ))}
             </div>
 
-            {/* Desktop Navigation Controls */}
             {slides.length > 1 && (
               <>
                 <button
@@ -180,7 +180,6 @@ export default function PreviewDialog({
                   <ChevronRight size={24} />
                 </button>
 
-                {/* Dots Indicator */}
                 <div className={styles.dotsContainer}>
                   {slides.map((_, idx) => (
                     <button
@@ -198,43 +197,29 @@ export default function PreviewDialog({
             )}
           </div>
 
-          {/* === RIGHT COLUMN: CONTENT PANEL === */}
+          {/* === CONTENT PANEL === */}
           <div className="flex-1 flex flex-col h-full overflow-hidden relative bg-[var(--bg)]">
-            {/* Header */}
-            <div className="flex items-start justify-between p-5 pb-2 shrink-0">
-              <div>
-                <div className="text-[var(--muted)] text-[10px] uppercase tracking-widest font-semibold mb-1.5">
-                  Project Detail
-                </div>
-                <h2 className="text-xl md:text-2xl font-semibold text-[var(--text)] font-sans tracking-tight">
-                  {title}
-                </h2>
+            <div className="p-5 pb-2 shrink-0">
+              <div className="text-[var(--muted)] text-[10px] uppercase tracking-widest font-semibold mb-1.5">
+                Project Detail
               </div>
-
-              <button
-                onClick={onClose}
-                className="hidden md:block p-2 rounded-full hover:bg-[var(--border)] text-[var(--muted)] transition-colors"
-              >
-                <X size={20} />
-              </button>
+              <h2 className="text-xl md:text-2xl font-semibold text-[var(--text)] font-sans tracking-tight">
+                {title}
+              </h2>
             </div>
-
-            {/* Scrollable Content Area */}
             <div
               className={cn(
                 styles.scrollArea,
                 "flex-1 overflow-y-auto p-5 pt-2 space-y-6",
               )}
             >
-              {/* 1. Description */}
               {description && (
-                <p className="text-[var(--muted)] leading-relaxed text-sm">
+                <p className="text-[var(--muted)] leading-relaxed text-sm whitespace-pre-wrap">
                   {description}
                 </p>
               )}
 
-              {/* 2. NEW: Key Highlights Section */}
-              {highlights && highlights.length > 0 && (
+              {Array.isArray(highlights) && highlights.length > 0 && (
                 <div className="bg-[var(--surface-1)]/50 rounded-xl p-4 border border-[var(--border-soft)]">
                   <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--accent)] mb-3 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
@@ -257,7 +242,6 @@ export default function PreviewDialog({
                 </div>
               )}
 
-              {/* 3. Video Jump Button */}
               {videoSrc && videoIndex !== -1 && activeIndex !== videoIndex && (
                 <button
                   onClick={() => goToSlide(videoIndex)}
@@ -268,8 +252,7 @@ export default function PreviewDialog({
                 </button>
               )}
 
-              {/* 4. Meta Grid */}
-              {meta && meta.length > 0 && (
+              {Array.isArray(meta) && meta.length > 0 && (
                 <div className="grid grid-cols-2 gap-y-4 gap-x-2 pt-4 border-t border-[var(--border)]">
                   {meta.map((m) => (
                     <div key={m.label}>
@@ -292,7 +275,6 @@ export default function PreviewDialog({
               )}
             </div>
 
-            {/* Footer Buttons */}
             {(primaryHref || secondaryHref) && (
               <div className="p-5 pt-4 mt-auto border-t border-[var(--border)] bg-[var(--bg)]/50 shrink-0">
                 <div className="flex gap-3">

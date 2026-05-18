@@ -4,32 +4,24 @@ import { cn } from "@/lib/utils";
 import { CircularProgress } from "./CircularProgress";
 import { ExternalLink } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import styles from "./SideQuestCard.module.css";
+import styles from "./ConceptLabsCard.module.css";
+import type { ConceptProject } from "../../data/conceptlabs";
 
-export interface SideProject {
-  name: string;
-  description: string;
-  progress: number;
-  url?: string;
-}
+// THE FIX: Restored relative static import so Vite compiles it instantly
+import PreviewDialog from "../PreviewDialog/PreviewDialog";
 
-interface SideQuestCardProps {
+interface ConceptLabsCardProps {
   title: string;
   subtitle?: string;
   icon?: LucideIcon;
-  projects: SideProject[];
+  projects: ConceptProject[];
   topRight?: React.ReactNode;
   className?: string;
 }
 
 const listVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariants = {
@@ -38,46 +30,34 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: {
-      type: "spring",
-      mass: 2.5,
-      stiffness: 60,
-      damping: 20,
-    },
+    transition: { type: "spring", mass: 2.5, stiffness: 60, damping: 20 },
   },
 };
 
-export function SideQuestCard({
+export function ConceptLabsCard({
   title,
   subtitle,
   icon: Icon,
-  projects,
+  projects = [],
   topRight,
   className,
-}: SideQuestCardProps) {
+}: ConceptLabsCardProps) {
   const scrollMobile = projects.length > 3;
   const scrollDesktop = projects.length > 2;
 
-  // 1. Ref to track the card element
   const cardRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  // Track hover for desktop
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // 2. Click Outside Logic
+  const [selectedProject, setSelectedProject] = useState<ConceptProject | null>(null);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // If the card exists and the click target is NOT inside the card...
       if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-        // ...close the active item.
         setActiveIndex(null);
       }
     }
-
-    // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Cleanup
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -87,12 +67,10 @@ export function SideQuestCard({
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  if (!Array.isArray(projects)) return null;
+
   return (
-    <article
-      ref={cardRef} // 3. Attach ref here
-      className={cn(styles.card, className)}
-    >
-      {/* Header */}
+    <article ref={cardRef} className={cn(styles.card, className)}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           {Icon && (
@@ -108,7 +86,6 @@ export function SideQuestCard({
         {topRight && <div className={styles.topRight}>{topRight}</div>}
       </div>
 
-      {/* Projects list */}
       <motion.div
         variants={listVariants}
         initial="hidden"
@@ -128,50 +105,66 @@ export function SideQuestCard({
             <motion.div
               variants={itemVariants}
               key={index}
-              className={cn(
-                styles.projectItem,
-                isActive && styles.projectItemActive,
-              )}
+              className={cn(styles.projectItem, isActive && styles.projectItemActive)}
               onClick={() => handleItemClick(index)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div className={styles.projectInfo}>
-                <h4 className={styles.projectName}>{project.name}</h4>
-                <p className={styles.projectDescription}>
-                  {project.description}
-                </p>
+                <h4 className={styles.projectName}>{project?.name}</h4>
+                <p className={styles.projectDescription}>{project?.description}</p>
               </div>
 
               <div className={styles.projectItemRight}>
                 <CircularProgress
-                  value={project.progress}
+                  value={project?.progress || 0}
                   size={42}
                   strokeWidth={4}
                   animateToValue={isActive || isHovered}
                 />
 
-                {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      styles.externalLinkWrapper,
-                      isActive && styles.iconActive,
-                    )}
+                {project?.modalDetails && (
+                  <button
+                    type="button"
+                    className={cn(styles.externalLinkWrapper, isActive && styles.iconActive)}
                     onClick={(e) => {
                       e.stopPropagation();
+                      setSelectedProject(project);
                     }}
                   >
                     <ExternalLink size={16} />
-                  </a>
+                  </button>
                 )}
               </div>
             </motion.div>
           );
         })}
       </motion.div>
+
+      {selectedProject != null && selectedProject.modalDetails != null && (
+        <PreviewDialog
+          open={!!selectedProject}
+          onClose={() => setSelectedProject(null)}
+          title={selectedProject?.name ?? "Untitled"}
+          layout="flipped"
+          imageSrc={selectedProject?.modalDetails?.previewImages?.[0] || undefined}
+          gallery={selectedProject?.modalDetails?.previewImages?.slice(1) ?? []}
+          description={
+            selectedProject?.modalDetails
+              ? `${selectedProject.modalDetails.problemStatement ?? ""}\n\nThought Process:\n${selectedProject.modalDetails.thoughtProcess ?? ""}`
+              : undefined
+          }
+          highlightsTitle="Current Direction"
+          highlights={selectedProject?.modalDetails?.currentDirection ?? []}
+          primaryHref={selectedProject?.modalDetails?.optionalLink?.url ?? undefined}
+          primaryLabel={selectedProject?.modalDetails?.optionalLink?.label ?? undefined}
+          secondaryHref={(selectedProject as Record<string, unknown>)?.url as string | undefined}
+          meta={[
+            { label: "Status", value: "Research / UI", accent: true },
+            { label: "Completion", value: `${selectedProject?.progress ?? 0}%` },
+          ]}
+        />
+      )}
     </article>
   );
 }

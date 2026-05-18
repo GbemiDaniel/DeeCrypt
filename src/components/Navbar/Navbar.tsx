@@ -69,7 +69,7 @@ function Navbar({
   // 1. Are we currently scrolling through a section?
   const isScrolling = !!sectionLabel;
 
-  // 2. Should we show the Menu (Story • Dev • Writer)?
+  // 2. Should we show the Menu (Story • Work • Writer)?
   // Show if: 
   // - Manually Open OR Hovered
   // - OR We are at the top of the page (NOT scrolling)
@@ -146,7 +146,7 @@ function Navbar({
                     className={`${styles.navLink} ${mode === "dev" ? styles.activeDev : ""
                       }`}
                   >
-                    Dev
+                    Work
                   </button>
                   <span className={styles.separator}>•</span>
                   <button

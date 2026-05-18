@@ -1,5 +1,12 @@
 /* src/components/PreviewDialog/PreviewDialog.module.css */
 
+/* === 0. SHADCN DEFAULT CLOSE BUTTON OVERRIDE ===
+   DialogPrimitive.Close injects a default close button inside <DialogContent>.
+   We hide it so only our custom .glassCloseBtn renders. */
+.dialogContent :global(> button[aria-label="Close"]) {
+  display: none !important;
+}
+
 /* === 1. THE DIALOG CONTAINER === */
 .dialogContent {
   /* Use your GLOBAL tokens. 
@@ -31,12 +38,17 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  position: relative; /* Anchor for absolute children */
+  position: relative;
+  /* Anchor for absolute children */
 }
 
 @media (min-width: 768px) {
   .root {
     flex-direction: row;
+  }
+
+  .rootFlipped {
+    flex-direction: row-reverse;
   }
 }
 
@@ -44,7 +56,8 @@
 .carouselViewport {
   position: relative;
   overflow: hidden;
-  background: #000; /* Media stage is ALWAYS black, even in light mode */
+  background: #000;
+  /* Media stage is ALWAYS black, even in light mode */
 }
 
 .slide {
@@ -54,7 +67,8 @@
   transition: opacity 0.4s ease-in-out;
   pointer-events: none;
   z-index: 1;
-  display: flex; /* Ensure centering works */
+  display: flex;
+  /* Ensure centering works */
   align-items: center;
   justify-content: center;
 }
@@ -88,7 +102,8 @@
 
 /* === 5. NAVIGATION CONTROLS === */
 .navBtn {
-  background: rgba(0, 0, 0, 0.5); /* Always dark for contrast against media */
+  background: rgba(0, 0, 0, 0.5);
+  /* Always dark for contrast against media */
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
@@ -98,7 +113,8 @@
 
 .navBtn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1) translateY(-50%); /* Preserve vertical centering if applied inline */
+  transform: scale(1.1) translateY(-50%);
+  /* Preserve vertical centering if applied inline */
 }
 
 /* Fix: If transform relies on parent container context, use this specific hover */
@@ -173,7 +189,8 @@
 }
 
 .highlightsTitle {
-  font-size: 0.75rem; /* 12px */
+  font-size: 0.75rem;
+  /* 12px */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
@@ -194,7 +211,8 @@
 .highlightsList {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
+  /* 10px */
   margin: 0;
   padding: 0;
   list-style: none;
@@ -204,7 +222,8 @@
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
+  /* 14px */
   line-height: 1.5;
   color: color-mix(in srgb, var(--text) 90%, transparent);
 }
@@ -213,5 +232,45 @@
   flex-shrink: 0;
   color: var(--muted);
   opacity: 0.7;
-  margin-top: 0.15rem; /* Align icon with first line of text */
+  margin-top: 0.15rem;
+  /* Align icon with first line of text */
+}
+
+/* === 8. PREMIUM CLOSE BUTTON === */
+.glassCloseBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  /* Volumetric Frost */
+  background: color-mix(in srgb, var(--bg, #000) 40%, rgba(20, 20, 30, 0.6));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+
+  color: var(--muted);
+  cursor: pointer;
+
+  /* The Physics / Spring Animation */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+}
+
+.glassCloseBtn:hover {
+  background: color-mix(in srgb, var(--bg, #000) 80%, rgba(255, 255, 255, 0.1));
+  color: var(--text);
+  border-color: var(--border);
+
+  /* The interaction: Scale up slightly and snap-rotate */
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 25%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }

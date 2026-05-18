@@ -13,14 +13,15 @@ export default function Pill({ children, tone = "default", className }: Props) {
     tone === "accent"
       ? styles.accent
       : tone === "success"
-      ? styles.success
-      : styles.default;
+        ? styles.success
+        : styles.default;
 
   return (
-    <span
-      className={[styles.pill, toneClass, className].filter(Boolean).join(" ")}
-    >
+    <span className={[styles.pill, toneClass, className].filter(Boolean).join(" ")}>
       {children}
     </span>
   );
 }
+
+
+

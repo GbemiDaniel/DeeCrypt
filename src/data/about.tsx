@@ -62,7 +62,7 @@ export const TIMELINE_DATA = [
 // --- UPDATED ARSENAL DATA (Minimal + Tech Stack) ---
 export const ARSENAL_DATA = [
   {
-    title: "Frontend Developer",
+    title: "Frontend Engineer",
     description:
       "I craft interfaces that feel effortless. Code is simply the tool; performance, accessibility, and the user's experience are what actually matter.",
     icon: <Code size={24} />,

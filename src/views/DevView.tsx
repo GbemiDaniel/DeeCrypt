@@ -5,6 +5,7 @@ import { useMediaQuery } from "../hooks/useMediaQuery";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 
 import ModeToggle from "../components/ModeToggle/ModeToggle";
+import RotatingStatus from "../components/RotatingStatus/RotatingStatus";
 import Hero from "../components/Hero/Hero";
 import ModuleGrid from "../components/ModuleGrid/ModuleGrid";
 import ModuleCard from "../components/ModuleCard/ModuleCard";
@@ -15,9 +16,9 @@ import PreviewCarousel, {
 } from "../components/PreviewCarousel/PreviewCarousel";
 import PreviewDialog from "../components/PreviewDialog/PreviewDialog";
 import { MinimalCTA } from "@/components/MinimalCTA/MinimalCTA";
-import { sideProjects } from "../data/sidequests";
+import { conceptProjects } from "../data/conceptlabs";
 import { projects, type Project } from "../data/projects";
-import { SideQuestCard } from "@/components/SideQuest/SideQuestCard";
+import { ConceptLabsCard } from "@/components/ConceptLabs/ConceptLabsCard";
 import { siteConfig } from "@/config/site";
 import { Rocket, Layers2, Terminal, Mail, FileText } from "lucide-react";
 import {
@@ -29,7 +30,7 @@ import {
   SiFramer,
 } from "react-icons/si";
 
-const TECH_STACK = [
+const TOOLKIT_ITEMS = [
   { name: "React", color: "#61DAFB", icon: SiReact },
   { name: "TypeScript", color: "#3178C6", icon: SiTypescript },
   { name: "Next.js", color: "#FFFFFF", icon: SiNextdotjs },
@@ -67,7 +68,7 @@ export default function DevView({ mode }: Props) {
     ...SPY_CONFIG,
     skip: !isDesktop,
     onChange: (inView) =>
-      inView && isDesktop && setSectionLabel("PROJECTS & STACK"),
+      inView && isDesktop && setSectionLabel("PROJECTS & TOOLKIT"),
   });
 
   const { ref: mobileProjectsRef } = useInView({
@@ -77,17 +78,17 @@ export default function DevView({ mode }: Props) {
       inView && !isDesktop && setSectionLabel("MY PROJECTS"),
   });
 
-  const { ref: mobileSideQuestRef } = useInView({
+  const { ref: mobileConceptLabsRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
     onChange: (inView) =>
-      inView && !isDesktop && setSectionLabel("SIDE QUESTS"),
+      inView && !isDesktop && setSectionLabel("CONCEPT LABS"),
   });
 
-  const { ref: mobileStackRef } = useInView({
+  const { ref: mobileToolkitRef } = useInView({
     ...SPY_CONFIG,
     skip: isDesktop,
-    onChange: (inView) => inView && !isDesktop && setSectionLabel("TECH STACK"),
+    onChange: (inView) => inView && !isDesktop && setSectionLabel("TOOLKIT"),
   });
 
   const { ref: ctaSpy } = useInView({
@@ -122,10 +123,10 @@ export default function DevView({ mode }: Props) {
         <Hero
           key="dev"
           mode="dev"
-          availabilityLabel="OPEN FOR COLLABORATION"
+          availabilityLabel={<RotatingStatus />}
           headlineTop={siteConfig.name}
-          headlineBottom="Frontend Developer"
-          subcopy="I bring ideas and visions to life through code. Working with React and TypeScript, I create web experiences that feel smooth, look great, and actually work the way people expect. I'm constantly learning and always building."
+          headlineBottom="Frontend Engineer"
+          subcopy="I design and build digital experiences that reflect the identity of professionals, brands, and products while remaining grounded in usability, clarity, and audience needs."
           modeToggleSlot={<ModeToggle />}
         />
       </div>
@@ -143,29 +144,29 @@ export default function DevView({ mode }: Props) {
           }
           rightTop={
             <div
-              ref={!isDesktop ? mobileSideQuestRef : undefined}
+              ref={!isDesktop ? mobileConceptLabsRef : undefined}
               style={{ height: "100%" }}
             >
-              <SideQuestCard
-                title="Side Quests"
+              <ConceptLabsCard
+                title="Concept Labs"
                 subtitle="Experimental labs where I test new ideas."
                 icon={Rocket}
-                projects={sideProjects}
+                projects={conceptProjects}
               />
             </div>
           }
           rightBottom={
             <div
-              ref={!isDesktop ? mobileStackRef : undefined}
+              ref={!isDesktop ? mobileToolkitRef : undefined}
               style={{ height: "100%" }}
             >
               <ModuleCard
-                title="Stack"
-                subtitle="My Tech Stack"
+                title="Toolkit"
+                subtitle="Tools Behind the Experience"
                 icon={Layers2}
                 footer={
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {TECH_STACK.map((tech) => (
+                    {TOOLKIT_ITEMS.map((tech) => (
                       <SkillBadge
                         key={tech.name}
                         name={tech.name}
@@ -202,7 +203,7 @@ export default function DevView({ mode }: Props) {
         <MinimalCTA
           icon={Terminal}
           title="Ready to ship?"
-          subtitle="Let's build something great together."
+          subtitle="Let’s build something worth remembering."
           primaryAction={{
             label: "Email Me",
             href: `mailto:${siteConfig.email}`,

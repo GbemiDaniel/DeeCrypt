@@ -17,103 +17,255 @@ export type Project = PreviewItem & {
 
 export const projects: Project[] = [
   {
-    id: "collaborated",
-    title: "Skillz Bloom",
-    subtitle: "Helping Stud ents Build Skills, One Day at a Time",
-    badge: "Live Project",
-    previewImage: "/preview/SkillzBloom.png",
-    previewVideo: "/previews/sample.mp4",
-    meta: [
-      { label: "ROLE", value: "Frontend Intern", accent: true },
-      { label: "TYPE", value: "Web App" },
-      { label: "STATUS", value: "MVP" },
-    ],
-    descriptionLong:
-      "SkillBloom is a global student skill-growth platform built to help learners develop real-world abilities through simple daily tasks, progress tracking, and AI-powered study support.",
+    id: "thrifty",
 
-    // --- NEW: Collaboration Highlights ---
-    highlightsTitle: "My Contributions",
-    highlights: [
-      "Skills dashboard with real-time stats (daily practice, total skills, proficiency tracking)",
-      "Manual skill addition system with evidence upload for accountability.",
-      "Progress tracking interface showing acquired skills vs. skills in development.",
-      "Clean, intuitive UI that makes tracking growth feel motivating, not overwhelming",
+    title: "Thrifty",
+
+    subtitle:
+      "Minimal ecommerce experience for modern fashion brands",
+
+    badge: "COLLAB",
+
+    previewImage:
+      "/projects/thrifty-ecommerce-store/thrifty-landing-page.png",
+
+    meta: [
+      { label: "ROLE", value: "Frontend Engineer", accent: true },
+      { label: "STACK", value: "Next.js + Tailwind" },
+      { label: "YEAR", value: "2026" },
     ],
-    // -------------------------------------
+
+    mobileMeta: [
+      { label: "ROLE", value: "FE Engineer", accent: true },
+      { label: "STACK", value: "Next.js" },
+      { label: "YEAR", value: "2026" },
+    ],
+
+    descriptionLong:
+      "Thrifty is a collaborative ecommerce experience developed alongside a product designer to explore minimalist product presentation, immersive shopping interactions, and scalable frontend architecture. I handled the frontend implementation, responsiveness, component systems, and interaction design while translating high-fidelity visual concepts into a polished digital shopping experience. The platform also became an exploration into AI-assisted frontend workflows and scalable ecommerce UI systems.",
+
+    highlightsTitle: "IMPLEMENTATION HIGHLIGHTS",
+
+    highlights: [
+      "Responsive ecommerce UI architecture",
+      "Reusable product component system",
+      "Scalable dashboard-ready structure",
+      "AI-assisted frontend workflow exploration",
+      "Premium typography and spacing system",
+    ],
 
     links: {
       primary: {
-        href: "https://skillz-bloom-jade.vercel.app/",
-        label: "Live preview",
+        href: "https://thrifty-rho.vercel.app/",
+        label: "Live Preview",
       },
+
       secondary: {
-        href: "https://github.com/UnbeatableFC/skillz-bloom",
+        href: "https://github.com/GbemiDaniel/thrifty",
         label: "GitHub",
       },
     },
   },
   {
-    id: "Webscript",
-    title: "Webscript Digital Agency",
-    subtitle: "Premium services for all things web",
-    badge: "B2B",
-    previewImage: "/preview/Webscript Agency.png",
-    previewVideo: "/previews/sample.mp4",
+    id: "daniel-creative-portfolio",
+
+    title: "Daniel Creative Portfolio",
+
+    subtitle:
+      "Modern creator portfolio focused on timeless digital experiences",
+
+    badge: "COLLAB",
+
+    previewImage:
+      "/projects/designer-portfolio/desginer-portfolio-landing-page.png",
+
     meta: [
-      { label: "ROLE", value: "Frontend", accent: true },
-      { label: "TYPE", value: "Live" },
+      { label: "ROLE", value: "UI Engineer", accent: true },
+      { label: "STACK", value: "Next.js + Tailwind" },
       { label: "YEAR", value: "2026" },
     ],
-    descriptionLong:
-      "A premium, full-stack B2B platform engineered for a digital agency. It seamlessly merges a high-converting marketing shell with a secure, role-based client portal, utilizing advanced Next.js App Router architecture and a bespoke 'Hardware-Glass' design system.",
-    // --- NEW: Personal Project Highlights ---
-    highlightsTitle: "ARCHITECTURAL HIGHLIGHTS",
-    highlights: [
-      "Role-Based Dashboards: Built distinct, secure portals for Admin data analytics and Client project tracking.",
-      "Custom Design System: Engineered a high-performance 'Premium Glass' UI layer with custom, etched-wireframe SVGs.",
-      "Tactile Micro-Interactions: Integrated Framer Motion for hardware-accelerated, hybrid hover and scroll physics.",
-      "Next.js Optimization: Leveraged React Server Components and optimized image architecture for sub-second load times.",
+
+    mobileMeta: [
+      { label: "ROLE", value: "UI Engineer", accent: true },
+      { label: "STACK", value: "Next.js" },
+      { label: "YEAR", value: "2026" },
     ],
-    // ----------------------------------------
+
+    descriptionLong:
+      "Daniel Creative Portfolio is a collaborative creator-focused portfolio experience designed alongside a visual designer to showcase modern branding, immersive storytelling, and timeless interface aesthetics. I handled the frontend implementation, interaction systems, responsive architecture, and UI composition while translating the visual direction into a polished and scalable web experience.",
+
+    highlightsTitle: "IMPLEMENTATION HIGHLIGHTS",
+
+    highlights: [
+      "Modern dark-themed interface system",
+      "Responsive creator-focused layouts",
+      "Reusable UI composition architecture",
+      "Polished interaction and motion design",
+      "AI-assisted frontend experimentation",
+    ],
 
     links: {
       primary: {
-        href: "https://websrcipts-agency.vercel.app/",
-        label: "Live Deployment"
+        href: "https://dice-portfolio.vercel.app/",
+        label: "Live Preview",
       },
+
       secondary: {
-        href: "https://github.com/GbemiDaniel/webscripts-agency",
-        label: "GitHub Repository",
+        href: "https://github.com/GbemiDaniel/Dice-Portfolio",
+        label: "GitHub",
       },
     },
   },
   {
-    id: "Portfolio",
-    title: "Gbemi Daniel — Portfolio 2026",
-    subtitle: "Interactive, multi-view digital identity built from scratch",
-    badge: "FRONTEND / UI",
-    previewImage: "/preview/Portfolio-hero.png", // Update with your actual path
-    previewVideo: "/previews/portfolio-preview.mp4", // Update with your actual path
+    id: "pentest-portfolio",
+
+    title: "Pentest Portfolio",
+
+    subtitle:
+      "Cybersecurity identity platform for a security researcher",
+
+    badge: "COLLAB",
+
+    previewImage:
+      "/projects/pentester-porfolio/pentester-portfolio-landing-page.png",
+
     meta: [
-      { label: "ROLE", value: "System Architect & UI/UX", accent: true },
-      { label: "STACK", value: "React, Tailwind, Framer" },
+      { label: "ROLE", value: "Frontend Engineer", accent: true },
+      { label: "STACK", value: "Next.js + Tailwind" },
       { label: "YEAR", value: "2026" },
     ],
-    descriptionLong:
-      "A highly interactive, performance-driven personal portfolio designed to mirror my dual focus as a UI engineer and technical writer. Built completely from scratch without templates, the architecture features a custom mode-switching system, glassmorphic bento-grid layouts, and a strictly typed data pipeline. Every interaction—from the physics-based carousels to the cursor-tracked specular highlights—was engineered to feel tactile, intentional, and premium.",
 
-    highlightsTitle: "TECHNICAL HIGHLIGHTS:",
+    mobileMeta: [
+      { label: "ROLE", value: "FE Engineer", accent: true },
+      { label: "STACK", value: "Next.js" },
+      { label: "YEAR", value: "2026" },
+    ],
+
+    descriptionLong:
+      "Pentest Portfolio is a cybersecurity-focused personal branding platform created in collaboration with a security researcher to visually reflect the world of penetration testing through immersive UI systems, terminal-inspired interactions, and layered visual aesthetics. I handled the frontend implementation, responsive architecture, and interactive UI systems while exploring modern animation techniques and AI-assisted development workflows.",
+
+    highlightsTitle: "IMPLEMENTATION HIGHLIGHTS",
+
     highlights: [
-      "Dual-mode architecture (Builder/Writer) with seamless state and layout transitions",
-      "Custom 'Chameleon' dialog system that dynamically shape-shifts to mock platform-native UI (X, LinkedIn, Medium, DevTo)",
-      "Responsive Bento-grid module system with a custom P5-style cursor-tracked specular highlight effect",
-      "Physics-based slide transitions and interactive carousels powered by Framer Motion",
-      "Theme-agnostic, performant CSS architecture using backdrop-blur glassmorphism and elastic flexbox distribution",
+      "Immersive cybersecurity-themed UI system",
+      "Responsive portfolio layout architecture",
+      "Terminal-inspired interaction patterns",
+      "Layered glow and typography effects",
+      "AI-assisted frontend experimentation",
     ],
 
     links: {
-      primary: { href: "http://gbemidaniel.vercel.app/", label: "Live" },
-      secondary: { href: "https://github.com/GbemiDaniel/DeeCrypt", label: "GitHub" },
+      primary: {
+        href: "https://okoh-bernard-portfolio.vercel.app/",
+        label: "Live Preview",
+      },
+
+      secondary: {
+        href: "https://github.com/GbemiDaniel/Okoh-Bernard",
+        label: "GitHub",
+      },
+    },
+  },
+  {
+    id: "creator-os",
+
+    title: "Creator OS",
+
+    subtitle:
+      "Interactive digital identity system for showcasing projects, writing, and experimentation",
+
+    badge: "CASE STUDY",
+
+    previewImage: "/preview/Portfolio-hero.png",
+
+    previewVideo: "/previews/portfolio-preview.mp4",
+
+    meta: [
+      { label: "ROLE", value: "Frontend Architect", accent: true },
+      { label: "STACK", value: "React + Motion" },
+      { label: "YEAR", value: "2026" },
+    ],
+
+    mobileMeta: [
+      { label: "ROLE", value: "FE Architect", accent: true },
+      { label: "STACK", value: "React" },
+      { label: "YEAR", value: "2026" },
+    ],
+
+    descriptionLong:
+      "Creator OS is a highly interactive digital identity platform engineered to showcase projects, technical writing, and creative experimentation through a unified frontend experience. Built entirely from scratch without templates, the system combines responsive bento-grid layouts, custom interaction patterns, physics-based transitions, and dynamic content architecture to create a tactile and immersive browsing experience. The project also served as an exploration into scalable frontend systems, premium UI composition, and AI-assisted implementation workflows.",
+
+    highlightsTitle: "TECHNICAL HIGHLIGHTS",
+
+    highlights: [
+      "Dual-mode Builder/Writer interface system",
+      "Custom platform-inspired dialog architecture",
+      "Responsive bento-grid layout composition",
+      "Physics-based transitions with Framer Motion",
+      "Glassmorphism UI system with dynamic highlights",
+    ],
+
+    links: {
+      primary: {
+        href: "http://gbemidaniel.vercel.app/",
+        label: "Live Preview",
+      },
+
+      secondary: {
+        href: "https://github.com/GbemiDaniel/DeeCrypt",
+        label: "GitHub",
+      },
+    },
+  },
+  {
+    id: "skillz-bloom",
+
+    title: "Skillz Bloom",
+
+    subtitle:
+      "Student growth platform focused on daily learning and skill development",
+
+    badge: "TEAM PROJECT",
+
+    previewImage: "/preview/SkillzBloom.png",
+
+    previewVideo: "/previews/sample.mp4",
+
+    meta: [
+      { label: "ROLE", value: "Frontend Engineer", accent: true },
+      { label: "STACK", value: "React + Tailwind" },
+      { label: "YEAR", value: "2025" },
+    ],
+
+    mobileMeta: [
+      { label: "ROLE", value: "FE Engineer", accent: true },
+      { label: "STACK", value: "React" },
+      { label: "YEAR", value: "2025" },
+    ],
+
+    descriptionLong:
+      "Skillz Bloom is a collaborative student skill-growth platform developed during my frontend internship as part of a team of developers. The platform was designed to help students build real-world abilities through consistent daily practice, progress tracking, and AI-assisted study support. I contributed to the frontend implementation and interface systems, focusing on intuitive dashboard experiences, clean UI composition, and user-friendly progress visualization.",
+
+    highlightsTitle: "TEAM CONTRIBUTIONS",
+
+    highlights: [
+      "Interactive student dashboard system",
+      "Skill progress and proficiency tracking",
+      "Evidence-based skill submission flow",
+      "Clean and motivating UI architecture",
+      "Collaborative frontend development workflow",
+    ],
+
+    links: {
+      primary: {
+        href: "https://skillz-bloom-jade.vercel.app/",
+        label: "Live Preview",
+      },
+
+      secondary: {
+        href: "https://github.com/UnbeatableFC/skillz-bloom",
+        label: "GitHub",
+      },
     },
   }
 ];

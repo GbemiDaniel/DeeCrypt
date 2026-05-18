@@ -1,8 +1,8 @@
-/* src/components/SideQuest/SideQuestCard.module.css */
+/* src/components/ConceptLabs/ConceptLabsCard.module.css */
 
 /* === MAIN CARD CONTAINER (Matches ModuleCard) === */
 .card {
-  --sidequest-accent: var(--accent, #c99cff);
+  --conceptlabs-accent: var(--accent, #c99cff);
   position: relative;
   display: flex;
   flex-direction: column;

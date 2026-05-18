@@ -1,0 +1,162 @@
+/* ─────────────────────────────────────────────────────────────
+   GlassCard.module.css
+   Updated for "Industrial Minimalism" Volumetric Glass
+───────────────────────────────────────────────────────────── */
+
+/* ─── Base card ────────────────────────────────────────────── */
+.card {
+    position: relative;
+    /* Map legacy variables to modern dark/tech glass tokens */
+    --local-glass-from: color-mix(in oklab, var(--bg, #0f172a) 40%, var(--glass-strong, rgba(20, 20, 30, 0.8)));
+    --local-glass-to: color-mix(in oklab, var(--bg, #0f172a) 60%, transparent);
+    --local-glass-border: var(--border-soft, rgba(255, 255, 255, 0.08));
+    --local-glass-border-highlight: rgba(255, 255, 255, 0.2);
+
+    background: linear-gradient(180deg, var(--local-glass-from) 0%, var(--local-glass-to) 100%);
+
+    /* Industrial Minimalism Rule: Volumetric Glass */
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+
+    border: 1px solid var(--local-glass-border);
+    /* Rim light effect */
+    border-top: 1px solid var(--local-glass-border-highlight);
+
+    /* Deep bottom-dropping shadow to simulate physical mass */
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    border-radius: var(--radius-2xl, 16px);
+    overflow: hidden;
+    color: var(--muted, #a1a1aa);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Heading color inherits from global text token */
+.card h1,
+.card h2,
+.card h3,
+.card h4 {
+    color: var(--text, #ffffff);
+}
+
+/* ─── Size variants ────────────────────────────────────────── */
+.sm {
+    padding: 1rem;
+}
+
+.md {
+    padding: 1.5rem;
+}
+
+.lg {
+    padding: 2rem;
+}
+
+.xl {
+    /* Dynamic padding specifically designed for the large modal chassis */
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* ─── Layout variants ──────────────────────────────────────── */
+.horizontal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.centered {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* ─── Slots ────────────────────────────────────────────────── */
+.imageSlot,
+.diagramSlot {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* In horizontal layout, media goes right, content goes left */
+.horizontal .imageSlot,
+.horizontal .diagramSlot {
+    margin-bottom: 0;
+    order: 2;
+    flex-shrink: 0;
+}
+
+.horizontal .contentSlot {
+    order: 1;
+}
+
+.contentSlot {
+    position: relative;
+    z-index: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* ─── Ray effect ───────────────────────────────────────────── */
+/*
+   Single soft light bloom from the top edge of the card.
+   Uses blur() to soften the gradient into a natural glow shape.
+*/
+.hasRays::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    height: 55%;
+    pointer-events: none;
+    /* Mapped exactly to your project's accent color */
+    background: linear-gradient(180deg,
+            color-mix(in oklab, var(--accent, #c99cff) 35%, transparent) 0%,
+            transparent 100%);
+    border-radius: 0 0 50% 50%;
+    filter: blur(24px);
+    z-index: 0;
+}
+
+/* ─── Glow effect ──────────────────────────────────────────── */
+.hasGlow {
+    /* Combined physical shadow and outer glow tied to accent color */
+    box-shadow: 0 0 40px color-mix(in oklab, var(--accent, #c99cff) 15%, transparent),
+        0 24px 48px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* ─── Visual variants ──────────────────────────────────────── */
+
+/*
+   accent — brighter border + subtle outer glow.
+*/
+.accent {
+    border-color: var(--local-glass-border-highlight);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    /* Stronger rim light */
+    box-shadow: 0 0 24px color-mix(in oklab, var(--accent, #c99cff) 10%, transparent),
+        0 24px 48px -12px rgba(0, 0, 0, 0.5);
+}
+
+/*
+   subtle — flat surface, no gradient, softer blur.
+   Border removed to let the glass recede visually.
+*/
+.subtle {
+    background: color-mix(in oklab, var(--bg, #0f172a) 40%, var(--glass-strong, rgba(20, 20, 30, 0.8)));
+    border-color: transparent;
+    border-top: transparent;
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    box-shadow: none;
+}

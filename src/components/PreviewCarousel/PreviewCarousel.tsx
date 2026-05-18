@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./PreviewCarousel.module.css";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils"; // Import cn utility if not present
 import {
   Carousel,
   CarouselContent,
@@ -23,6 +24,7 @@ export type PreviewItem = {
   previewImage?: string;
   icon?: React.ReactNode;
   meta?: PreviewMeta[];
+  mobileMeta?: PreviewMeta[];
 };
 
 export type PreviewCarouselProps = {
@@ -32,7 +34,6 @@ export type PreviewCarouselProps = {
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
-
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const apply = () => setReduced(mq.matches);
@@ -40,7 +41,6 @@ function usePrefersReducedMotion() {
     mq.addEventListener?.("change", apply);
     return () => mq.removeEventListener?.("change", apply);
   }, []);
-
   return reduced;
 }
 
@@ -49,13 +49,34 @@ export default function PreviewCarousel({
   onOpen,
 }: PreviewCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
-  // Use a ref to store the dot button DOM nodes.
   const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
-
   const canLoop = items.length > 1;
-
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (!api || !canLoop || prefersReducedMotion) return;
+    const DELAY = 5000;
+    let timerId: ReturnType<typeof setTimeout>;
+    const scheduleNext = () => {
+      timerId = setTimeout(() => {
+        api.scrollNext();
+        scheduleNext();
+      }, DELAY);
+    };
+    const pause = () => clearTimeout(timerId);
+    scheduleNext();
+    const root = api.rootNode();
+    root.addEventListener("mouseenter", pause);
+    root.addEventListener("mouseleave", scheduleNext);
+    api.on("pointerDown", pause);
+    return () => {
+      clearTimeout(timerId);
+      root.removeEventListener("mouseenter", pause);
+      root.removeEventListener("mouseleave", scheduleNext);
+      api.off("pointerDown", pause);
+    };
+  }, [api, canLoop, prefersReducedMotion]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 720px)");
@@ -65,10 +86,8 @@ export default function PreviewCarousel({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  // Update dots imperatively for performance
   useEffect(() => {
     if (!api) return;
-
     const updateDots = (emblaApi: CarouselApi) => {
       dotsRef.current.forEach((dotNode, index) => {
         if (!dotNode) return;
@@ -79,26 +98,18 @@ export default function PreviewCarousel({
         }
       });
     };
-
     api.on("select", updateDots);
     api.on("reInit", updateDots);
     updateDots(api);
-
     return () => {
       api.off("select", updateDots);
       api.off("reInit", updateDots);
     };
   }, [api, items]);
 
-  const goTo = (i: number) => {
-    api?.scrollTo(i);
-  };
-  const prev = () => {
-    api?.scrollPrev();
-  };
-  const next = () => {
-    api?.scrollNext();
-  };
+  const goTo = (i: number) => api?.scrollTo(i);
+  const prev = () => api?.scrollPrev();
+  const next = () => api?.scrollNext();
 
   if (!items.length) return null;
 
@@ -112,7 +123,6 @@ export default function PreviewCarousel({
       }}
       className={styles.wrap}
     >
-      {/* Mobile arrows OUTSIDE + pulse */}
       {isMobile && canLoop ? (
         <>
           <Button
@@ -125,7 +135,6 @@ export default function PreviewCarousel({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-
           <Button
             type="button"
             variant="outline"
@@ -139,51 +148,58 @@ export default function PreviewCarousel({
         </>
       ) : null}
 
-      {/* Container: Negative margin to offset item padding */}
       <CarouselContent className="h-full -ml-4">
         {items.map((item) => {
-          const meta = (item.meta ?? []).slice(0, 3);
+          const meta = isMobile
+            ? (item.mobileMeta ?? item.meta ?? []).slice(0, 3)
+            : (item.meta ?? []).slice(0, 3);
 
           return (
             <CarouselItem key={item.id} className={`${styles.slide} pl-4`}>
-              <div className={styles.slideInner}>
-                <div
-                  className={`${styles.preview} noPointer`}
-                  aria-hidden="true"
-                >
-                  {item.previewImage ? (
-                    <img
-                      className={`${styles.previewImg} noPointer`}
-                      src={item.previewImage}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      fetchpriority="low"
-                    />
-                  ) : (
-                    <div className={`${styles.previewTintOnly} noPointer`} />
-                  )}
-                </div>
+              {/* [FIX APPLIED]: Conditionally apply styles for the side-by-side desktop layout */}
+              <div className={cn(styles.slideInner, !isMobile && styles.slideDesktopRow)}>
 
-                <div className={styles.overlayUi} aria-hidden="true">
-                  {item.badge ? (
-                    <div className={styles.badge}>{item.badge}</div>
-                  ) : null}
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className={styles.eyeBtn}
-                    aria-label="Open preview"
-                    aria-haspopup="dialog"
-                    onClick={() => onOpen?.(item)}
+                {/* [FIX APPLIED]: Container for the preview, ordered last on desktop (right) */}
+                <div className={cn(styles.previewWrapper, !isMobile && styles.previewOnRight)}>
+                  <div
+                    className={`${styles.preview} noPointer`}
+                    aria-hidden="true"
                   >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+                    {item.previewImage ? (
+                      <img
+                        className={`${styles.previewImg} noPointer`}
+                        src={item.previewImage}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="low"
+                      />
+                    ) : (
+                      <div className={`${styles.previewTintOnly} noPointer`} />
+                    )}
+                  </div>
+
+                  <div className={styles.overlayUi} aria-hidden="true">
+                    {item.badge ? (
+                      <div className={styles.badge}>{item.badge}</div>
+                    ) : null}
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className={styles.eyeBtn}
+                      aria-label="Open preview"
+                      aria-haspopup="dialog"
+                      onClick={() => onOpen?.(item)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
 
-                <div className={styles.content}>
+                {/* [FIX APPLIED]: Container for the content, ordered first on desktop (left) */}
+                <div className={cn(styles.content, !isMobile && styles.contentOnLeft)}>
                   <div className={styles.textBlock}>
                     <h3 className={styles.title}>{item.title}</h3>
                     <p className={styles.subtitle}>{item.subtitle}</p>

@@ -378,7 +378,13 @@
   }
 
   .meta {
-    column-gap: 1rem;
+    /* Equal columns: abbreviated mobileMeta values now fit, giving even visual weight */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .metaCell {
+    text-align: center;
   }
 
   .dots {

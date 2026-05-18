@@ -1,0 +1,33 @@
+.container {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Styling (padding, background, shadows, typography) is inherited from the parent <Pill> wrapper */
+}
+
+.staticText {
+  margin-right: 0.25rem;
+}
+
+.wordWrapper {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  user-select: none;
+}
+
+.invisibleMeasure {
+  grid-row-start: 1;
+  grid-column-start: 1;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.rotatingWord {
+  grid-row-start: 1;
+  grid-column-start: 1;
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  user-select: text;
+}
