@@ -77,7 +77,7 @@ export const projects: Project[] = [
     subtitle: "Modern creator portfolio focused on timeless digital experiences",
     badge: "COLLAB",
 
-    previewImage: "/projects/designer-portfolio/desginer-portfolio-landing-page.png",
+    previewImage: "/projects/designer-portfolio/designer-portfolio-landing-page.png",
 
     gallery: {
       desktop: [

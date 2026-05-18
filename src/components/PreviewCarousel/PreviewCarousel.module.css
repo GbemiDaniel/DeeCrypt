@@ -48,40 +48,45 @@
 }
 
 /* =========================================
-   1. BACKGROUNDS & IMAGES (FOG REMOVED)
+   1. BACKGROUNDS & IMAGES (LIFTED & CENTERED)
    ========================================= */
 .preview {
   position: absolute;
+  /* THE FIX: We pull the bottom boundary up by 30% so the image physically 
+     cannot encroach on the text block at the bottom. */
+  inset: 0 0 30% 0;
+  opacity: 1;
+  z-index: 0;
+  pointer-events: none;
+
+  /* Flexbox ensures the image floats in the absolute center of this new restricted zone */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   1. BACKGROUNDS & IMAGES
+   ========================================= */
+.preview {
+  position: absolute;
+  /* Desktop default: Takes up the full height of the right-side grid */
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 1;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Notice: The .preview::after murky gradient scrim has been completely deleted! */
-
 .previewImg {
-  width: 100%;
-  height: 100%;
+  /* Scales perfectly to the bounds of the container without artificial max-heights */
+  width: 95%;
+  height: 95%;
   object-fit: contain;
   pointer-events: none;
-  filter: blur(3px);
-  /* Retains depth of field */
   opacity: 0.85;
-  transform: scale(1.05);
-}
-
-.previewTintOnly {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  /* Fixed to respect theme colors instead of hardcoded black */
-  background:
-    radial-gradient(circle at 25% 8%,
-      color-mix(in srgb, var(--accent) 15%, transparent),
-      transparent 30%),
-    linear-gradient(180deg, transparent, color-mix(in srgb, var(--background) 60%, transparent));
-  pointer-events: none;
 }
 
 .previewVideo {
@@ -367,6 +372,10 @@
 
   .navColPlaceholder {
     display: none;
+  }
+
+  .preview {
+    inset: 0 0 35% 0;
   }
 }
 

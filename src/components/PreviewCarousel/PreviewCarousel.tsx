@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import styles from "./PreviewCarousel.module.css";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils"; // Import cn utility if not present
+import { cn } from "@/lib/utils";
 import {
   Carousel,
   CarouselContent,
@@ -49,7 +49,9 @@ export default function PreviewCarousel({
   onOpen,
 }: PreviewCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  // THE FIX: Dots are now tracked by React state, surviving HMR reloads perfectly
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const canLoop = items.length > 1;
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -58,18 +60,22 @@ export default function PreviewCarousel({
     if (!api || !canLoop || prefersReducedMotion) return;
     const DELAY = 5000;
     let timerId: ReturnType<typeof setTimeout>;
+
     const scheduleNext = () => {
       timerId = setTimeout(() => {
         api.scrollNext();
         scheduleNext();
       }, DELAY);
     };
+
     const pause = () => clearTimeout(timerId);
     scheduleNext();
+
     const root = api.rootNode();
     root.addEventListener("mouseenter", pause);
     root.addEventListener("mouseleave", scheduleNext);
     api.on("pointerDown", pause);
+
     return () => {
       clearTimeout(timerId);
       root.removeEventListener("mouseenter", pause);
@@ -86,26 +92,22 @@ export default function PreviewCarousel({
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  // THE FIX: Updates the React state when the slide changes
+  const onSelect = useCallback(() => {
+    if (!api) return;
+    setSelectedIndex(api.selectedScrollSnap());
+  }, [api]);
+
   useEffect(() => {
     if (!api) return;
-    const updateDots = (emblaApi: CarouselApi) => {
-      dotsRef.current.forEach((dotNode, index) => {
-        if (!dotNode) return;
-        if (index === emblaApi.selectedScrollSnap()) {
-          dotNode.classList.add(styles.dotActive);
-        } else {
-          dotNode.classList.remove(styles.dotActive);
-        }
-      });
-    };
-    api.on("select", updateDots);
-    api.on("reInit", updateDots);
-    updateDots(api);
+    onSelect(); // Set initial dot
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
     return () => {
-      api.off("select", updateDots);
-      api.off("reInit", updateDots);
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
-  }, [api, items]);
+  }, [api, onSelect]);
 
   const goTo = (i: number) => api?.scrollTo(i);
   const prev = () => api?.scrollPrev();
@@ -149,17 +151,14 @@ export default function PreviewCarousel({
       ) : null}
 
       <CarouselContent className="h-full -ml-4">
-        {items.map((item) => {
+        {items.map((item, index) => {
           const meta = isMobile
             ? (item.mobileMeta ?? item.meta ?? []).slice(0, 3)
             : (item.meta ?? []).slice(0, 3);
 
           return (
             <CarouselItem key={item.id} className={`${styles.slide} pl-4`}>
-              {/* [FIX APPLIED]: Conditionally apply styles for the side-by-side desktop layout */}
               <div className={cn(styles.slideInner, !isMobile && styles.slideDesktopRow)}>
-
-                {/* [FIX APPLIED]: Container for the preview, ordered last on desktop (right) */}
                 <div className={cn(styles.previewWrapper, !isMobile && styles.previewOnRight)}>
                   <div
                     className={`${styles.preview} noPointer`}
@@ -170,9 +169,9 @@ export default function PreviewCarousel({
                         className={`${styles.previewImg} noPointer`}
                         src={item.previewImage}
                         alt=""
-                        loading="lazy"
-                        decoding="async"
-                        fetchpriority="low"
+                        // THE FIX: Eager load hero images immediately. No more flashing blank slides.
+                        loading={index === 0 ? "eager" : "auto"}
+                        fetchPriority={index === 0 ? "high" : "auto"}
                       />
                     ) : (
                       <div className={`${styles.previewTintOnly} noPointer`} />
@@ -198,7 +197,6 @@ export default function PreviewCarousel({
                   </div>
                 </div>
 
-                {/* [FIX APPLIED]: Container for the content, ordered first on desktop (left) */}
                 <div className={cn(styles.content, !isMobile && styles.contentOnLeft)}>
                   <div className={styles.textBlock}>
                     <h3 className={styles.title}>{item.title}</h3>
@@ -258,9 +256,9 @@ export default function PreviewCarousel({
         {items.map((_, i) => (
           <button
             key={i}
-            ref={(el) => (dotsRef.current[i] = el)}
             type="button"
-            className={styles.dot}
+            // THE FIX: Let React state drive the active class
+            className={cn(styles.dot, i === selectedIndex && styles.dotActive)}
             aria-label={`Go to project ${i + 1}`}
             onClick={() => goTo(i)}
           />
