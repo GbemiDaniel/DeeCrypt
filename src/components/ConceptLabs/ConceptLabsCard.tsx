@@ -147,8 +147,17 @@ export function ConceptLabsCard({
           onClose={() => setSelectedProject(null)}
           title={selectedProject?.name ?? "Untitled"}
           layout="flipped"
-          imageSrc={selectedProject?.modalDetails?.previewImages?.[0] || undefined}
-          gallery={selectedProject?.modalDetails?.previewImages?.slice(1) ?? []}
+
+          // ✅ SAFE FALLBACK: Automatically reads the first image whether it's the old array or the new object
+          imageSrc={
+            Array.isArray(selectedProject?.modalDetails?.previewImages)
+              ? selectedProject?.modalDetails?.previewImages[0]
+              : selectedProject?.modalDetails?.previewImages?.desktop?.[0]
+          }
+
+          // ✅ THE FIX: Passes the exact object downward without trying to slice it
+          gallery={selectedProject?.modalDetails?.previewImages}
+
           description={
             selectedProject?.modalDetails
               ? `${selectedProject.modalDetails.problemStatement ?? ""}\n\nThought Process:\n${selectedProject.modalDetails.thoughtProcess ?? ""}`
@@ -158,7 +167,7 @@ export function ConceptLabsCard({
           highlights={selectedProject?.modalDetails?.currentDirection ?? []}
           primaryHref={selectedProject?.modalDetails?.optionalLink?.url ?? undefined}
           primaryLabel={selectedProject?.modalDetails?.optionalLink?.label ?? undefined}
-          secondaryHref={(selectedProject as Record<string, unknown>)?.url as string | undefined}
+          secondaryHref={undefined}
           meta={[
             { label: "Status", value: "Research / UI", accent: true },
             { label: "Completion", value: `${selectedProject?.progress ?? 0}%` },

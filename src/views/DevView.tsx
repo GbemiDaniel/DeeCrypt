@@ -185,7 +185,13 @@ export default function DevView({ mode }: Props) {
       <PreviewDialog
         open={openPreview}
         title={active?.title ?? "Preview"}
+
+        // ✅ THE FIX: Pass the newly structured device-aware gallery object!
+        gallery={active?.gallery}
+
+        // Fallback for the cover image if the gallery doesn't exist
         imageSrc={active?.previewImage}
+
         videoSrc={active?.previewVideo}
         description={active?.descriptionLong ?? active?.subtitle}
         meta={active?.meta}

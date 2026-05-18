@@ -6,11 +6,12 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
+  Monitor,
+  Smartphone,
 } from "lucide-react";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import type { Mode } from "../../app/modes";
 import styles from "./PreviewDialog.module.css";
 
 export type PreviewDialogMeta = {
@@ -23,7 +24,8 @@ export type PreviewDialogProps = {
   open: boolean;
   title: string;
   imageSrc?: string;
-  gallery?: string[];
+  // ✅ UPDATED: Now supports the device-aware object, or falls back to standard array
+  gallery?: { desktop: string[]; mobile?: string[] } | string[];
   videoSrc?: string;
   description?: string;
   highlights?: string[];
@@ -34,7 +36,6 @@ export type PreviewDialogProps = {
   secondaryHref?: string;
   secondaryLabel?: string;
   onClose: () => void;
-  mode?: Mode;
   layout?: "default" | "flipped";
 };
 
@@ -42,7 +43,7 @@ export default function PreviewDialog({
   open,
   title,
   imageSrc,
-  gallery = [],
+  gallery,
   videoSrc,
   description,
   highlights,
@@ -54,25 +55,57 @@ export default function PreviewDialog({
   onClose,
   layout = "default",
 }: PreviewDialogProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Check if we actually have mobile images in the data
+  const hasMobileImages =
+    gallery !== undefined &&
+    !Array.isArray(gallery) &&
+    Array.isArray(gallery.mobile) &&
+    gallery.mobile.length > 0;
+
+  // ✅ SMART INITIALIZATION: Check screen size on mount
+  useEffect(() => {
+    if (open) {
+      const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+      // Default to mobile images if they exist AND user is on a phone
+      setViewMode(isMobileDevice && hasMobileImages ? "mobile" : "desktop");
+      setActiveIndex(0);
+    }
+  }, [open, hasMobileImages]);
+
+  // ✅ DYNAMIC SLIDE MAPPING
   const slides = useMemo(() => {
     const list = [];
-    if (imageSrc) list.push({ type: "image", src: imageSrc });
 
-    if (Array.isArray(gallery) && gallery.length > 0) {
+    // 1. Handle the new device-aware gallery object
+    if (gallery && !Array.isArray(gallery)) {
+      const activeGallery =
+        viewMode === "mobile" && hasMobileImages
+          ? gallery.mobile
+          : gallery.desktop;
+
+      if (Array.isArray(activeGallery)) {
+        activeGallery.forEach((img) => list.push({ type: "image", src: img }));
+      }
+    }
+    // 2. Fallback for older projects that still pass a flat string[]
+    else if (Array.isArray(gallery)) {
       gallery.forEach((img) => list.push({ type: "image", src: img }));
     }
 
+    // 3. Append video if it exists
     if (videoSrc) list.push({ type: "video", src: videoSrc });
+
+    // 4. Ultimate fallback: Just show the main cover image
+    if (list.length === 0 && imageSrc) {
+      list.push({ type: "image", src: imageSrc });
+    }
+
     return list;
-  }, [imageSrc, gallery, videoSrc]);
-
-  const [activeIndex, setActiveIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (open) setActiveIndex(0);
-  }, [open]);
+  }, [gallery, viewMode, hasMobileImages, videoSrc, imageSrc]);
 
   useEffect(() => {
     const currentSlide = slides[activeIndex];
@@ -94,11 +127,10 @@ export default function PreviewDialog({
       <DialogContent
         className={cn(
           styles.dialogContent,
-          "max-w-[1100px] w-[96vw] h-[85vh] md:h-[650px] p-0 gap-0 border-0", // <-- Removed "relative" to restore "fixed" centering
-          "[&>button[aria-label='Close']]:hidden" // <-- Precisely hides Shadcn's default button
+          "max-w-[1100px] w-[96vw] h-[85vh] md:h-[650px] p-0 gap-0 border-0",
+          "[&>button[aria-label='Close']]:hidden" // Hides Shadcn default button
         )}
       >
-        {/* OUR PREMIUM BUTTON: Uses aria-label="Close Preview" so it survives the class above */}
         <button
           onClick={onClose}
           className={styles.glassCloseBtn}
@@ -108,16 +140,54 @@ export default function PreviewDialog({
         </button>
 
         <div className={cn(styles.root, layout === "flipped" && styles.rootFlipped)}>
-
-          {/* === MEDIA STAGE (Always Dark) === */}
+          {/* === MEDIA STAGE === */}
           <div className="relative w-full h-[45vh] md:h-full md:w-[60%] bg-black group shrink-0">
+
+            {/* ✅ THE GLASSMORPHIC DEVICE TOGGLE */}
+            {hasMobileImages && (
+              <div className="absolute top-4 left-4 z-40 flex items-center gap-1 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 shadow-lg">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setViewMode("desktop");
+                    setActiveIndex(0);
+                  }}
+                  className={cn(
+                    "p-1.5 rounded-full transition-all duration-200 flex items-center justify-center",
+                    viewMode === "desktop"
+                      ? "bg-white/20 text-white shadow-sm"
+                      : "text-white/50 hover:text-white/90 hover:bg-white/10"
+                  )}
+                  aria-label="View desktop layout"
+                >
+                  <Monitor size={15} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setViewMode("mobile");
+                    setActiveIndex(0);
+                  }}
+                  className={cn(
+                    "p-1.5 rounded-full transition-all duration-200 flex items-center justify-center",
+                    viewMode === "mobile"
+                      ? "bg-white/20 text-white shadow-sm"
+                      : "text-white/50 hover:text-white/90 hover:bg-white/10"
+                  )}
+                  aria-label="View mobile layout"
+                >
+                  <Smartphone size={15} />
+                </button>
+              </div>
+            )}
+
             <div className="w-full h-full relative overflow-hidden">
               {slides.map((slide, idx) => (
                 <div
-                  key={idx}
+                  key={`${viewMode}-${idx}`} // Forces re-render of animation when mode switches
                   className={cn(
                     styles.slide,
-                    idx === activeIndex && styles.slideActive,
+                    idx === activeIndex && styles.slideActive
                   )}
                 >
                   {slide.type === "image" ? (
@@ -162,7 +232,7 @@ export default function PreviewDialog({
                   }}
                   className={cn(
                     styles.navBtn,
-                    "hidden md:block absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full opacity-0 group-hover:opacity-100 z-30",
+                    "hidden md:block absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full opacity-0 group-hover:opacity-100 z-30"
                   )}
                 >
                   <ChevronLeft size={24} />
@@ -174,7 +244,7 @@ export default function PreviewDialog({
                   }}
                   className={cn(
                     styles.navBtn,
-                    "hidden md:block absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full opacity-0 group-hover:opacity-100 z-30",
+                    "hidden md:block absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full opacity-0 group-hover:opacity-100 z-30"
                   )}
                 >
                   <ChevronRight size={24} />
@@ -187,7 +257,7 @@ export default function PreviewDialog({
                       onClick={() => goToSlide(idx)}
                       className={cn(
                         styles.dot,
-                        idx === activeIndex && styles.dotActive,
+                        idx === activeIndex && styles.dotActive
                       )}
                       aria-label={`Go to slide ${idx + 1}`}
                     />
@@ -210,7 +280,7 @@ export default function PreviewDialog({
             <div
               className={cn(
                 styles.scrollArea,
-                "flex-1 overflow-y-auto p-5 pt-2 space-y-6",
+                "flex-1 overflow-y-auto p-5 pt-2 space-y-6"
               )}
             >
               {description && (
@@ -264,7 +334,7 @@ export default function PreviewDialog({
                           "text-sm font-medium mt-1 truncate",
                           m.accent
                             ? "text-[var(--accent)]"
-                            : "text-[var(--text)]",
+                            : "text-[var(--text)]"
                         )}
                       >
                         {m.value}

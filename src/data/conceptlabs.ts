@@ -7,7 +7,11 @@ export interface ConceptProject {
 
   // --- NEW: Deep Dive Modal Data ---
   modalDetails: {
-    previewImages: string[]; // Array of image paths (wireframes, screenshots)
+    // UPDATED: Now supports device-specific galleries
+    previewImages: {
+      desktop: string[];
+      mobile?: string[];
+    };
     problemStatement: string;
     thoughtProcess: string; // 1-3 lines max
     currentDirection: string[]; // Array of bullet points
@@ -28,12 +32,20 @@ export const conceptProjects: ConceptProject[] = [
     progress: 15,
 
     modalDetails: {
-      previewImages: [
-        "/projects/Threadlab/threadlab-home.png",
-        "/projects/Threadlab/threadlab-content-editor.png",
-        "/projects/Threadlab/threadlab-analytics.png",
-        "/projects/Threadlab/threadlab-idea-generator.png.png",
-      ],
+      previewImages: {
+        desktop: [
+          "/projects/Threadlab/threadlab-home.png",
+          "/projects/Threadlab/threadlab-content-editor.png",
+          "/projects/Threadlab/threadlab-analytics.png",
+          "/projects/Threadlab/threadlab-idea-generator.png",
+        ],
+        mobile: [
+          "/projects/Threadlab/threadlab-mobile-1.png",
+          "/projects/Threadlab/threadlab-mobile-2.png",
+          "/projects/Threadlab/threadlab-mobile-3.png",
+          "/projects/Threadlab/threadlab-mobile-4.png",
+        ],
+      },
 
       problemStatement:
         "Growing consistently on X requires more than writing good posts. Creators often struggle with idea generation, content organization, engagement optimization, and maintaining a consistent publishing workflow across multiple drafts and threads.",
@@ -61,7 +73,10 @@ export const conceptProjects: ConceptProject[] = [
     description: "Modern digital agency platform focused on premium client experiences",
     progress: 45,
     modalDetails: {
-      previewImages: ["/preview/Webscript Agency.png"],
+      previewImages: {
+        desktop: ["/preview/Webscript Agency.png"],
+        mobile: ["/preview/Webscript Agency Mobile.png"],
+      },
       problemStatement: "Webscript Agency is a modern digital agency platform designed to combine premium visual presentation with scalable frontend architecture.",
       thoughtProcess: "Exploring how business-focused interfaces can feel immersive, interactive, and visually refined while still maintaining usability and performance.",
       currentDirection: [
@@ -77,6 +92,4 @@ export const conceptProjects: ConceptProject[] = [
       }
     }
   },
-  // ... other projects
-  // trigger hmr
 ];
