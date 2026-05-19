@@ -8,7 +8,7 @@ import { useInView } from "react-intersection-observer";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
-import { TIMELINE_DATA, CAPABILITIES_DATA, BADGES_DATA } from "@/data/about";
+import { TIMELINE_DATA, CAPABILITIES_DATA, HIGHLIGHTS_DATA } from "@/data/about";
 import { Timeline } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
@@ -140,6 +140,14 @@ export default function AboutView({ mode }: Props) {
             variant="writer"
             centered
           />
+          <motion.p
+            className={styles.sectionSubtitle}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewConfig}
+          >
+            A few moments and decisions that shaped how I think, build, and create.
+          </motion.p>
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -179,11 +187,19 @@ export default function AboutView({ mode }: Props) {
       <section className={styles.flowSection} ref={badgesSpy}>
         <div className={styles.contentWrapper}>
           <SectionHeader
-            title="Badges & Milestones"
+            title="Selected Highlights"
             icon={Hexagon}
             variant="default"
             centered
           />
+          <motion.p
+            className={styles.sectionSubtitle}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewConfig}
+          >
+            Selected moments, builds, and milestones along the way.
+          </motion.p>
           <motion.div
             className={styles.certGrid}
             initial="hidden"
@@ -191,7 +207,7 @@ export default function AboutView({ mode }: Props) {
             viewport={{ ...viewConfig, amount: 0.1 }}
             variants={contentContainer}
           >
-            {BADGES_DATA.map((badge, i) => (
+            {HIGHLIGHTS_DATA.map((badge, i) => (
               <motion.div key={i} variants={cardVariant}>
                 <BadgeCard {...badge} />
               </motion.div>

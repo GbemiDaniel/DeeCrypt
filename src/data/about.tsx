@@ -19,41 +19,45 @@ import type { TimelineType } from "@/components/Timeline";
 export const TIMELINE_DATA = [
   {
     year: "2026",
-    title: "Building & Launching",
+    title: "Building & Bringing Ideas to Life",
     description:
-      "Shipping frontend projects and preparing to launch DeeCrypt. Building products with a focus on real-world utility and seamless UX.",
+      "Focused on turning ideas into real products through frontend engineering, experimentation, and intentional design. Expanding from building interfaces to creating experiences shaped around people and purpose.",
     icon: <Zap size={14} />,
     type: "dev" as TimelineType,
   },
+
   {
     year: "2025",
-    title: "QA Testing & Bug Hunting",
+    title: "Learning Through Testing",
     description:
-      "Joined test.io to break products under real conditions. Learning exactly how systems fail in the wild so I can write more bulletproof code.",
+      "Started testing products in real-world conditions to better understand usability, edge cases, and how thoughtful systems are built. This shifted my approach from writing features to designing resilient experiences.",
     icon: <Terminal size={14} />,
     type: "dev" as TimelineType,
   },
+
   {
     year: "2025",
-    title: "The Web3 & Writing Dive",
+    title: "Exploring Beyond the Interface",
     description:
-      "Started learning smart contract security via Cyfrin Updraft. Documenting my journey through blockchain, AI, and frontend to help others learn.",
+      "Began documenting my learning journey while exploring Web3, AI, and emerging technologies. Writing became a way to think clearly, share ideas, and deepen my understanding through creation.",
     icon: <PenTool size={14} />,
     type: "writer" as TimelineType,
   },
+
   {
-    year: "2024",
-    title: "Programmify Internship",
+    year: "2025",
+    title: "First Collaborative Build",
     description:
-      "Collaborated on Skillz Bloom with a remote team. First real project experience with Git workflows, agile development, and code reviews.",
+      "Worked with a remote team during my internship to bring ideas into production. Learned the foundations of collaboration, feedback, version control, and building beyond solo projects.",
     icon: <Briefcase size={14} />,
     type: "dev" as TimelineType,
   },
+
   {
     year: "2024",
-    title: "CS Grad → Self-Taught Dev",
+    title: "From Theory to Building",
     description:
-      "Graduated from the University of Nigeria. Took my foundation in CS theory and immediately taught myself the practice of building with React and TypeScript.",
+      "Graduated with a Computer Science degree and shifted focus toward building modern web experiences. Started turning concepts into working products through self-driven learning and hands-on execution.",
     icon: <GraduationCap size={14} />,
     type: "dev" as TimelineType,
   },
@@ -87,63 +91,63 @@ export const CAPABILITIES_DATA = [
 ];
 
 
-// --- BADGES DATA ---
-export const BADGES_DATA = [
+export const HIGHLIGHTS_DATA = [
   {
     type: "dev" as const,
-    title: "Portfolio v1 Shipped",
-    subtitle: "Designed & Built from Scratch",
+    title: "Portfolio Reimagined",
+    subtitle: "Building a more intentional digital identity",
     date: "2026",
     status: "Live",
     link: "https://gbemidaniel.vercel.app",
     icon: <Code size={28} color="var(--accent)" />,
   },
+
   {
     type: "dev" as const,
-    title: "Bronze QA Tester",
-    subtitle: "3 Badges Earned on test.io",
+    title: "Quality Through Testing",
+    subtitle: "Exploring products through real-world testing",
     date: "2026",
-    status: "Active",
-    link: "https://test.io/",
+    status: "Completed",
     icon: <CheckCircle2 size={28} color="var(--accent)" />,
   },
+
   {
     type: "dev" as const,
-    title: "Blockchain Foundations",
-    subtitle: "Cyfrin Updraft - 75% Complete",
-    date: "In Progress",
-    status: "Learning",
-    link: "#",
+    title: "Exploring Web3 Foundations",
+    subtitle: "Expanding across security, systems, and emerging tech",
+    date: "2026",
+    status: "Exploring",
     icon: <Rocket size={28} color="var(--accent)" />,
   },
+
   {
     type: "writer" as const,
-    title: "DeeCrypt Brand",
-    subtitle: "Logo Designed, Content in Draft",
-    date: "Launching Q2 2026",
+    title: "DeeCrypt",
+    subtitle: "Shaping a space for building and sharing ideas",
+    date: "In Progress",
     status: "Building",
-    link: "https://twitter.com/deecrypthub",
     icon: <PenTool size={28} color="#a855f7" />,
   },
+
   {
     type: "dev" as const,
-    title: "Final Year Project",
-    subtitle: "Real Estate PWA - Nsukka Case Study",
+    title: "First End-to-End Product",
+    subtitle: "Applied product thinking through academic research",
     date: "2024",
     status: "Completed",
-    link: "#",
     icon: <Award size={28} color="var(--accent)" />,
   },
+
   {
     type: "dev" as const,
-    title: "Programmify Internship",
-    subtitle: "Remote Team Collaboration - 6 Developers",
+    title: "First Team Build",
+    subtitle: "Collaborated remotely to deliver a real product",
     date: "2024",
     status: "Completed",
-    link: "#",
     icon: <Briefcase size={28} color="var(--accent)" />,
   },
 ];
+
 export const LIFESTYLE_ITEMS = [
   { label: "Series & Cinema", icon: <Tv size={14} /> },
   { label: "Journaling", icon: <BookOpen size={14} /> },
