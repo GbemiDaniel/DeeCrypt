@@ -15,16 +15,14 @@ const FLIP_SPRING = {
 interface PersonaCardProps {
     photoSrc?: string;
     photoAlt?: string;
-    /** * Delays the automated flip to sync with the terminal typing effect.
-     * Default is 3800ms (3.8 seconds). Adjust this dial to match your exact typing speed.
-     */
-    bootDelayMs?: number;
+    /** Controlled flip state triggered by parent */
+    flipTrigger?: boolean;
 }
 
 export function PersonaCard({
     photoSrc = "/GbemiDaniel_Face.png",
     photoAlt = "Gbemi Daniel — the face behind Deecrypt",
-    bootDelayMs = 13800, // <-- THE FIX: Extended to outlast the typewriter
+    flipTrigger = false,
 }: PersonaCardProps) {
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -32,15 +30,10 @@ export function PersonaCard({
      * AUTOMATED BOOT SEQUENCE
      */
     useEffect(() => {
-        // If bootDelayMs is set to 0, disable auto-flip entirely
-        if (bootDelayMs <= 0) return;
-
-        const timer = setTimeout(() => {
+        if (flipTrigger) {
             setIsFlipped(true);
-        }, bootDelayMs);
-
-        return () => clearTimeout(timer);
-    }, [bootDelayMs]);
+        }
+    }, [flipTrigger]);
 
     /** Manual toggle */
     const handleFlip = () => setIsFlipped((prev) => !prev);

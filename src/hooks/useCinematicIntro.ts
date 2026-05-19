@@ -1,22 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function useCinematicIntro(isLoading: boolean) {
   const [text, setText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [sequencePhase, setSequencePhase] = useState("cursor");
 
+  // THE FIX: We use a ref to track the string synchronously. 
+  // This prevents the useEffect from endlessly restarting on every keystroke.
+  const textRef = useRef("");
+
   useEffect(() => {
     // Wait for preloader to finish
     if (isLoading) return;
 
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
+    let isCancelled = false;
 
     // Helper: Type char by char
     const typeText = (target: string, nextPhase: string, speed = 50) => {
       let i = 0;
       const tick = () => {
+        if (isCancelled) return;
         if (i <= target.length) {
-          setText(target.slice(0, i));
+          textRef.current = target.slice(0, i);
+          setText(textRef.current);
           i++;
           timeout = setTimeout(tick, speed);
         } else {
@@ -28,10 +35,12 @@ export function useCinematicIntro(isLoading: boolean) {
 
     // Helper: Delete char by char
     const deleteText = (nextPhase: string, speed = 30) => {
-      let i = text.length;
+      let i = textRef.current.length;
       const tick = () => {
+        if (isCancelled) return;
         if (i >= 0) {
-          setText(text.slice(0, i));
+          textRef.current = textRef.current.slice(0, i);
+          setText(textRef.current);
           i--;
           timeout = setTimeout(tick, speed);
         } else {
@@ -44,65 +53,51 @@ export function useCinematicIntro(isLoading: boolean) {
     // --- CINEMATIC SEQUENCE ---
     switch (sequencePhase) {
       case "cursor":
-        // 1. Initial Wait (1.5s)
-        timeout = setTimeout(() => setSequencePhase("typing1"), 1500);
+        timeout = setTimeout(() => {
+          if (!isCancelled) setSequencePhase("typing1");
+        }, 2500); // FIXED: 2.5s initial wait before typing
         break;
 
       case "typing1":
-        // 2. "Welcome."
-        typeText("Welcome.", "pause1", 80);
+        typeText("Loading Identity...", "pause1", 60);
         break;
       case "pause1":
-        timeout = setTimeout(() => setSequencePhase("deleting1"), 800);
+        timeout = setTimeout(() => {
+          if (!isCancelled) setSequencePhase("deleting1");
+        }, 1000);
         break;
       case "deleting1":
         deleteText("typing2");
         break;
 
       case "typing2":
-        // 3. "I'm Gbemi Daniel."
-        typeText("I'm Gbemi Daniel.", "pause2", 60);
+        typeText("Welcome.", "pause2", 80);
         break;
       case "pause2":
-        timeout = setTimeout(() => setSequencePhase("deleting2"), 1000);
-        break;
-      case "deleting2":
-        deleteText("typing3");
-        break;
-
-      case "typing3":
-        // 4. "What i do"
-        typeText("I build. I learn. I share.", "pause3", 50);
-        break;
-      case "pause3":
-        timeout = setTimeout(() => setSequencePhase("deleting3"), 1500);
-        break;
-      case "deleting3":
-        deleteText("typing4");
-        break;
-
-      case "typing4":
-        // 5. "Curating the narrative is the goal."
-        typeText("Here's my story", "pause4", 50);
-        break;
-      case "pause4":
-        timeout = setTimeout(() => setSequencePhase("fading"), 1200);
+        timeout = setTimeout(() => {
+          if (!isCancelled) setSequencePhase("fading");
+        }, 1000);
         break;
 
       case "fading":
-        // 6. Trigger Fade Out
-        timeout = setTimeout(() => setSequencePhase("final"), 600);
+        timeout = setTimeout(() => {
+          if (!isCancelled) setSequencePhase("final");
+        }, 600);
         break;
 
       case "final":
-        // 7. Show Final Static Header
-        setShowCursor(false);
+        if (!isCancelled) setShowCursor(false);
         break;
     }
 
-    return () => clearTimeout(timeout);
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeout);
+    };
+
+    // Notice: `text` is completely removed from this array.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sequencePhase, isLoading]); 
+  }, [sequencePhase, isLoading]);
 
   return { text, showCursor, sequencePhase };
 }

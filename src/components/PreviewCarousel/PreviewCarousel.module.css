@@ -71,13 +71,14 @@
 .preview {
   position: absolute;
   /* Desktop default: Takes up the full height of the right-side grid */
-  inset: 0;
+  inset: 0 0 25% 0;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 1;
   z-index: 0;
   pointer-events: none;
+
 }
 
 .previewImg {

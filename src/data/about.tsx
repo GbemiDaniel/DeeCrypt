@@ -58,29 +58,28 @@ export const TIMELINE_DATA = [
     type: "dev" as TimelineType,
   },
 ];
-// --- ARSENAL (SKILLS) DATA ---
-// --- UPDATED ARSENAL DATA (Minimal + Tech Stack) ---
-export const ARSENAL_DATA = [
+// --- CAPABILITIES DATA ---
+export const CAPABILITIES_DATA = [
   {
-    title: "Frontend Engineer",
+    title: "Experience Engineering",
     description:
-      "I craft interfaces that feel effortless. Code is simply the tool; performance, accessibility, and the user's experience are what actually matter.",
+      "Designing and building digital experiences that balance usability, interaction, and visual identity.",
     icon: <Code size={24} />,
     type: "dev",
     tech: ["React", "TypeScript", "Tailwind", "Framer"],
   },
   {
-    title: "QA Tester",
+    title: "Product Thinking",
     description:
-      "I break products under real conditions to learn how to build them better. Every bug found is a lesson in creating resilient systems.",
+      "Exploring ideas through testing, iteration, and thoughtful execution to create more resilient experiences.",
     icon: <Terminal size={24} />,
     type: "dev",
     tech: ["Manual Testing", "User Flows", "Bug Reporting"],
   },
   {
-    title: "Technical Writer",
+    title: "Knowledge Sharing",
     description:
-      "I document the chaos of building. From frontend architecture to Web3 exploration, I make complex concepts accessible to the curious.",
+      "Documenting lessons, workflows, and discoveries to make ideas more accessible and practical.",
     icon: <PenTool size={24} />,
     type: "writer",
     tech: ["Tech Blogs", "Documentation", "Web3 Guides"],

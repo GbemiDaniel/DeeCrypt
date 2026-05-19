@@ -8,8 +8,8 @@ import { PersonaCard } from "@/components/PersonaCard/PersonaCard";
 
 // --- VARIANTS ---
 const avatarPop: Variants = {
-  hidden: { scale: 0, opacity: 0, rotate: -10 },
-  visible: {
+  cardHidden: { scale: 0, opacity: 0, rotate: -10 },
+  cardVisible: {
     scale: 1,
     opacity: 1,
     rotate: 0,
@@ -17,7 +17,6 @@ const avatarPop: Variants = {
   },
 };
 
-// --- STORY-DRIVEN ASSEMBLY VARIANTS ---
 const bioContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -33,7 +32,6 @@ const textChunk: Variants = {
 
 const badgePop: Variants = {
   hidden: { opacity: 0, scale: 0.8, y: 10 },
-  // Spring physics makes it look like physical hardware clicking into place
   visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 250, damping: 15 } },
 };
 
@@ -42,18 +40,28 @@ type Props = { isLoading: boolean; };
 export function AboutHero({ isLoading }: Props) {
   const { text, showCursor, sequencePhase } = useCinematicIntro(isLoading);
 
+  // THE FIX: We trigger the card flip earlier! 
+  // As soon as the system starts deleting "Loading Identity..." to type "Welcome", the card flips in.
+  const isIdentityLoaded = ["deleting1", "typing2", "pause2", "fading", "final"].includes(sequencePhase);
+
   return (
     <section className={styles.heroScreen}>
       <div className={styles.contentWrapper}>
         <motion.div className={styles.heroSection} initial="hidden" whileInView="visible" viewport={{ once: true }}>
 
-          {/* PERSONA CARD — Heavy Mechanical Flip */}
-          <motion.div variants={avatarPop} className={styles.cardAnchor}>
-            <PersonaCard />
+          {/* PERSONA CARD — Triggered by `isIdentityLoaded` */}
+          <motion.div
+            variants={avatarPop}
+            className={styles.cardAnchor}
+            initial="cardHidden"
+            animate={isIdentityLoaded ? "cardVisible" : "cardHidden"}
+          >
+            <PersonaCard flipTrigger={isIdentityLoaded} />
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.5, type: "spring", stiffness: 300 }}
+              // The status badge waits until the very end to "boot up" with the rest of the bio
+              animate={sequencePhase === "final" ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
               className={styles.statusBadge}
             >
               <span className={styles.statusDot} /> Open to Work
@@ -71,13 +79,11 @@ export function AboutHero({ isLoading }: Props) {
                   exit={{ opacity: 0, filter: "blur(10px)", transition: { duration: 0.5 } }}
                 >
                   {text}
-                  {/* The literal <_ CRT cursor */}
                   {showCursor && <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className={styles.cursor}>&lt;_</motion.span>}
                 </motion.div>
               )}
 
-              {/* FINAL HEADER (The Hardware Dashboard) */}
-              {/* RENDER CONTINUOUSLY TO RESERVE SPACE, ONLY FADE IN WHEN ACTIVE */}
+              {/* FINAL HEADER */}
               <motion.div
                 key="finalHeader"
                 className={styles.finalHeaderWrapper}
@@ -92,33 +98,12 @@ export function AboutHero({ isLoading }: Props) {
                   pointerEvents: sequencePhase === "final" ? "auto" : "none",
                 }}
               >
-
-                {/* Perfectly sized, Ash-Green metallic lead-in with ambient sweep */}
                 <h2 className={styles.metallicHeader}>I'm Gbemi Daniel</h2>
-
-                {/* The Physical Hardware Chains */}
-                <div className={styles.chainContainer}>
-                  <div className={styles.chainLeft} />
-                  <div className={styles.chainRight} />
-                </div>
-
-                <GlassPlaque variant="default" className={styles.deecryptPlaque}>
-                  {/* Localized teal/cyan glow override — paints over GlassPlaque's global ::before.
-                      No global styles modified. Strictly scoped to this instance. */}
-                  <div className={styles.deecryptGlowOverride} aria-hidden="true" />
-                  <motion.img
-                    src="/logos/DeeCrypt_handwritten_logo.png"
-                    alt="DeeCrypt handwritten metallic logo"
-                    className={`w-full h-full object-contain scale-[1.4] ${styles.pulseDeecryptImg}`}
-                  />
-                </GlassPlaque>
-
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* FINAL BIO CONTENT (The Module Boot-Up) */}
-          {/* RENDER CONTINUOUSLY TO RESERVE SPACE */}
+          {/* FINAL BIO CONTENT */}
           <motion.div
             className={styles.introText}
             variants={bioContainer}
@@ -128,41 +113,18 @@ export function AboutHero({ isLoading }: Props) {
               pointerEvents: sequencePhase === "final" ? "auto" : "none",
             }}
           >
+            <motion.p variants={textChunk} className={styles.paragraph} style={{ marginBottom: "1rem" }}>
+              I design and build digital experiences that reflect the identity of brands, professionals, and products while balancing clarity, usability, and strong visual direction.
+            </motion.p>
 
-            <p className={styles.paragraph}>
-              <motion.span variants={textChunk} className="inline-block">
-                I build web applications, test digital products, and write about what keeps me curious—
-              </motion.span>
-
-              <motion.span variants={badgePop} className="inline-block">
-                <GlassPlaque variant="inline">
-                  <span className={styles.pulseFrontend}>frontend dev</span>
-                </GlassPlaque>
-              </motion.span>
-
-              <motion.span variants={textChunk} className="inline-block">, </motion.span>
-
-              <motion.span variants={badgePop} className="inline-block">
-                <GlassPlaque variant="inline">
-                  <span className={styles.pulseAI}>emerging AI</span>
-                </GlassPlaque>
-              </motion.span>
-
-              <motion.span variants={textChunk} className="inline-block">
-                , and the evolving{" "}
-              </motion.span>
-
-              <motion.span variants={badgePop} className="inline-block">
-                <GlassPlaque variant="inline">
-                  <span className={styles.pulseWeb3}>Web3 space</span>
-                </GlassPlaque>
-              </motion.span>
-
-              <motion.span variants={textChunk} className="inline-block">.</motion.span>
-            </p>
+            <motion.p variants={textChunk} className={styles.paragraph}>
+              My work combines frontend engineering, product thinking, and creative execution to create experiences that feel intentional, distinct, and built for the people they serve.
+            </motion.p>
 
             <motion.div variants={textChunk} className={styles.summaryBox}>
-              Want to know how I got here and where I'm heading? Scroll down.
+              <span style={{ opacity: 0.6, fontSize: "0.85rem", letterSpacing: "0.02em" }}>
+                Building across modern web, emerging AI, and digital products.
+              </span>
 
               <motion.div variants={badgePop}>
                 <GlassPlaque variant="icon" className={styles.arrowPlaqueWrapper}>

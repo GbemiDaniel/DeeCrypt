@@ -8,7 +8,7 @@ import { useInView } from "react-intersection-observer";
 import { setSectionLabel } from "../hooks/useScrollSpy";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
-import { TIMELINE_DATA, ARSENAL_DATA, BADGES_DATA } from "@/data/about";
+import { TIMELINE_DATA, CAPABILITIES_DATA, BADGES_DATA } from "@/data/about";
 import { Timeline } from "@/components/Timeline";
 import { BadgeCard } from "@/components/BadgeCard/BadgeCard";
 import { ContactPanel } from "@/components/ContactPanel/ContactPanel";
@@ -56,9 +56,9 @@ export default function AboutView({ mode }: Props) {
     onChange: (v) => v && setSectionLabel(null),
   });
 
-  const { ref: arsenalSpy } = useInView({
+  const { ref: capabilitiesSpy } = useInView({
     ...spyConfig,
-    onChange: (v) => v && setSectionLabel("THE ARSENAL"),
+    onChange: (v) => v && setSectionLabel("CAPABILITIES"),
   });
 
   const { ref: journeySpy } = useInView({
@@ -94,14 +94,22 @@ export default function AboutView({ mode }: Props) {
         <AboutHero isLoading={false} />
       </div>
 
-      <section className={styles.flowSection} ref={arsenalSpy}>
+      <section className={styles.flowSection} ref={capabilitiesSpy}>
         <div className={styles.contentWrapper}>
           <SectionHeader
-            title="The Arsenal"
+            title="Capabilities"
             icon={Terminal}
             variant="default"
             centered
           />
+          <motion.p
+            className={styles.sectionSubtitle}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewConfig}
+          >
+            The disciplines that shape how I think, build, and bring ideas to life.
+          </motion.p>
           <motion.div
             className={styles.gridSection}
             initial="hidden"
@@ -109,7 +117,7 @@ export default function AboutView({ mode }: Props) {
             viewport={viewConfig}
             variants={contentContainer}
           >
-            {ARSENAL_DATA.map((item, index) => (
+            {CAPABILITIES_DATA.map((item, index) => (
               <motion.div key={index} variants={cardVariant}>
                 <SkillCard
                   title={item.title}
