@@ -5,27 +5,26 @@ export function useCinematicIntro(isLoading: boolean) {
   const [showCursor, setShowCursor] = useState(true);
   const [sequencePhase, setSequencePhase] = useState("cursor");
 
-  // THE FIX: We use a ref to track the string synchronously. 
-  // This prevents the useEffect from endlessly restarting on every keystroke.
   const textRef = useRef("");
+  // THE FIX: Storing the timeout in a ref so we can definitively clear it across renders
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
-    // Wait for preloader to finish
     if (isLoading) return;
 
-    let timeout: ReturnType<typeof setTimeout>;
-    let isCancelled = false;
+    // THE FIX: Strict Mode safeguard flag. 
+    // If the component unmounts, this flips to false and stops the recursive typing dead in its tracks.
+    let isActive = true;
 
-    // Helper: Type char by char
     const typeText = (target: string, nextPhase: string, speed = 50) => {
       let i = 0;
       const tick = () => {
-        if (isCancelled) return;
+        if (!isActive) return; // Abort if unmounted
         if (i <= target.length) {
           textRef.current = target.slice(0, i);
           setText(textRef.current);
           i++;
-          timeout = setTimeout(tick, speed);
+          timeoutRef.current = setTimeout(tick, speed);
         } else {
           setSequencePhase(nextPhase);
         }
@@ -33,16 +32,15 @@ export function useCinematicIntro(isLoading: boolean) {
       tick();
     };
 
-    // Helper: Delete char by char
     const deleteText = (nextPhase: string, speed = 30) => {
       let i = textRef.current.length;
       const tick = () => {
-        if (isCancelled) return;
+        if (!isActive) return; // Abort if unmounted
         if (i >= 0) {
           textRef.current = textRef.current.slice(0, i);
           setText(textRef.current);
           i--;
-          timeout = setTimeout(tick, speed);
+          timeoutRef.current = setTimeout(tick, speed);
         } else {
           setSequencePhase(nextPhase);
         }
@@ -53,17 +51,17 @@ export function useCinematicIntro(isLoading: boolean) {
     // --- CINEMATIC SEQUENCE ---
     switch (sequencePhase) {
       case "cursor":
-        timeout = setTimeout(() => {
-          if (!isCancelled) setSequencePhase("typing1");
-        }, 2500); // FIXED: 2.5s initial wait before typing
+        timeoutRef.current = setTimeout(() => {
+          if (isActive) setSequencePhase("typing1");
+        }, 2500); // 2.5s blank screen with just the blinking cursor
         break;
 
       case "typing1":
         typeText("Loading Identity...", "pause1", 60);
         break;
       case "pause1":
-        timeout = setTimeout(() => {
-          if (!isCancelled) setSequencePhase("deleting1");
+        timeoutRef.current = setTimeout(() => {
+          if (isActive) setSequencePhase("deleting1");
         }, 1000);
         break;
       case "deleting1":
@@ -74,29 +72,27 @@ export function useCinematicIntro(isLoading: boolean) {
         typeText("Welcome.", "pause2", 80);
         break;
       case "pause2":
-        timeout = setTimeout(() => {
-          if (!isCancelled) setSequencePhase("fading");
+        timeoutRef.current = setTimeout(() => {
+          if (isActive) setSequencePhase("fading");
         }, 1000);
         break;
 
       case "fading":
-        timeout = setTimeout(() => {
-          if (!isCancelled) setSequencePhase("final");
+        timeoutRef.current = setTimeout(() => {
+          if (isActive) setSequencePhase("final");
         }, 600);
         break;
 
       case "final":
-        if (!isCancelled) setShowCursor(false);
+        setShowCursor(false);
         break;
     }
 
+    // THE FIX: Cleanup function runs when component unmounts (or Strict Mode does its double-fire)
     return () => {
-      isCancelled = true;
-      clearTimeout(timeout);
+      isActive = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-
-    // Notice: `text` is completely removed from this array.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sequencePhase, isLoading]);
 
   return { text, showCursor, sequencePhase };

@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import styles from "./PersonaCard.module.css";
 
-/**
- * HARDWARE PHYSICS: Heavy mechanical spring.
- */
 const FLIP_SPRING = {
     type: "spring" as const,
     mass: 2.5,
@@ -12,10 +9,9 @@ const FLIP_SPRING = {
     damping: 20,
 } satisfies Parameters<typeof motion.div>[0]["transition"];
 
-interface PersonaCardProps {
+interface PersonaCardProps extends HTMLMotionProps<"div"> {
     photoSrc?: string;
     photoAlt?: string;
-    /** Controlled flip state triggered by parent */
     flipTrigger?: boolean;
 }
 
@@ -23,24 +19,31 @@ export function PersonaCard({
     photoSrc = "/GbemiDaniel_Face.png",
     photoAlt = "Gbemi Daniel — the face behind Deecrypt",
     flipTrigger = false,
+    className,
+    ...motionProps
 }: PersonaCardProps) {
     const [isFlipped, setIsFlipped] = useState(false);
 
-    /**
-     * AUTOMATED BOOT SEQUENCE
-     */
+    // THE FIX: High-priority image preloading
+    // Forces the browser to load the image into cache immediately on mount
+    useEffect(() => {
+        if (photoSrc) {
+            const img = new Image();
+            img.src = photoSrc;
+        }
+    }, [photoSrc]);
+
     useEffect(() => {
         if (flipTrigger) {
             setIsFlipped(true);
         }
     }, [flipTrigger]);
 
-    /** Manual toggle */
     const handleFlip = () => setIsFlipped((prev) => !prev);
 
     return (
-        <div
-            className={styles.wrapper}
+        <motion.div
+            className={`${styles.wrapper} ${className || ""}`}
             onClick={handleFlip}
             role="button"
             tabIndex={0}
@@ -51,14 +54,15 @@ export function PersonaCard({
                     handleFlip();
                 }
             }}
-            // 1. THE CAMERA
             style={{ perspective: "1200px" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            {...motionProps}
         >
             <motion.div
                 className={styles.chassis}
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
                 transition={FLIP_SPRING}
-                // 2. THE HINGE
                 style={{
                     transformStyle: "preserve-3d",
                     position: "relative",
@@ -77,7 +81,6 @@ export function PersonaCard({
                         WebkitBackfaceVisibility: "hidden",
                     }}
                 >
-                    {/* THE FIX: Forced 100% width/height on the well, and centered its contents */}
                     <div
                         className={styles.badgeWell}
                         style={{
@@ -86,7 +89,7 @@ export function PersonaCard({
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            padding: "0" // Set to 0 to maximize zoom
+                            padding: "0"
                         }}
                     >
                         <img
@@ -94,7 +97,6 @@ export function PersonaCard({
                             alt="Deecrypt brand logo"
                             className={styles.brandLogo}
                             draggable={false}
-                            // THE FIX: object-fit contain makes it scale up as much as possible without cropping
                             style={{
                                 width: "100%",
                                 height: "100%",
@@ -122,17 +124,18 @@ export function PersonaCard({
                         alt={photoAlt}
                         className={styles.photo}
                         draggable={false}
+                        // Ensure modern browsers prioritize this image
+                        fetchPriority="high"
                         style={{
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
-                            // THE FIX: Moves the center focus of the image up. Adjust percentage as needed.
                             objectPosition: "center 40%"
                         }}
                     />
                     <div className={styles.neonMask} aria-hidden="true" />
                 </div>
             </motion.div>
-        </div>
+        </motion.div>
     );
 }

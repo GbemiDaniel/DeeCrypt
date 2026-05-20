@@ -1,4 +1,5 @@
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
+import { XIcon } from "@/components/icons/XIcon";
 import styles from "./Footer.module.css";
 // Ensure you import the Mode type so TypeScript is happy
 import type { Mode } from "../../app/modes";
@@ -14,9 +15,9 @@ export default function Footer({ mode }: FooterProps) {
   const socialLinks = [
     { icon: Github, href: siteConfig.socials.github, label: "GitHub" },
     {
-      icon: Twitter,
+      icon: XIcon,
       href: siteConfig.socials.twitter,
-      label: "Twitter",
+      label: "X (Twitter)",
     },
     {
       icon: Linkedin,

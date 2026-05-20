@@ -22,20 +22,11 @@ import {
   Newspaper,
   Linkedin,
   PenTool,
-  Twitter,
-  Mail,
-  X,
   TerminalSquare,
 } from "lucide-react";
+import { XIcon } from "@/components/icons/XIcon";
 
 const PLATFORMS = [
-  {
-    id: "twitter",
-    href: siteConfig.socials.twitter,
-    label: " ",
-    icon: <X size={14} />,
-    color: "#ffffff",
-  },
   {
     id: "linkedin",
     href: siteConfig.socials.linkedin,
@@ -44,18 +35,25 @@ const PLATFORMS = [
     color: "#0a66c2",
   },
   {
-    id: "devto",
-    href: siteConfig.socials.medium,
-    label: "DevTo",
-    icon: <TerminalSquare size={14} />,
-    color: "#000000",
-  },
-  {
     id: "medium",
     href: siteConfig.socials.medium,
     label: "Medium",
     icon: <Newspaper size={14} />,
     color: "#FFC017",
+  },
+  {
+    id: "devto",
+    href: siteConfig.socials.medium,
+    label: "Dev.to",
+    icon: <TerminalSquare size={14} />,
+    color: "#000000",
+  },
+  {
+    id: "twitter",
+    href: siteConfig.socials.twitter,
+    label: " ",
+    icon: <XIcon size={14} />,
+    color: "#ffffff",
   },
 ];
 
@@ -125,10 +123,10 @@ export default function WriterView() {
           }
           subcopy={
             <>
-              Essays, threads, and notes about frontend clarity, Web3 UX,
-              learning, and{" "}
+              Thoughts on building, design decisions, emerging technology, and
+              creating{" "}
               <span className={heroStyles.writerHighlight}>
-                building in the open
+                digital experiences that feel intentional
               </span>
               .
             </>
@@ -159,18 +157,18 @@ export default function WriterView() {
             >
               <ModuleCard
                 variant="writer"
-                title="Topics"
-                subtitle="Themes I keep circling back to."
+                title="Field Notes"
+                subtitle="Ideas & concepts shaping how i build."
                 icon={BookOpen}
                 footer={
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {[
-                      "UI clarity",
-                      "Frontend systems",
-                      "Web3 UX",
-                      "Writing craft",
-                      "Learning notes",
-                      "Product thinking",
+                      "Interface Design",
+                      "Product Systems",
+                      "Emerging Tech",
+                      "Web3",
+                      "Creative Process",
+                      "Builder Notes",
                     ].map((t) => (
                       <Tag key={t}>{t}</Tag>
                     ))}
@@ -186,8 +184,8 @@ export default function WriterView() {
             >
               <ModuleCard
                 variant="writer"
-                title="Platforms"
-                subtitle="Where I publish."
+                title="Published Across"
+                subtitle="Places I write and share."
                 icon={Newspaper}
                 footer={
                   <div className={styles.platformContainer}>
@@ -225,17 +223,17 @@ export default function WriterView() {
       <div ref={ctaSpy}>
         <MinimalCTA
           icon={PenTool}
-          title="DeeCrypt / Q2 2026"
-          subtitle="Simplifying blockchain tech through clarity."
+          title="Builder Notes"
+          subtitle="Thoughts, lessons, and ideas from the process of creating digital experiences."
           primaryAction={{
-            label: "Follow Updates",
-            href: siteConfig.socials.secondaryTwitter,
-            icon: Twitter,
+            label: "Read More",
+            href: siteConfig.socials.medium,
+            icon: BookOpen,
           }}
           secondaryAction={{
-            label: "Get Notified",
-            href: `mailto:${siteConfig.email}`,
-            icon: Mail,
+            label: "Follow Along",
+            href: siteConfig.socials.twitter,
+            icon: XIcon,
           }}
         />
       </div>

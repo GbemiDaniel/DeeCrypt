@@ -1,27 +1,27 @@
 /* src/components/AboutHero/AboutHero.module.css */
 
+/* THE HEIGHT FIX: heroScreen naturally locks to 100dvh for the cinematic centering */
 .heroScreen {
-  /*
-   * PHASE 2: THE 100DVH BLAST DOOR.
-   * This is the unbreakable ATF lock.
-   * 100dvh = dynamic viewport height (accounts for mobile browser chrome).
-   * overflow:hidden is the physical wall — nothing escapes this container.
-   */
   position: relative;
-  height: 100dvh;
+  min-height: 100dvh;
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* No padding-top here — Navbar clearance is handled inside heroSection */
   padding: 0 1.5rem;
+  transition: min-height 0.8s ease-in-out, padding 0.8s ease-in-out;
+}
+
+.bentoActive {
+  min-height: 0;
+  padding-top: clamp(2rem, 8vh, 6rem);
+  padding-bottom: clamp(4rem, 10vh, 6rem);
 }
 
 .contentWrapper {
   width: 100%;
-  max-width: 640px;
-  /* flex:1 + height:100% fills the entire heroScreen height */
+  max-width: 1100px;
   flex: 1;
   height: 100%;
   display: flex;
@@ -33,19 +33,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*
-   * space-evenly distributes the card, typewriter/bio, and arrow
-   * evenly across the full height — no element can push another off-screen.
-   * The gaps physically shrink on short screens because they're derived
-   * from the remaining space, not a fixed rem value.
-   */
   justify-content: space-evenly;
   flex: 1;
   width: 100%;
-  /* 
-   * Top padding provides minimal Navbar clearance. 
-   * clamp shrinks aggressively on short screens to save height. 
-   */
   padding-top: clamp(1rem, 4vh, 3rem);
   padding-bottom: clamp(0.5rem, 1vh, 1rem);
 }
@@ -77,7 +67,6 @@
   z-index: 10;
 }
 
-
 .statusDot {
   width: 0.375rem;
   height: 0.375rem;
@@ -86,17 +75,13 @@
   animation: pulse 2s infinite;
 }
 
-/* --- TEXT ELEMENTS (ASH-GREEN CRT GLOW) --- */
+/* --- TEXT ELEMENTS --- */
 .textContainer {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* 
-   * THE SHIFT FIX: We reserve the height using the invisible final header.
-   * The container hugs the final header.
-   */
 }
 
 .typewriterAbsolute {
@@ -115,7 +100,6 @@
   font-size: clamp(1.25rem, 4vw, 2rem);
   font-weight: 500;
   color: #64748b;
-  /* Dull Mono Terminal Text */
 }
 
 .cursor {
@@ -133,15 +117,6 @@
   position: relative;
 }
 
-/* --- THE HARDWARE DASHBOARD STYLES --- */
-.finalHeaderWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-/* LIGHT MODE: Static Premium Dark Slate (No Train Animation) */
 .metallicHeader {
   font-family: var(--font-sans);
   font-size: clamp(1.75rem, 4.5vw, 3.25rem);
@@ -150,168 +125,20 @@
   letter-spacing: -0.01em;
   margin: 0;
   z-index: 2;
-
-  /* Static, deep metallic cut */
   background: linear-gradient(135deg, #475569 0%, #1e293b 50%, #0f172a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  /* Soft, clean emboss */
   filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* DARK MODE: Static Polished Silver (No Train Animation) */
 :global(.dark) .metallicHeader,
 :global([data-theme="dark"]) .metallicHeader {
-  /* Static, bright metallic cut */
   background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 40%, #334155 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  /* Heavy dark mode drop shadow */
   filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0px 8px 15px rgba(0, 0, 0, 0.6));
-}
-
-/* --- ADD THIS KEYFRAME AT THE BOTTOM OF YOUR FILE --- */
-@keyframes metallicShine {
-  to {
-    background-position: 200% center;
-  }
-}
-
-/* --- THE MECHANICAL CHAINS --- */
-.chainContainer {
-  position: relative;
-  width: 130px;
-  /* Precise width to hook specific letters to the plaque */
-  height: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  margin-top: -0.2rem;
-  margin-bottom: -0.2rem;
-  z-index: 1;
-  /* Sits behind the text and the glass */
-}
-
-.chainLeft,
-.chainRight {
-  position: relative;
-  width: 6px;
-  height: 100%;
-  /* Creates the mechanical timing-belt look */
-  background: repeating-linear-gradient(to bottom, #94a3b8 0, #94a3b8 4px, #1e293b 4px, #1e293b 8px);
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.8),
-    inset 1px 0 1px rgba(255, 255, 255, 0.3),
-    inset -1px 0 2px rgba(0, 0, 0, 0.6);
-  border-radius: 1px;
-}
-
-/* The physical bolts mounting the chain to the glass */
-.chainLeft::after,
-.chainRight::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  left: -2px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #475569;
-  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.8);
-  z-index: 3;
-}
-
-/* --- THE ENGRAVED TEXT EFFECTS --- */
-
-.engravedBase {
-  font-weight: 800;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  will-change: filter;
-}
-
-/* Deecrypt Crown Jewel (The Theme Looper) */
-.deecryptPlaque {
-  z-index: 2;
-  /* Compact plaque — close to the width of the header text above it */
-  width: clamp(200px, 32vw, 300px) !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-
-/*
- * Teal/Cyan ambient override — child div rendered AFTER the global ::before,
- * visually covering GlassPlaque's rainbow gradient with a localized dark-teal marine glow.
- * STRICTLY local to AboutHero. No global CSS modified.
- */
-.deecryptGlowOverride {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  background: linear-gradient(115deg,
-      rgba(0, 200, 185, 0.10) 0%,
-      rgba(10, 150, 200, 0.07) 55%,
-      rgba(0, 100, 160, 0.05) 100%) !important;
-}
-
-.pulseDeecrypt {
-  composes: engravedBase;
-  font-family: var(--font-mono);
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-
-  /* A massive gradient track containing all 3 theme colors + a return to Cyan to loop */
-  background-image: linear-gradient(to right,
-      #22d3ee 0%,
-      /* Cyan (Build) */
-      #f59e0b 33%,
-      /* Amber (AI) */
-      #a855f7 66%,
-      /* Purple (Web3) */
-      #22d3ee 100%
-      /* Cyan (Loop) */
-    );
-
-  /* Stretches the background to 300% width so we only see one color at a time */
-  background-size: 300% 100%;
-
-  /* Runs two synchronized 9-second hardware-accelerated animations */
-  animation:
-    panThemeGradient 9s linear infinite,
-    engravePulseThemeLoop 9s ease-in-out infinite;
-}
-
-.pulseDeecryptImg {
-  will-change: filter;
-  /* Static ambient metallic teal/cyan etching — no pulsing, matches logo sheen */
-  filter:
-    drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.75)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.12)) drop-shadow(0 0 10px rgba(0, 200, 185, 0.35)) drop-shadow(0 0 4px rgba(20, 160, 200, 0.2));
-}
-
-/* Inline Badges */
-.pulseFrontend {
-  composes: engravedBase;
-  background-image: linear-gradient(180deg, #67e8f9 0%, #06b6d4 100%);
-  animation: engravePulseCyan 3s ease-in-out infinite;
-}
-
-.pulseAI {
-  composes: engravedBase;
-  background-image: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
-  animation: engravePulseCombined 3.2s ease-in-out infinite;
-}
-
-.pulseWeb3 {
-  composes: engravedBase;
-  background-image: linear-gradient(180deg, #d8b4fe 0%, #a855f7 100%);
-  animation: engravePulsePurple 3.5s ease-in-out infinite reverse;
 }
 
 /* --- BIO PARAGRAPHS --- */
@@ -325,7 +152,8 @@
 
 .paragraph {
   font-size: clamp(0.85rem, 1.5vw, 1rem);
-  line-height: 2;
+  /* THE FIX: Reduced from 2 to 1.6 to stop the vertical stretching on mobile */
+  line-height: 1.6;
   color: var(--muted-foreground);
   max-width: 720px;
   margin: 0;
@@ -334,10 +162,11 @@
 @media (min-width: 768px) {
   .paragraph {
     font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    /* THE FIX: Relaxes the line height back out on desktop where there is room */
+    line-height: 1.8;
   }
 }
 
-/* --- ACTUATOR BUTTON --- */
 .summaryBox {
   font-size: 0.875rem;
   font-weight: 500;
@@ -361,91 +190,6 @@
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.8));
 }
 
-/* --- THE CARVED ILLUMINATION KEYFRAMES --- */
-
-/* Smoothly pans the background image to reveal the colors */
-@keyframes panThemeGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  100% {
-    background-position: 100% 50%;
-  }
-}
-
-/* Synchronizes the physical neon glow to match the color sliding underneath it */
-@keyframes engravePulseThemeLoop {
-
-  /* Cyan Pulse (Build) */
-  0% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 5px rgba(34, 211, 238, 0.2));
-  }
-
-  16.6% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 15px rgba(34, 211, 238, 0.8));
-  }
-
-  /* Amber Pulse (AI) */
-  33.3% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 5px rgba(245, 158, 11, 0.2));
-  }
-
-  50% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 15px rgba(245, 158, 11, 0.8));
-  }
-
-  /* Purple Pulse (Web3) */
-  66.6% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 5px rgba(168, 85, 247, 0.2));
-  }
-
-  83.3% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
-  }
-
-  /* Loop back to Cyan */
-  100% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 5px rgba(34, 211, 238, 0.2));
-  }
-}
-
-@keyframes engravePulsePurple {
-
-  0%,
-  100% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 5px rgba(168, 85, 247, 0.2));
-  }
-
-  50% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
-  }
-}
-
-@keyframes engravePulseCyan {
-
-  0%,
-  100% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 4px rgba(6, 182, 212, 0.2));
-  }
-
-  50% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 12px rgba(6, 182, 212, 0.8));
-  }
-}
-
-@keyframes engravePulseCombined {
-
-  0%,
-  100% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(-4px 0 6px rgba(34, 211, 238, 0.3)) drop-shadow(4px 0 6px rgba(168, 85, 247, 0.3));
-  }
-
-  50% {
-    filter: drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.2)) drop-shadow(-8px 0 12px rgba(34, 211, 238, 0.8)) drop-shadow(8px 0 12px rgba(168, 85, 247, 0.8));
-  }
-}
-
 @keyframes neonPulseGreen {
 
   0%,
@@ -457,21 +201,6 @@
   50% {
     filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.8));
     transform: translateY(3px);
-  }
-}
-
-/* Old Animations */
-@keyframes float {
-  0% {
-    transform: translateY(0px) translateZ(20px);
-  }
-
-  50% {
-    transform: translateY(-10px) translateZ(20px);
-  }
-
-  100% {
-    transform: translateY(0px) translateZ(20px);
   }
 }
 
@@ -487,4 +216,232 @@
     opacity: 0.5;
     transform: scale(0.8);
   }
+}
+
+/* src/components/AboutHero/AboutHero.module.css */
+/* ... keep everything above .bentoGrid exactly the same ... */
+
+/* =========================================
+   THE BENTO BOX STATIC LAYOUT
+   ========================================= */
+
+/* --- MOBILE DEFAULT (The Dashboard Sketch) --- */
+.bentoGrid {
+  display: grid;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  background: color-mix(in oklab, var(--glass) 80%, transparent);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  padding: clamp(1rem, 5vw, 1.5rem);
+  gap: 1.25rem 0.85rem;
+  box-shadow: var(--shadow-md);
+
+  grid-template-columns: 42px 1fr;
+  grid-template-areas:
+    "avatar titles"
+    "divider divider"
+    "socials text";
+}
+
+/* FLUID TYPOGRAPHY ENGINE */
+.headline {
+  /* Scales fluidly from mobile to ultrawide */
+  font-size: clamp(1.75rem, 3.5vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.mobileName {
+  font-family: var(--font-sans);
+  font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.mobileRole {
+  font-size: clamp(0.65rem, 1vw, 0.85rem);
+  color: var(--muted-foreground);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* GLASSMORPHISM BUTTON ENGINE */
+.glassPillIcon {
+  width: clamp(28px, 3.5vw, 40px) !important;
+  height: clamp(28px, 3.5vw, 40px) !important;
+  border-radius: 50% !important;
+  background: color-mix(in oklab, var(--glass, rgba(15, 20, 30, 0.4)) 20%, transparent) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--muted-foreground) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+.glassPillIcon svg {
+  width: clamp(12px, 1.5vw, 18px);
+  height: clamp(12px, 1.5vw, 18px);
+}
+
+.glassPillBtn {
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--glass, rgba(15, 20, 30, 0.4)) 20%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--foreground);
+  padding: clamp(0.35rem, 1vw, 0.5rem) clamp(0.75rem, 1.5vw, 1.5rem);
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 0;
+}
+
+/* GRID AREAS */
+.areaAvatar {
+  grid-area: avatar;
+}
+
+.areaTitles {
+  grid-area: titles;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.areaDivider {
+  grid-area: divider;
+  height: 1px;
+  background: color-mix(in oklab, var(--border-soft) 80%, transparent);
+  width: 100%;
+}
+
+.areaText {
+  grid-area: text;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.areaSocialsMobile {
+  grid-area: socials;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+
+.areaNav {
+  display: none;
+}
+
+.rawMobileAvatar {
+  width: clamp(42px, 10vw, 50px);
+  height: clamp(42px, 10vw, 50px);
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.desktopBentoAvatar {
+  display: none;
+}
+
+/* --- DESKTOP VARIATION (The 3-Pane Matrix) --- */
+@media (min-width: 768px) {
+  .bentoGrid {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+
+    /* Slightly more fluid column split */
+    grid-template-columns: clamp(280px, 30%, 350px) 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "avatar nav"
+      "avatar text";
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .areaAvatar,
+  .areaNav,
+  .areaText {
+    background: color-mix(in oklab, var(--glass) 80%, transparent);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .areaAvatar {
+    padding: 0;
+    overflow: hidden;
+    min-height: clamp(400px, 45vw, 550px);
+  }
+
+  .rawMobileAvatar {
+    display: none;
+  }
+
+  .desktopBentoAvatar {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  .areaNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Fluid internal padding */
+    padding: clamp(0.5rem, 1.5vw, 1.5rem) clamp(0.5rem, 1.5vw, 2rem);
+    gap: clamp(0.5rem, 1vw, 1.5rem);
+    min-width: 0;
+  }
+
+  .areaText {
+    /* Fluid internal padding */
+    padding: clamp(1.5rem, 4vw, 3rem);
+    justify-content: center;
+  }
+
+  .areaTitles,
+  .areaDivider,
+  .areaSocialsMobile {
+    display: none;
+  }
+}
+
+.navIdentity {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 1vw, 0.75rem);
+  min-width: 0;
+  white-space: nowrap;
 }

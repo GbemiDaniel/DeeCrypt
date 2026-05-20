@@ -73,14 +73,13 @@ export default function WriterDialog({
           {/* Author row */}
           <div className={styles.nativeTop}>
             <div className={styles.avatar} aria-hidden="true">
-              {post?.author?.avatarUrl ? (
-                <img
-                  src={post.author.avatarUrl}
-                  alt=""
-                  className={styles.avatarImg}
-                  loading="lazy"
-                />
-              ) : null}
+              <img
+                src={post?.author?.avatarUrl || "/GbemiDaniel_Face.png"}
+                alt={post?.author?.name || "Author avatar"}
+                className={styles.avatarImg}
+                width="48"
+                height="48"
+              />
             </div>
 
             <div className={styles.author}>

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Download, Github, Twitter, Linkedin, Copy, CheckCircle2 } from "lucide-react";
+import { Mail, Download, Github, Linkedin, Copy, CheckCircle2 } from "lucide-react";
+import { XIcon } from "@/components/icons/XIcon";
 import styles from "./ContactPanel.module.css";
 import { cn } from "@/lib/utils";
 
@@ -37,12 +38,10 @@ export function ContactPanel({ email, resumeUrl, socials }: ContactPanelProps) {
             <span>Get In Touch</span>
           </div>
 
-          <h2 className={styles.title}>Ready to build something legendary?</h2>
+          <h2 className={styles.title}>Ready to build something meaningful?</h2>
           
           <p className={styles.subtitle}>
-            Whether you need a <strong>Frontend Architect</strong> for your next
-            SaaS or a <strong>Technical Writer</strong> to give your Web3 project
-            a voice, I'm just one click away.
+            Whether you're shaping a personal brand, launching a product, or refining a digital experience, I'd love to hear what you're building.
           </p>
         </div>
 
@@ -67,8 +66,8 @@ export function ContactPanel({ email, resumeUrl, socials }: ContactPanelProps) {
             </a>
           )}
           {socials.twitter && (
-            <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Twitter">
-              <Twitter size={22} />
+            <a href={socials.twitter} target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="X (Twitter)">
+              <XIcon size={22} />
             </a>
           )}
           {socials.linkedin && (

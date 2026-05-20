@@ -102,22 +102,28 @@
 }
 
 .avatar {
-  height: 38px;
-  width: 38px;
+  height: 42px;
+  width: 42px;
   flex-shrink: 0;
-  /* CRITICAL: avatar never squishes on small screens */
   border-radius: 999px;
   background: color-mix(in oklab, var(--bg) 75%, var(--glass-strong));
   border: 1px solid var(--border);
   overflow: hidden;
-  display: grid;
-  place-items: center;
+  /* position:relative so the img can be absolutely placed inside */
+  position: relative;
 }
 
 .avatarImg {
+  /* Absolute fill — guarantees the img covers the full circle */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Face is ~40% from top of the tall portrait */
+  object-position: center 40%;
+  display: block;
+  filter: brightness(1.25) contrast(1.05);
 }
 
 .author {
